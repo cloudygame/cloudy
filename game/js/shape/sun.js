@@ -42,12 +42,8 @@
 
 
 
-
+		// add effects to sun
 		var tween	= createjs.Tween.get( this.shape );
-		// var timeline = new Timeline([
-		// 	tween.to({alpha: 1, rotation:360}, 1000)
-		// 	.to({alpha: 0},	1000)
-		// ], null, {loop: true});
 
 		var timeline = new createjs.Timeline();
 		timeline.addTween(
@@ -56,11 +52,6 @@
 					.to({rotation:360, x:1000,y:100,alpha:1},4000, createjs.Ease.linearOut )
 			);
 
-
-		// tween.to({x:300,y:0,alpha:0.4},4000, Ease.linearOut )
-		// 			.to({x:600,y:0,alpha:0.8},4000, Ease.linearOut )
-		// 			.to({x:1000,y:100,alpha:1},4000, Ease.linearOut )
-		// ;
 		tween.loop	= true;
 	};
 
