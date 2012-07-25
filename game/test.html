@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>EaselJS Example</title>
+
+	<link rel="stylesheet" href="css/main.css" type="text/css" media="screen" />
+
+	<!-- 
+	Hosted version
+
+	Latest stable without namespace:
+	<script src="http://code.createjs.com/easeljs-0.4.1.min.js"></script>
+	<script src="http://code.createjs.com/tweenjs-0.2.0.min.js"></script>
+	-->
+
+	<!-- Local version -->
+	<script src="js/lib/easeljs-NEXT.min.js"></script>
+	<script src="js/lib/tweenjs-NEXT.min.js"></script>
+	<script src="js/lib/jquery-1.7.2.min.js"></script>
+
+	<script src="js/main.js"></script>
+	<script src="js/common.js"></script>
+
+	<script src="js/shape/cloud.js"></script>
+	<script src="js/shape/bubble.js"></script>
+	<script src="js/shape/sun.js"></script>
+
+
+</head>
+	
+<body>
+
+	<canvas id="container"></canvas>
+
+
+	<!-- DEVELOPMENT BUTTONS, MESSAGES -->
+	<div id="dev">
+	
+		<div id="dev_buttons">
+			<input type="button" id="go" value="Felhõt!" onClick="game.main.initClouds();"><br>
+			<input type="button" style="width:150px;" value="Cache On 300x180px" onClick="game.main.turnOnCache(300,180);"><br>
+			<input type="button" style="width:150px;" value="Cache On 300x300px" onClick="game.main.turnOnCache(300,300);"><br>
+			<input type="button" style="width:150px;" value="Cache On 100x100px" onClick="game.main.turnOnCache(100,100);"><br>
+			<input type="button" id="" value="Cache Off" onClick="game.main.turnOffCache();"><br>
+			<!-- <input type="button" value="anim_test" onClick="test_kinectanim();"><br> -->
+			<!-- <input type="button" value="teszt" onClick="$('#c2').val( 'FPS: ' + animStartTimeFPS ); "> <br> -->
+
+		</div>
+
+		<div id="dev_messages">
+			<div id="coords">
+				C1: <input type="text" id="c1" value="teszt">
+				C2: <input type="text" id="c2" value="teszt">
+				FPS: <input type="text" id="FPS" value="teszt">
+			</div>
+			<br>
+			
+			<div id="message"></div>
+			
+		</div>
+
+	</div>
+
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
