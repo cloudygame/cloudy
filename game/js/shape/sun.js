@@ -1,5 +1,7 @@
 /*
+*	Test to sun branch
 *	Dev branch test
+*
 */
 
 (function(namespace){
@@ -42,7 +44,6 @@
 		this.shape	= new createjs.Shape(g);
 		this.shape.x	= -20;
 		this.shape.y	= 50;
-
 
 
 		// add effects to sun
