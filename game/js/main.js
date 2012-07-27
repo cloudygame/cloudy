@@ -19,9 +19,11 @@
 	var CLOUD_COLOR_FILL		= "lightgray";
 	
 	// Cloud parameters
-	var cloudArr				= new  Array();
+	var cloudArr				= new Array();
 	var cloudCount				= 3;
 	
+	// Bubbles
+	var bubbleArr				= new Array();
 	
 	// development (temporary) parameters
 	var	sebesseg_oszto			= 2;
@@ -63,6 +65,14 @@ $(document).ready( function() {
 
 	game.main.havacska();
 
+	// BubbleTest
+	bubbleArr[0]	= new game.Bubble( 30, 30, game.common.getRandomColor() );
+	// the test bubble is ellipsoid a bit ...
+	bubbleArr[0].bmpAnimation.scaleX	= 0.7;
+
+	var	i	= 0;
+    stage.addChild(bubbleArr[i].bmpAnimation);
+
 
 	// set the global ticker which used by tween.js and easeljs animations
 	createjs.Ticker.setFPS(30);
@@ -77,6 +87,30 @@ function tick()
 {
 
 	$('#FPS').val('FPS: '+ createjs.Ticker.getMeasuredFPS() );
+
+	var	i	= 0;
+
+    // Hit testing the screen width, otherwise our sprite would disappear
+    if (bubbleArr[i].bmpAnimation.x >= STAGE_WIDTH - 16) {
+        // We've reached the right side of our screen
+        // We need to walk left now to go back to our initial position
+        bubbleArr[i].bmpAnimation.direction = -90;
+    }
+
+    if (bubbleArr[i].bmpAnimation.x < 16) {
+        // We've reached the left side of our screen
+        // We need to walk right now
+        bubbleArr[i].bmpAnimation.direction = 90;
+    }
+
+    // Moving the sprite based on the direction & the speed
+    if (bubbleArr[i].bmpAnimation.direction == 90) {
+        bubbleArr[i].bmpAnimation.x += bubbleArr[i].bmpAnimation.vX;
+    } else {
+        bubbleArr[i].bmpAnimation.x -= bubbleArr[i].bmpAnimation.vX;
+    }
+
+
 	//re-render the stage
 	stage.update();
 }

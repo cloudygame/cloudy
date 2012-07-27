@@ -1,6 +1,4 @@
 /*
-*	Test to sun branch
-*	Dev branch test
 *
 */
 
