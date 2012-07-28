@@ -9,9 +9,20 @@
 (function (namespace) {
 
 	var Bubble	= function ( inX, inY, inColor ){
-		this.initialize( inX, inY, inColor );
-		this.spriteInit();
+		this.x	= x;
+		this.y	= y;
+		this.color	= color;
+		this.initSprite();
+		this.initShape();
 	}
+
+
+	Bubble.shape	= null;
+	Bubble.graphics	= null;
+
+	Bubble.spriteImg	= null;
+	Bubble.bmpAnimation	= null;
+
 
 	var p	= Bubble.prototype;
 
@@ -19,25 +30,26 @@
 	p.y		= null;
 	p.color	= null;
 
-	p.initialize	= function( x, y, color ){
-		this.x	= x;
-		this.y	= y;
-		this.color	= color;
 
-		// alert(this.color);
+	// creates a simple circle bubble shape with gradient fill
+	p.initShape	= function(){
+		this.graphics	= new createjs.Graphics;
+		this.graphics.beginRadialGradientFill(["#D1D8F2","#3A5BCB"], [0, 1], 20, 20, 0, 0, 0, 50);
+		this.graphics.setStrokeStyle(3);
+		this.graphics.beginLinearGradientStroke(["#8B9AE2","#E7EAF8"], [0, 1], 0, 0, 60, 60);
+		this.graphics.drawCircle(30, 30, 30);
+
+
+		this.shape	= new createjs.Shape(this.graphics);
+		this.shape.x	= 20;
+		this.shape.y	= 50;
+		this.shape.alpha=0.6;
+
 	}
 
 
-	p.create	= function (){
-
-	}
-
-	Bubble.spriteImg	= null;
-	Bubble.bmpAnimation	= null;
-
-
-	// 92px széles
-	p.spriteInit	= function(){
+	// creates a sprite bubble
+	p.initSprite	= function(){
 		this.spriteImg	= new Image();
 		this.spriteImg.onload	= p.handleImageLoad;
 		this.spriteImg.onerror	= p.handleImageError;
@@ -77,14 +89,16 @@
 		// of animated rats if you disabled the shadow.
 		this.bmpAnimation.shadow = new createjs.Shadow("#454", 33, 125, 41);
 		
-		this.bmpAnimation.name = "monster1";
-		this.bmpAnimation.direction = 90;
-		this.bmpAnimation.vX = 1;
-		this.bmpAnimation.x = STAGE_WIDTH/2;
-		this.bmpAnimation.y = STAGE_HEIGHT;
+		this.bmpAnimation.name		= "monster1";
+		this.bmpAnimation.direction	= 270;
+		this.bmpAnimation.directionPi	= this.bmpAnimation.direction/180*Math.PI;	// degree to radian
+		this.bmpAnimation.speed		= 1;
+		this.bmpAnimation.x			= STAGE_WIDTH/2;
+		this.bmpAnimation.y			= STAGE_HEIGHT;
 	
 		// have each monster start at a specific frame
 		this.bmpAnimation.currentFrame = 0;
+		this.bmpAnimation.alpha	= 0.6;
 		
 	}
 

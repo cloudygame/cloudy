@@ -41,6 +41,11 @@
 
 	var canvas				= null;		// the main canvas
 
+	var dragAndDropStartX	= null;
+	var dragAndDropStartY	= null;
+
+	var gStageBackground;
+
 /*
 *	the main function
 */
@@ -59,6 +64,11 @@ $(document).ready( function() {
 	stage		= new createjs.Stage(canvas);
 	layerCloud	= new createjs.Container();
 
+
+    gStageBackground	= new createjs.Graphics();
+	var background	= new createjs.Shape(gStageBackground);
+	stage.addChild(background);
+
 	game.main.initClouds();
 	// stage.enableMouseOver();
 
@@ -68,14 +78,15 @@ $(document).ready( function() {
 
 	game.main.havacska();
 
-	// BubbleTest
-	bubbleArr[0]	= new game.Bubble( 30, 30, game.common.getRandomColor() );
-	// the test bubble is ellipsoid a bit ...
-	bubbleArr[0].bmpAnimation.scaleX	= 0.7;
-
+	// sprite Bubble Test
 	var	i	= 0;
-    stage.addChild(bubbleArr[i].bmpAnimation);
+	bubbleArr[i]	= new game.Bubble( 30, 30, game.common.getRandomColor() );
+	// the test bubble is ellipsoid a bit ...
+	bubbleArr[i].bmpAnimation.scaleX	= 0.7;
 
+	stage.addChild(bubbleArr[i].shape);
+
+    stage.addChild(bubbleArr[i].bmpAnimation);
 
 	// set the global ticker which used by tween.js and easeljs animations
 	createjs.Ticker.setFPS(30);
@@ -88,31 +99,59 @@ $(document).ready( function() {
 //function called by the Tick instance at a set interval
 function tick()
 {
+    // change stage background color
+	gStageBackground.beginFill( createjs.Graphics.getRGB( game.common.getRandomColor(), 1 ) );
+	gStageBackground.setStrokeStyle(3);
+	gStageBackground.beginStroke('#fff');
+	// gStageBackground.rect(0,0,STAGE_WIDTH, STAGE_HEIGHT);
+	gStageBackground.endStroke();
 
 	// FPS measurement for testing
 	$('#FPS').val('FPS: '+ createjs.Ticker.getMeasuredFPS() );
 
-	var	i	= 0;
+	for( var i=0; i<bubbleArr.length; i++){
+		var bmpAnimation	= bubbleArr[i].bmpAnimation;
+	    // Hit testing the screen width, otherwise our sprite would disappear
+	    if (bmpAnimation.y < 0) {
+			// We've reached the right side of our screen
+			// We need to walk left now to go back to our initial position
+			bmpAnimation.direction	= 90;
+			// alert("FENT");
+	    }
 
-    // Hit testing the screen width, otherwise our sprite would disappear
-    if (bubbleArr[i].bmpAnimation.x >= STAGE_WIDTH - 16) {
-        // We've reached the right side of our screen
-        // We need to walk left now to go back to our initial position
-        bubbleArr[i].bmpAnimation.direction = -90;
-    }
+	    if (bmpAnimation.y > STAGE_HEIGHT) {
+			// We've reached the left side of our screen
+			// We need to walk right now
+			bmpAnimation.direction	= 270;
+			// alert("LENT");
+	    }
 
-    if (bubbleArr[i].bmpAnimation.x < 16) {
-        // We've reached the left side of our screen
-        // We need to walk right now
-        bubbleArr[i].bmpAnimation.direction = 90;
-    }
+	    // calculate the offset vector
+		var angle	= bmpAnimation.direction*0.0174533;		// (Math.PI/180)
+		var radius	= bmpAnimation.speed*10;
+		var x	= Math.round(Math.cos(angle) * radius);
+		var y	= Math.round(Math.sin(angle) * radius);
 
-    // Moving the sprite based on the direction & the speed
-    if (bubbleArr[i].bmpAnimation.direction == 90) {
-        bubbleArr[i].bmpAnimation.x += bubbleArr[i].bmpAnimation.vX;
-    } else {
-        bubbleArr[i].bmpAnimation.x -= bubbleArr[i].bmpAnimation.vX;
-    }
+		// console.log("x:" + x + " - y:" + y + "- angle:" + angle + "---" + Math.sin(angle) * radius + " ANIM Y:" + bmpAnimation.y);
+
+		// bubble move
+		bmpAnimation.y	+= y;
+		bmpAnimation.x	+= x;
+	}
+
+  //   // Moving the sprite based on the direction & the speed
+  //   if (bmpAnimation.direction == 90) {
+		// // bmpAnimation.y += bmpAnimation.speed;
+		// // bmpAnimation.x += bmpAnimation.speed;
+			
+		// bmpAnimation.y	= y;
+		// bmpAnimation.x	= x;
+		// alert("x:"+x+".."+y)
+
+  //   } else {
+  //       bmpAnimation.y -= bmpAnimation.speed;
+  //       bmpAnimation.x -= bmpAnimation.speed;
+  //   }
 
 
 	//re-render the stage
@@ -179,6 +218,9 @@ function tick()
 
 		stage.addChild(layerCloud);
 
+		// ONLY FOR TESTING!! performance killer line
+		stage.enableMouseOver(10);
+
 		stage.update();
 
 	}	// end main.initClouds
@@ -192,9 +234,8 @@ function tick()
 		shape.onPress	= function(evt){
 
 			// store the start position
-			var cloud	= main.getCloudByShape(shape);
-			cloud.lastX	= shape.x;
-			cloud.lastY	= shape.y;
+			dragAndDropStartX	= shape.x;
+			dragAndDropStartY	= shape.y;
 
 			var offset = {x:shape.x-evt.stageX, y:shape.y-evt.stageY};
 
@@ -204,17 +245,25 @@ function tick()
 				shape.x = ev.stageX+offset.x;
 				shape.y = ev.stageY+offset.y;
 			}
+			evt.onMouseUp	= function(){
+				tween	= createjs.Tween.get(shape);
+				tween.to({x:dragAndDropStartX,y:dragAndDropStartY},2000,createjs.Ease.elasticOut);
+			}
 		}
 		shape.onMouseOver = function() {
-			shape.scaleX = shape.scaleY = shape.scale*1.2;
+			// shape.scaleX = shape.scaleY =1.2;
+				tween	= createjs.Tween.get(shape);
+				tween.to({scaleX:shape.scaleX+0.1,scaleY:shape.scaleY+0.1},300,createjs.Ease.linearOut);
 		}
 		shape.onMouseOut = function() {
-			shape.scaleX = shape.scaleY = shape.scale;
+				tween	= createjs.Tween.get(shape);
+				tween.to({scaleX:shape.scaleX-0.1,scaleY:shape.scaleY-0.1},300,createjs.Ease.linearOut);
 		}
 	
 	}
 
 
+	// is it used????
 	// get the cloud object which consists the given shape
 	main.getCloudByShape	= function(shape){
 		for (var i=0; i<cloudArr.length; i++){

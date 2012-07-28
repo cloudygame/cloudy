@@ -8,20 +8,20 @@ canvas {
 
 #container {
 	/* Gradient background*/
-	background-image: linear-gradient(bottom, #D1D8F2 0%, #B8D4FC 69%, #6882D7 100%);
-	background-image: -o-linear-gradient(bottom, #D1D8F2 0%, #B8D4FC 69%, #6882D7 100%);
-	background-image: -moz-linear-gradient(bottom, #D1D8F2 0%, #B8D4FC 69%, #000000 100%);
-	background-image: -webkit-linear-gradient(bottom, #D1D8F2 0%, #B8D4FC 69%, #6882D7 100%);
-	background-image: -ms-linear-gradient(bottom, #D1D8F2 0%, #B8D4FC 69%, #6882D7 100%);
-
-	background-image: -webkit-gradient(
-		linear,
-		left bottom,
-		left top,
-		color-stop(0, #D1D8F2),
-		color-stop(0.69, #80FF80),
-		color-stop(1, #6882D7)
-	);
+		background-image: linear-gradient(bottom, #D1D8F2 0%, #B8D4FC 69%, #6882D7 100%);
+		background-image: -o-linear-gradient(bottom, #D1D8F2 0%, #B8D4FC 69%, #6882D7 100%);
+		background-image: -moz-linear-gradient(bottom, #D1D8F2 0%, #B8D4FC 69%, #6882D7 100%);
+		background-image: -webkit-linear-gradient(bottom, #D1D8F2 0%, #B8D4FC 69%, #6882D7 100%);
+		background-image: -ms-linear-gradient(bottom, #D1D8F2 0%, #B8D4FC 69%, #6882D7 100%);
+		
+		background-image: -webkit-gradient(
+			linear,
+			left bottom,
+			left top,
+			color-stop(0, #D1D8F2),
+			color-stop(0.69, #B8D4FC),
+			color-stop(1, #6882D7)
+		);
 	/* End of Gradient background*/
 
 
