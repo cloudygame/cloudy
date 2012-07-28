@@ -80,8 +80,8 @@
 		this.bmpAnimation.name = "monster1";
 		this.bmpAnimation.direction = 90;
 		this.bmpAnimation.vX = 1;
-		this.bmpAnimation.x = 16;
-		this.bmpAnimation.y = 132;
+		this.bmpAnimation.x = STAGE_WIDTH/2;
+		this.bmpAnimation.y = STAGE_HEIGHT;
 	
 		// have each monster start at a specific frame
 		this.bmpAnimation.currentFrame = 0;

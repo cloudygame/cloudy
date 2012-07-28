@@ -15,70 +15,40 @@
 	*	the Cloud object and constructor
 	*/
 	var Cloud	= function( inX,inY, inFillColor, inAlpha, inScaleRnd ){
+		this.fillColor	= inFillColor;
+		this.scaleRnd	= inScaleRnd;
 		this.initialize( inX,inY, inFillColor, inAlpha, inScaleRnd );
 	}
 
 	// object variables
-	Cloud.x			= 0;
-	Cloud.y			= 0;
+	Cloud.lastX			= null;		// last x position for drag n' drop
+	Cloud.lastY			= null;		// last y position for drag n' drop
 	Cloud.fillColor	= 0;
-	Cloud.alpha		= 0;
+	// Cloud.alpha		= 0;
 	Cloud.scaleRnd	= 0;			// to the scale for size randomizing
 	Cloud.shape		= null;			// generated after the initialize()
 
 
 
-	var	protoCloud	= Cloud.prototype; 
-
-
-	// the constructor function
-	protoCloud.initialize	= function( inX,inY, inFillColor, inAlpha, inScaleRnd ){
-		this.shape		= protoCloud.create( inX,inY, inFillColor, inAlpha, inScaleRnd  );				// generated after the initialize()
-	};
-
+	var	p	= Cloud.prototype; 
 
 	/*
 	*	draw a new cloud from JSON data and return with a Shape object
 	*/
-	protoCloud.create	= function ( inX,inY, inFillColor, inAlpha, inScaleRnd  ){
+	p.initialize	= function ( inX,inY, inFillColor, inAlpha, inScaleRnd  ){
 
-		var jsonStr = '{"moveTo":{"x":140,"y":200},"quadraticCurveTo":[{"x":135,"y":155,"ref_x":180,"ref_y":150},{"x":220,"y":110,"ref_x":260,"ref_y":130},{"x":300,"y":100,"ref_x":340,"ref_y":130},{"x":390,"y":125,"ref_x":400,"ref_y":170},{"x":440,"y":190,"ref_x":420,"ref_y":230},{"x":420,"y":270,"ref_x":380,"ref_y":270},{"x":340,"y":290,"ref_x":300,"ref_y":270},{"x":260,"y":290,"ref_x":220,"ref_y":270},{"x":185,"y":275,"ref_x":170,"ref_y":250},{"x":185,"y":275,"ref_x":170,"ref_y":250},{"x":130,"y":240,"ref_x":140,"ref_y":200}]}';
-		var cloudCoordArr = jQuery.parseJSON(jsonStr);
+		// load data from JSON
+		var jsonStr = '{"fillColor":"'+inFillColor+'","alpha":"'+inAlpha+'","strokeStyle":6,"moveTo":{"x":140,"y":200},"quadraticCurveTo":[{"x":135,"y":155,"ref_x":180,"ref_y":150},{"x":220,"y":110,"ref_x":260,"ref_y":130},{"x":300,"y":100,"ref_x":340,"ref_y":130},{"x":390,"y":125,"ref_x":400,"ref_y":170},{"x":440,"y":190,"ref_x":420,"ref_y":230},{"x":420,"y":270,"ref_x":380,"ref_y":270},{"x":340,"y":290,"ref_x":300,"ref_y":270},{"x":260,"y":290,"ref_x":220,"ref_y":270},{"x":185,"y":275,"ref_x":170,"ref_y":250},{"x":185,"y":275,"ref_x":170,"ref_y":250},{"x":130,"y":240,"ref_x":140,"ref_y":200}]}';
+		var cloudData = jQuery.parseJSON(jsonStr);
 
-		var cloudGraphics = new createjs.Graphics();
-
-		// All drawing methods in Graphics return the Graphics instance, so they can be chained together.
-		cloudGraphics.beginFill( createjs.Graphics.getRGB( inFillColor, inAlpha) ).setStrokeStyle(6).beginLinearGradientStroke(["#000","#FFF"], [0, 1], 100, 100, 440, 300);
-
-		cloudGraphics.moveTo(cloudCoordArr["moveTo"]["x"], cloudCoordArr["moveTo"]["y"]);
+		var cloudGraphics	= new createjs.Graphics();
+		cloudGraphics	= this.drawQuadraticJson(cloudGraphics, cloudData);
 
 
-		for (var i=0; i<cloudCoordArr.quadraticCurveTo.length; i++){
-			cloudGraphics.quadraticCurveTo( 
-				cloudCoordArr["quadraticCurveTo"][i]["x"],
-				cloudCoordArr["quadraticCurveTo"][i]["y"],
-				cloudCoordArr["quadraticCurveTo"][i]["ref_x"],
-				cloudCoordArr["quadraticCurveTo"][i]["ref_y"]
-				);
-		}
-
-		cloudGraphics.closePath();
-
-
+		// ** testing
 		// Multiple drawing methods are possible in the same Graphics instance.
 		// I added some random snow to the cloud graphics in this example:
-		var tmpX	= 0;
-		var tmpY	= 0;
-		for ( var i=0; i<5; i++ ){
-			tmpX		= Math.round((Math.random())*400);
-			tmpY		= Math.round((Math.random()-0.2)*100);
-			tmpAlpha	= Math.random();
-			cloudGraphics.beginFill( createjs.Graphics.getRGB( game.common.getRandomColor(), tmpAlpha ) );
-			cloudGraphics.setStrokeStyle(1);
-			cloudGraphics.beginStroke('#fff');
-			cloudGraphics.drawCircle( 135 + tmpX, 300 + tmpY, 5 );
-		}
-
+		cloudGraphics	= this.testDrawSnow(cloudGraphics);
 
 
 		/*
@@ -94,19 +64,89 @@
 		cloudShape.scaleX	= inScaleRnd;
 		cloudShape.scaleY	= inScaleRnd;
 
-		return cloudShape;
+		this.shape	= cloudShape;
+
+		// ** testing
+		this.testAddOnClickGetData();
 	}
 
 
 
 	/*
-	*	generate shadow around the cloud shape
+	*	this function generates shadow around the cloud shape
 	*	in:		cloud shape
 	*	return: -
 	*/
-	protoCloud.addShadow	= function (){
+	p.addShadow	= function (){
 		var	shadow	= new createjs.Shadow( "gray", 10, 10, 3 );
 		this.shape.shadow	= shadow;
+	}
+
+
+
+	/*
+	*	universal quadratic curve drawer function
+	*/
+	p.drawQuadraticJson	= function( graphics, inJson ){
+		// draw out
+		// var graphics = new createjs.Graphics();
+
+		// All drawing methods in Graphics return the Graphics instance, so they can be chained together.
+		graphics.beginFill( createjs.Graphics.getRGB( inJson["fillColor"], inJson["alpha"]) ).setStrokeStyle(inJson["strokeStyle"]).beginLinearGradientStroke(["#000","#FFF"], [0, 1], 100, 100, 440, 300);
+
+		graphics.moveTo(inJson["moveTo"]["x"], inJson["moveTo"]["y"]);
+
+		for (var i=0; i<inJson.quadraticCurveTo.length; i++){
+			graphics.quadraticCurveTo( 
+				inJson["quadraticCurveTo"][i]["x"],
+				inJson["quadraticCurveTo"][i]["y"],
+				inJson["quadraticCurveTo"][i]["ref_x"],
+				inJson["quadraticCurveTo"][i]["ref_y"]
+				);
+		}
+
+		graphics.closePath();
+		return graphics;
+	}
+
+
+
+	// for testing: draw "snow"
+	p.testDrawSnow	= function( graphics ){
+		var tmpX	= 0;
+		var tmpY	= 0;
+		for ( var i=0; i<5; i++ ){
+			tmpX		= Math.round((Math.random())*400);
+			tmpY		= Math.round((Math.random()-0.2)*100);
+			tmpAlpha	= Math.random();
+			graphics.beginFill( createjs.Graphics.getRGB( game.common.getRandomColor(), tmpAlpha ) );
+			graphics.setStrokeStyle(1);
+			graphics.beginStroke('#fff');
+			graphics.drawCircle( 135 + tmpX, 300 + tmpY, 5 );
+		}
+
+		return graphics;
+	}
+
+
+	// for testing: show information about cloud
+	p.testAddOnClickGetData	= function(){
+		this.shape.onDoubleClick	= function(mouseEvent){ 
+
+			var x = mouseEvent.stageX;
+    		var y = mouseEvent.stageY;
+			for (var i=0; i<cloudArr.length; i++){
+				if (cloudArr[i].shape===this){
+					tmpStr	= " x:" + Math.round(this.x) + " y:" + Math.round(this.y) +
+						" \n skewX:"	+ this.skewX	+ "  skewY:" + this.skewY +
+						" \n regX:"		+ this.regX		+ "  regY:" + this.regY + 
+						" \n alpha: "	+ this.alpha	+ 
+						" \n color: "	+ cloudArr[i].fillColor;
+						;
+				}
+			}
+			alert( tmpStr ) ;
+		};
 	}
 
 

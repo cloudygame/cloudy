@@ -37,6 +37,9 @@
 	var currDateFPS				= new Date;
 	var currTimeFPS				= currDateFPS.getTime();
 	
+	var STOP_DRAW			= false;	// stop drawing for testing (CPU heat)
+
+	var canvas				= null;		// the main canvas
 
 /*
 *	the main function
@@ -46,7 +49,7 @@ $(document).ready( function() {
 	/* Get the canvas and set the its size.
 	*		(The size setting works only this way. why??)
 	*/
-	var canvas		= $('#container').get(0);
+	canvas		= $('#container').get(0);
 	canvas.width	= STAGE_WIDTH;
 	canvas.height	= STAGE_HEIGHT;
 //	$('#container').css('width','900px');	// this solution would be nice but the size setting from css is buggy
@@ -86,6 +89,7 @@ $(document).ready( function() {
 function tick()
 {
 
+	// FPS measurement for testing
 	$('#FPS').val('FPS: '+ createjs.Ticker.getMeasuredFPS() );
 
 	var	i	= 0;
@@ -112,7 +116,9 @@ function tick()
 
 
 	//re-render the stage
-	stage.update();
+	if (!STOP_DRAW){
+		stage.update();
+	}
 }
 
 
@@ -153,7 +159,7 @@ function tick()
 	//		cloud.show();
 		}
 
-		// start the effects on every cloud
+		// start the tween effects on every new cloud
 		var tweenArr	= Array();
 		var tmpX,tmpY		= 0;
 		for(var i=offset;i<(cloudCount+offset);i++){
@@ -161,48 +167,15 @@ function tick()
 			tmpY		= Math.round((Math.random()-0.2)*10);
 			tmpAlpha	= Math.random();
 			tweenArr[i] = createjs.Tween.get( cloudArr[i].shape );
-			tweenArr[i].to({x:170,y:50,alpha:0.1},4000, createjs.Ease.elasticInOut ).to({x:tmpX, y:tmpY, alpha:0.9},4000, createjs.Ease.bounceInOut).to( {rotation:360}, 4000, createjs.Ease.elasticInOut );
 
-
-			// show information about cloud
-			cloudArr[i].shape.onClick	= function(mouseEvent){ 
-					tmpStr	= " x:" + Math.round(this.x) + " y:" + Math.round(this.y) +
-								" \n skewX:" + this.skewX  + "  skewY:" + this.skewY +
-								" \n regX:" + this.regX  + "  regY:" + this.regY + 
-								" \n alpha: " + this.alpha + 
-								" \n color: "
-								;
-					alert( tmpStr ) 
-				};
-
-
-
+			// complex movement for tests
+			// tweenArr[i].to({x:170,y:50,alpha:0.1},4000, createjs.Ease.elasticInOut ).to({x:tmpX, y:tmpY, alpha:0.9},4000, createjs.Ease.bounceInOut).to( {rotation:360}, 4000, createjs.Ease.elasticInOut );
+			tweenArr[i].to({alpha:0.9},1000);
 
 			// add simple drag'n drop to every cloud shape
-			(function (target){
-				cloudArr[i].shape.onPress	= function(evt){
-					var offset = {x:target.x-evt.stageX, y:target.y-evt.stageY};
-
-					// add a handler to the event object's onMouseMove callback
-					// this will be active until the user releases the mouse button:
-					evt.onMouseMove = function(ev) {
-						target.x = ev.stageX+offset.x;
-						target.y = ev.stageY+offset.y;
-						// indicate that the stage should be updated on the next tick:
-						update = true;
-					}
-				}
-				cloudArr[i].shape.onMouseOver = function() {
-					target.scaleX = target.scaleY = target.scale*1.2;
-					update = true;
-				}
-				cloudArr[i].shape.onMouseOut = function() {
-					target.scaleX = target.scaleY = target.scale;
-					update = true;
-				}
-			})(cloudArr[i].shape)
-
+			main.addShapeDragAndDrop( cloudArr[i].shape );
 		}
+
 
 		stage.addChild(layerCloud);
 
@@ -210,6 +183,46 @@ function tick()
 
 	}	// end main.initClouds
 
+
+
+
+	// add DnD to a given target shape
+	main.addShapeDragAndDrop	= function( shape ){
+
+		shape.onPress	= function(evt){
+
+			// store the start position
+			var cloud	= main.getCloudByShape(shape);
+			cloud.lastX	= shape.x;
+			cloud.lastY	= shape.y;
+
+			var offset = {x:shape.x-evt.stageX, y:shape.y-evt.stageY};
+
+			// add a handler to the event object's onMouseMove callback
+			// this will be active until the user releases the mouse button:
+			evt.onMouseMove = function(ev) {
+				shape.x = ev.stageX+offset.x;
+				shape.y = ev.stageY+offset.y;
+			}
+		}
+		shape.onMouseOver = function() {
+			shape.scaleX = shape.scaleY = shape.scale*1.2;
+		}
+		shape.onMouseOut = function() {
+			shape.scaleX = shape.scaleY = shape.scale;
+		}
+	
+	}
+
+
+	// get the cloud object which consists the given shape
+	main.getCloudByShape	= function(shape){
+		for (var i=0; i<cloudArr.length; i++){
+			if (cloudArr[i].shape===shape){
+				return cloudArr[i];
+			}
+		}
+	}
 
 
 	main.havacska	= function(){
