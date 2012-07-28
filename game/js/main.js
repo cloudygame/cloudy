@@ -132,27 +132,14 @@ function tick()
 		var x	= Math.round(Math.cos(angle) * radius);
 		var y	= Math.round(Math.sin(angle) * radius);
 
-		// console.log("x:" + x + " - y:" + y + "- angle:" + angle + "---" + Math.sin(angle) * radius + " ANIM Y:" + bmpAnimation.y);
-
-		// bubble move
+		// image bubble movevement
 		bmpAnimation.y	+= y;
 		bmpAnimation.x	+= x;
+
+		// shape bubble movevement
+		bubbleArr[i].shape.y	+= y;
+		bubbleArr[i].shape.x	+= x;
 	}
-
-  //   // Moving the sprite based on the direction & the speed
-  //   if (bmpAnimation.direction == 90) {
-		// // bmpAnimation.y += bmpAnimation.speed;
-		// // bmpAnimation.x += bmpAnimation.speed;
-			
-		// bmpAnimation.y	= y;
-		// bmpAnimation.x	= x;
-		// alert("x:"+x+".."+y)
-
-  //   } else {
-  //       bmpAnimation.y -= bmpAnimation.speed;
-  //       bmpAnimation.x -= bmpAnimation.speed;
-  //   }
-
 
 	//re-render the stage
 	if (!STOP_DRAW){
@@ -166,7 +153,6 @@ function tick()
 /*
 *	The main object
 */
-
 
 (function(namespace){
 	var main	= new Object;
@@ -188,14 +174,12 @@ function tick()
 
 			var cloud 	= new game.Cloud( x, y, color, alpha, scaleRnd );
 
-			// cloud.shape	= cloud.create();
 			cloud.addShadow();
 
 			layerCloud.addChild(cloud.shape);
 
-			//store clouds in a global array too
-			cloudArr[i]	= cloud;
-	//		cloud.show();
+			cloudArr[i]	= cloud;				//store clouds in a global array too
+
 		}
 
 		// start the tween effects on every new cloud
@@ -265,13 +249,13 @@ function tick()
 
 	// is it used????
 	// get the cloud object which consists the given shape
-	main.getCloudByShape	= function(shape){
-		for (var i=0; i<cloudArr.length; i++){
-			if (cloudArr[i].shape===shape){
-				return cloudArr[i];
-			}
-		}
-	}
+	// main.getCloudByShape	= function(shape){
+	// 	for (var i=0; i<cloudArr.length; i++){
+	// 		if (cloudArr[i].shape===shape){
+	// 			return cloudArr[i];
+	// 		}
+	// 	}
+	// }
 
 
 	main.havacska	= function(){
