@@ -45,7 +45,7 @@ function tick()
 	}
 
 	//re-render the stage
-	if (!STOP_DRAW){
+	if (!STOP_TICK_DRAW){
 		stage.update();
 	}
 }

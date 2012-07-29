@@ -58,16 +58,16 @@ Common.drawQuadraticJson	= function( graphics, inJson ){
 
 		for (var i=0; i<inJson.quadraticCurveTo.length; i++){
 			graphics.quadraticCurveTo( 
-				inJson["quadraticCurveTo"][i]["x"],
-				inJson["quadraticCurveTo"][i]["y"],
 				inJson["quadraticCurveTo"][i]["ref_x"],
-				inJson["quadraticCurveTo"][i]["ref_y"]
+				inJson["quadraticCurveTo"][i]["ref_y"],
+				inJson["quadraticCurveTo"][i]["x"],
+				inJson["quadraticCurveTo"][i]["y"]
 				);
 		}
 
-		// if (inJson.closepath==true || !("closepath" in inJson ){
+		if (inJson["closepath"]==true || !("closepath" in inJson )){
 			graphics.closePath();
-		// }
+		}
 		return graphics;
 }
 

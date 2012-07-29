@@ -37,14 +37,13 @@
 	var currDateFPS				= new Date;
 	var currTimeFPS				= currDateFPS.getTime();
 	
-	var STOP_DRAW			= false;	// stop drawing for testing (CPU heat)
-
 	var canvas				= null;		// the Main canvas
 
 	var dragAndDropStartX	= null;
 	var dragAndDropStartY	= null;
 
 	var gStageBackground;
+	var STOP_TICK_DRAW			= false;	// it stops drawing in tick() (CPU heat)
 
 /*
 *	the Main function
@@ -93,6 +92,15 @@ $(document).ready( function() {
 	// set the global ticker which used by tween.js and easeljs animations
 	createjs.Ticker.setFPS(30);
 	createjs.Ticker.addListener(tick);
+
+
+	// it stops automatically drawing if the user will leave the browser window
+	$(window).bind("blur",function(){
+		STOP_TICK_DRAW	= true;
+	});
+	$(window).bind("focus",function(){
+		STOP_TICK_DRAW	= false;
+	});
 
 }
 );
@@ -196,38 +204,72 @@ $(document).ready( function() {
 	}
 
 
-	// is it used????
-	// get the cloud object which consists the given shape
-	// Main.getCloudByShape	= function(shape){
-	// 	for (var i=0; i<cloudArr.length; i++){
-	// 		if (cloudArr[i].shape===shape){
-	// 			return cloudArr[i];
-	// 		}
-	// 	}
-	// }
 
-	// generated grass testing
+	/*
+	* automatically generated grass
+	*/
 	Main.testGrass	= function(){
-		var jsonStr = '{"fillColor":"0xffffff",	\
-						"alpha":"1",			\
-						"strokeStyle":1,		\
-						"moveTo":{"x":0,"y":70},\
-						"quadraticCurveTo":[{"x":10,"y":0,"ref_x":0,"ref_y":50},{"x":30,"y":100,"ref_x":0,"ref_y":50}]	\
-						}';
-		var jsonData = jQuery.parseJSON(jsonStr);
+
+
+		var	grassStartColor	= '#487A12';
+		var	grassEndColor	= '#7BEF5F';
+		var alpha	= 0.9;
+
+		// TODO : fill with gradient color
+		// TODO : repeat the drawing
 
 		var g	= new createjs.Graphics();
-
-		g.beginFill( createjs.Graphics.getRGB( jsonData["fillColor"], jsonData["alpha"]) ).setStrokeStyle(jsonData["strokeStyle"]).beginLinearGradientStroke(["#000","#FFF"], [0, 1], 100, 100, 440, 300);
-		g	= game.Common.drawQuadraticJson(g, jsonData);
+		g.setStrokeStyle(1).beginLinearGradientStroke(["#000","#FFF"], [0, 1], 100, 100, 440, 300);
+	
+		for ( var i=0;i<100;i++){
+			offsetX	= i*10;
+			g.beginLinearGradientFill( [grassStartColor,grassEndColor], [0.3,1], 0+offsetX,100, 30+offsetX,0 );
+			var jsonData	= Main.getRandomBladeOfGrassJSON( offsetX,6 );
+			g	= game.Common.drawQuadraticJson(g, jsonData);
+		}
 
 		var s	= new createjs.Shape(g);
-		s.x	= 100;
-		s.y	= 100;
+		s.x	= 0;
+		s.y	= STAGE_HEIGHT-50;
 		s.scaleX	= 1;
 		s.scaleY	= 1;
 
 		stage.addChild(s);
+	}
+
+	/*
+	* generate the coordinates of one blade of grass and return data in json
+	*/
+	Main.getRandomBladeOfGrassJSON	= function( offsetX, width ){
+		width	= (typeof width == "undefined") ? 4 : width;	// set default value
+
+		var rndHeight		= (Math.random()-0.5)*2;			// to randomize grass height
+		var rndTopEdgeX		= Math.random()*2;					// 
+		var rndRefOffset	= Math.random()+1;				// to randomize grass curve by offseting reference points
+
+		var rndDirection	= (Math.random()<0.5)?-1:1;			// to the left or right
+
+		console.log("rndTopEdgeX:" + rndTopEdgeX + "  rndDirection:" + rndDirection + " rndRefOffset:" + rndRefOffset);
+
+		var jsonStr = {"fillColor":"0xffffff",
+							"alpha":"1",
+							"closepath":"false",
+							"strokeStyle":1,
+							"moveTo":{"x":0+offsetX,"y":50},		// the start point is fix
+							"quadraticCurveTo": [{
+								"x": (width*2)*rndTopEdgeX*rndDirection+offsetX,			// upper edge
+								"y": 0-25*rndHeight,
+								"ref_x": -10*rndRefOffset*rndDirection+offsetX,
+								"ref_y": 25
+							}, {
+								"x": rndDirection*(width+rndTopEdgeX*2)+offsetX,
+								"y": 50,					// fix -> the same as the start point
+								"ref_x": -3*rndRefOffset*rndDirection+offsetX,
+								"ref_y": 25
+							}]
+						};
+		// var jsonData = jQuery.parseJSON(jsonStr);
+		return jsonStr;
 	}
 
 
