@@ -45,6 +45,9 @@
 	var gStageBackground;
 	var STOP_TICK_DRAW			= false;	// it stops drawing in tick() (CPU heat)
 
+
+	var	grassArr		= new Array();
+
 /*
 *	the Main function
 */
@@ -64,10 +67,15 @@ $(document).ready( function() {
 	layerCloud	= new createjs.Container();
 
 
+	// create bakcground
     gStageBackground	= new createjs.Graphics();
+	gStageBackground.colorR	= 80;
+	gStageBackground.colorG	= 80;
+	gStageBackground.colorB	= 150;
 	var background	= new createjs.Shape(gStageBackground);
 	stage.addChild(background);
 
+	// initialize clouds
 	game.Main.initClouds();
 	// stage.enableMouseOver();
 
@@ -77,9 +85,16 @@ $(document).ready( function() {
 
 	game.Main.havacska();
 
-	game.Main.testGrass();
+	// draw grass
+	grassArr[0]	= new game.Grass( 0, STAGE_HEIGHT-60);
+	grassArr[0].shape.alpha = 0.6;
+	stage.addChild(grassArr[0].shape);
 
-	// sprite Bubble Test
+	grassArr[1]	= new game.Grass( 0, STAGE_HEIGHT-40);
+	stage.addChild(grassArr[1].shape);
+
+
+	// sprite and shape Bubble Test
 	var	i	= 0;
 	bubbleArr[i]	= new game.Bubble( 30, 30, game.Common.getRandomColor() );
 	// the test bubble is ellipsoid a bit ...
@@ -96,10 +111,12 @@ $(document).ready( function() {
 
 	// it stops automatically drawing if the user will leave the browser window
 	$(window).bind("blur",function(){
-		STOP_TICK_DRAW	= true;
+		createjs.Ticker.setPaused(true);
+		// STOP_TICK_DRAW	= true;
 	});
 	$(window).bind("focus",function(){
-		STOP_TICK_DRAW	= false;
+		// STOP_TICK_DRAW	= false;
+		createjs.Ticker.setPaused(false);
 	});
 
 }
@@ -202,76 +219,6 @@ $(document).ready( function() {
 		}
 	
 	}
-
-
-
-	/*
-	* automatically generated grass
-	*/
-	Main.testGrass	= function(){
-
-
-		var	grassStartColor	= '#487A12';
-		var	grassEndColor	= '#7BEF5F';
-		var alpha	= 0.9;
-
-		// TODO : fill with gradient color
-		// TODO : repeat the drawing
-
-		var g	= new createjs.Graphics();
-		g.setStrokeStyle(1).beginLinearGradientStroke(["#000","#FFF"], [0, 1], 100, 100, 440, 300);
-	
-		for ( var i=0;i<100;i++){
-			offsetX	= i*10;
-			g.beginLinearGradientFill( [grassStartColor,grassEndColor], [0.3,1], 0+offsetX,100, 30+offsetX,0 );
-			var jsonData	= Main.getRandomBladeOfGrassJSON( offsetX,6 );
-			g	= game.Common.drawQuadraticJson(g, jsonData);
-		}
-
-		var s	= new createjs.Shape(g);
-		s.x	= 0;
-		s.y	= STAGE_HEIGHT-50;
-		s.scaleX	= 1;
-		s.scaleY	= 1;
-
-		stage.addChild(s);
-	}
-
-	/*
-	* generate the coordinates of one blade of grass and return data in json
-	*/
-	Main.getRandomBladeOfGrassJSON	= function( offsetX, width ){
-		width	= (typeof width == "undefined") ? 4 : width;	// set default value
-
-		var rndHeight		= (Math.random()-0.5)*2;			// to randomize grass height
-		var rndTopEdgeX		= Math.random()*2;					// 
-		var rndRefOffset	= Math.random()+1;				// to randomize grass curve by offseting reference points
-
-		var rndDirection	= (Math.random()<0.5)?-1:1;			// to the left or right
-
-		console.log("rndTopEdgeX:" + rndTopEdgeX + "  rndDirection:" + rndDirection + " rndRefOffset:" + rndRefOffset);
-
-		var jsonStr = {"fillColor":"0xffffff",
-							"alpha":"1",
-							"closepath":"false",
-							"strokeStyle":1,
-							"moveTo":{"x":0+offsetX,"y":50},		// the start point is fix
-							"quadraticCurveTo": [{
-								"x": (width*2)*rndTopEdgeX*rndDirection+offsetX,			// upper edge
-								"y": 0-25*rndHeight,
-								"ref_x": -10*rndRefOffset*rndDirection+offsetX,
-								"ref_y": 25
-							}, {
-								"x": rndDirection*(width+rndTopEdgeX*2)+offsetX,
-								"y": 50,					// fix -> the same as the start point
-								"ref_x": -3*rndRefOffset*rndDirection+offsetX,
-								"ref_y": 25
-							}]
-						};
-		// var jsonData = jQuery.parseJSON(jsonStr);
-		return jsonStr;
-	}
-
 
 
 
