@@ -119,7 +119,7 @@
 			tmpX		= Math.round((Math.random())*400);
 			tmpY		= Math.round((Math.random()-0.2)*100);
 			tmpAlpha	= Math.random();
-			graphics.beginFill( createjs.Graphics.getRGB( game.common.getRandomColor(), tmpAlpha ) );
+			graphics.beginFill( createjs.Graphics.getRGB( game.Common.getRandomColor(), tmpAlpha ) );
 			graphics.setStrokeStyle(1);
 			graphics.beginStroke('#fff');
 			graphics.drawCircle( 135 + tmpX, 300 + tmpY, 5 );

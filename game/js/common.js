@@ -3,13 +3,13 @@
 */
 (function(namespace){
 
-var common	= new Object;
+var Common	= new Object;
 
 
 /*
 *	random color generator for testing
 */
-common.getRandomColor	= function ( type ) {
+Common.getRandomColor	= function ( type ) {
 	var letters = '0123456789ABCDEF'.split('');
 
 	if (type=="HTML"){
@@ -27,7 +27,7 @@ common.getRandomColor	= function ( type ) {
 /*
 *	log text to console
 */
-common.log	= function ( text ){
+Common.log	= function ( text ){
 	var currD	= new Date;
 	var currT	= currD.getTime();
 	var elapsedTimePrgStart	= (currT-programStartTime)/1000;
@@ -40,7 +40,40 @@ common.log	= function ( text ){
 }
 
 
-namespace.common	= common;
+
+/* It draws quadratic only lines from input JSON into the given easel Graphics
+*
+*	JSON format:
+*	- moveTo: start point
+*	- quadraticCurveTo: quadratic point
+*		* x
+*		* y
+*		* ref_x
+*		* ref_y
+*	- closepath: true/false (true by default)
+*/
+Common.drawQuadraticJson	= function( graphics, inJson ){
+
+		graphics.moveTo(inJson["moveTo"]["x"], inJson["moveTo"]["y"]);
+
+		for (var i=0; i<inJson.quadraticCurveTo.length; i++){
+			graphics.quadraticCurveTo( 
+				inJson["quadraticCurveTo"][i]["x"],
+				inJson["quadraticCurveTo"][i]["y"],
+				inJson["quadraticCurveTo"][i]["ref_x"],
+				inJson["quadraticCurveTo"][i]["ref_y"]
+				);
+		}
+
+		// if (inJson.closepath==true || !("closepath" in inJson ){
+			graphics.closePath();
+		// }
+		return graphics;
+}
+
+
+
+namespace.Common	= Common;
 }
 (game || (game = {})));
 var game;

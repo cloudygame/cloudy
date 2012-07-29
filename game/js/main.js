@@ -39,7 +39,7 @@
 	
 	var STOP_DRAW			= false;	// stop drawing for testing (CPU heat)
 
-	var canvas				= null;		// the main canvas
+	var canvas				= null;		// the Main canvas
 
 	var dragAndDropStartX	= null;
 	var dragAndDropStartY	= null;
@@ -47,7 +47,7 @@
 	var gStageBackground;
 
 /*
-*	the main function
+*	the Main function
 */
 $(document).ready( function() {
 
@@ -69,18 +69,20 @@ $(document).ready( function() {
 	var background	= new createjs.Shape(gStageBackground);
 	stage.addChild(background);
 
-	game.main.initClouds();
+	game.Main.initClouds();
 	// stage.enableMouseOver();
 
 	var sun	= new game.Sun();
 	stage.addChild(sun.shape);
 
 
-	game.main.havacska();
+	game.Main.havacska();
+
+	game.Main.testGrass();
 
 	// sprite Bubble Test
 	var	i	= 0;
-	bubbleArr[i]	= new game.Bubble( 30, 30, game.common.getRandomColor() );
+	bubbleArr[i]	= new game.Bubble( 30, 30, game.Common.getRandomColor() );
 	// the test bubble is ellipsoid a bit ...
 	bubbleArr[i].bmpAnimation.scaleX	= 0.7;
 
@@ -93,74 +95,21 @@ $(document).ready( function() {
 	createjs.Ticker.addListener(tick);
 
 }
-)
-
-
-//function called by the Tick instance at a set interval
-function tick()
-{
-    // change stage background color
-	gStageBackground.beginFill( createjs.Graphics.getRGB( game.common.getRandomColor(), 1 ) );
-	gStageBackground.setStrokeStyle(3);
-	gStageBackground.beginStroke('#fff');
-	// gStageBackground.rect(0,0,STAGE_WIDTH, STAGE_HEIGHT);
-	gStageBackground.endStroke();
-
-	// FPS measurement for testing
-	$('#FPS').val('FPS: '+ createjs.Ticker.getMeasuredFPS() );
-
-	for( var i=0; i<bubbleArr.length; i++){
-		var bmpAnimation	= bubbleArr[i].bmpAnimation;
-	    // Hit testing the screen width, otherwise our sprite would disappear
-	    if (bmpAnimation.y < 0) {
-			// We've reached the right side of our screen
-			// We need to walk left now to go back to our initial position
-			bmpAnimation.direction	= 90;
-			// alert("FENT");
-	    }
-
-	    if (bmpAnimation.y > STAGE_HEIGHT) {
-			// We've reached the left side of our screen
-			// We need to walk right now
-			bmpAnimation.direction	= 270;
-			// alert("LENT");
-	    }
-
-	    // calculate the offset vector
-		var angle	= bmpAnimation.direction*0.0174533;		// (Math.PI/180)
-		var radius	= bmpAnimation.speed*10;
-		var x	= Math.round(Math.cos(angle) * radius);
-		var y	= Math.round(Math.sin(angle) * radius);
-
-		// image bubble movevement
-		bmpAnimation.y	+= y;
-		bmpAnimation.x	+= x;
-
-		// shape bubble movevement
-		bubbleArr[i].shape.y	+= y;
-		bubbleArr[i].shape.x	+= x;
-	}
-
-	//re-render the stage
-	if (!STOP_DRAW){
-		stage.update();
-	}
-}
-
+);
 
 
 
 /*
-*	The main object
+*	The Main object
 */
 
 (function(namespace){
-	var main	= new Object;
+	var Main	= new Object;
 
 	/*
 	*	first time cloud generating
 	*/
-	main.initClouds	= function (){
+	Main.initClouds	= function (){
 
 		var offset	= cloudArr.length;
 
@@ -168,7 +117,7 @@ function tick()
 		for(var i=offset;i<(cloudCount+offset);i++){
 			x			= Math.round( STAGE_WIDTH/cloudCount )*i;	// x position (equal cloud distance)
 			y			= Math.round( (Math.random()-0.5)*40 );		// random y position (offset)
-			color		= game.common.getRandomColor();							// generate random color
+			color		= game.Common.getRandomColor();							// generate random color
 			alpha		= Math.random();							// alpha
 			scaleRnd	= (Math.random())/2+0.5;					// random scaling - maximum +-25%
 
@@ -196,7 +145,7 @@ function tick()
 			tweenArr[i].to({alpha:0.9},1000);
 
 			// add simple drag'n drop to every cloud shape
-			main.addShapeDragAndDrop( cloudArr[i].shape );
+			Main.addShapeDragAndDrop( cloudArr[i].shape );
 		}
 
 
@@ -207,13 +156,13 @@ function tick()
 
 		stage.update();
 
-	}	// end main.initClouds
+	}	// end Main.initClouds
 
 
 
 
 	// add DnD to a given target shape
-	main.addShapeDragAndDrop	= function( shape ){
+	Main.addShapeDragAndDrop	= function( shape ){
 
 		shape.onPress	= function(evt){
 
@@ -249,7 +198,7 @@ function tick()
 
 	// is it used????
 	// get the cloud object which consists the given shape
-	// main.getCloudByShape	= function(shape){
+	// Main.getCloudByShape	= function(shape){
 	// 	for (var i=0; i<cloudArr.length; i++){
 	// 		if (cloudArr[i].shape===shape){
 	// 			return cloudArr[i];
@@ -257,8 +206,34 @@ function tick()
 	// 	}
 	// }
 
+	// generated grass testing
+	Main.testGrass	= function(){
+		var jsonStr = '{"fillColor":"0xffffff",	\
+						"alpha":"1",			\
+						"strokeStyle":1,		\
+						"moveTo":{"x":0,"y":70},\
+						"quadraticCurveTo":[{"x":10,"y":0,"ref_x":0,"ref_y":50},{"x":30,"y":100,"ref_x":0,"ref_y":50}]	\
+						}';
+		var jsonData = jQuery.parseJSON(jsonStr);
 
-	main.havacska	= function(){
+		var g	= new createjs.Graphics();
+
+		g.beginFill( createjs.Graphics.getRGB( jsonData["fillColor"], jsonData["alpha"]) ).setStrokeStyle(jsonData["strokeStyle"]).beginLinearGradientStroke(["#000","#FFF"], [0, 1], 100, 100, 440, 300);
+		g	= game.Common.drawQuadraticJson(g, jsonData);
+
+		var s	= new createjs.Shape(g);
+		s.x	= 100;
+		s.y	= 100;
+		s.scaleX	= 1;
+		s.scaleY	= 1;
+
+		stage.addChild(s);
+	}
+
+
+
+
+	Main.havacska	= function(){
 		for(var i=0;i<100;i++){
 
 			var g		= new createjs.Graphics;
@@ -300,7 +275,7 @@ function tick()
 	*	Add cache to every cloud shape;
 	*	Comment: The caching will be slow if the cached graphic is too big. 
 	*/
-	main.turnOnCache	= function( sizeX, sizeY ){
+	Main.turnOnCache	= function( sizeX, sizeY ){
 		// set the defult size
 		if (sizeX==0){
 			sizeX=300;
@@ -314,7 +289,7 @@ function tick()
 	}
 
 
-	main.turnOffCache	= function(){
+	Main.turnOffCache	= function(){
 
 		for  ( var i=0; i<cloudArr.length; i++){
 			//turn on the cache
@@ -323,6 +298,6 @@ function tick()
 	}
 
 
-namespace.main	= main;
+namespace.Main	= Main;
 }(game || (game = {})));
 var game;
