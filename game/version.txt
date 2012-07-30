@@ -4,6 +4,7 @@ UI:
 - double click on cloud pops up some cloud data in an alert window
 - cloud drag and drop: you can drag the cloud and after drop it will go back to the drag start position
 - draw: sun, cloud, bubble, grass
+- moving stars in the background
 
 Other:
 - cache: you can test caching when you click on the right side buttons

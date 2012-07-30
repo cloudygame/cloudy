@@ -45,12 +45,6 @@
 		cloudGraphics	= this.drawQuadraticJson(cloudGraphics, cloudData);
 
 
-		// ** testing
-		// Multiple drawing methods are possible in the same Graphics instance.
-		// I added some random snow to the cloud graphics in this example:
-		cloudGraphics	= this.testDrawSnow(cloudGraphics);
-
-
 		/*
 		*	Doc: A Shape allows you to display vector art in the display list. It composites a Graphics instance which exposes all of the vector drawing methods. 
 		*	The Graphics instance can be shared between multiple Shape instances to display the same vector graphics with different positions or transforms.
@@ -66,8 +60,11 @@
 
 		this.shape	= cloudShape;
 
-		// ** testing
-		this.testAddOnClickGetData();
+		// ** TESTING: 
+		this.testGetDataOnDoubleClick();
+		// Multiple drawing methods are possible in the same Graphics instance.
+		// I added some random snow to the cloud graphics in this example:
+		// cloudGraphics	= this.testDrawSnow(cloudGraphics);
 	}
 
 
@@ -130,7 +127,7 @@
 
 
 	// for testing: show information about cloud
-	p.testAddOnClickGetData	= function(){
+	p.testGetDataOnDoubleClick	= function(){
 		this.shape.onDoubleClick	= function(mouseEvent){ 
 
 			var x = mouseEvent.stageX;

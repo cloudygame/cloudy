@@ -29,6 +29,10 @@
 	<script src="js/shape/bubble.js"></script>
 	<script src="js/shape/sun.js"></script>
 	<script src="js/shape/grass.js"></script>
+	<script src="js/shape/star.js"></script>
+
+	<!-- data -->
+	<script src="js/json/stars.js"></script>
 
 
 </head>
@@ -49,6 +53,9 @@
 			<input type="button" id="" value="Cache Off" onClick="game.main.turnOffCache();"><br>
 			<input type="button" id="" value="Stop drawing" onClick="STOP_TICK_DRAW=true;"><br>
 			<input type="button" id="" value="Start drawing" onClick="STOP_TICK_DRAW=false;"><br>
+
+			<input type="button" id="" value="add rain bubbles" onClick="game.Main.havacska();"><br>
+			<input type="button" id="" value="add circles to clouds" onClick="for( var i=0;i<cloudArr.length;i++){cloudArr[i].testDrawSnow(cloudArr[i].shape.graphics)};"><br>
 			<!-- <input type="button" value="anim_test" onClick="test_kinectanim();"><br> -->
 			<!-- <input type="button" value="teszt" onClick="$('#c2').val( 'FPS: ' + animStartTimeFPS ); "> <br> -->
 

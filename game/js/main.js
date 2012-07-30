@@ -42,7 +42,11 @@
 	var dragAndDropStartX	= null;
 	var dragAndDropStartY	= null;
 
-	var gStageBackground;
+	// stage background
+	var gStageBackground;			// stage background gradient graphic
+	var StageBackgroundStars;
+
+
 	var STOP_TICK_DRAW			= false;	// it stops drawing in tick() (CPU heat)
 
 
@@ -59,8 +63,8 @@ $(document).ready( function() {
 	canvas		= $('#container').get(0);
 	canvas.width	= STAGE_WIDTH;
 	canvas.height	= STAGE_HEIGHT;
-//	$('#container').css('width','900px');	// this solution would be nice but the size setting from css is buggy
-//	$('#container').css('height','300px');
+	//	$('#container').css('width','900px');	// this solution would be nice but the size setting from css is buggy
+	//	$('#container').css('height','300px');
 
 	/* A stage is the root level Container for a display list. Each time its tick method is called, it will render its display list to its target canvas. */
 	stage		= new createjs.Stage(canvas);
@@ -75,6 +79,14 @@ $(document).ready( function() {
 	var background	= new createjs.Shape(gStageBackground);
 	stage.addChild(background);
 
+	// stars
+    var StageBackgroundStars	= new game.Star();
+    stage.addChild(StageBackgroundStars.shape);
+		
+	var starsTween = createjs.Tween.get( StageBackgroundStars.shape );
+	starsTween.to({alpha:0.3},6000).to({alpha:1,rotation:9},30000).to({alpha:0,rotation:9},150000);
+
+
 	// initialize clouds
 	game.Main.initClouds();
 	// stage.enableMouseOver();
@@ -82,8 +94,6 @@ $(document).ready( function() {
 	var sun	= new game.Sun();
 	stage.addChild(sun.shape);
 
-
-	game.Main.havacska();
 
 	// draw grass
 	grassArr[0]	= new game.Grass( 0, STAGE_HEIGHT-60);
@@ -101,8 +111,8 @@ $(document).ready( function() {
 	bubbleArr[i].bmpAnimation.scaleX	= 0.7;
 
 	stage.addChild(bubbleArr[i].shape);
-
     stage.addChild(bubbleArr[i].bmpAnimation);
+
 
 	// set the global ticker which used by tween.js and easeljs animations
 	createjs.Ticker.setFPS(30);
