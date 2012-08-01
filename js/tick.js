@@ -6,19 +6,20 @@ function tick()
 	// FPS measurement for testing
 	$('#FPS').val('FPS: '+ createjs.Ticker.getMeasuredFPS() );
 
-	if (!STOP_TICK_DRAW){
+	if (!globals.STOP_TICK_DRAW){
 
 		/*
 		*	1. simple background transition
 		*/
 		if (createjs.Ticker.getTicks()%30 == 0){
-			bgGraphics	= gStageBgGradient;
-			var color	= createjs.Graphics.getRGB( gStageBgGradient.colorR, gStageBgGradient.colorG, gStageBgGradient.colorB, 0.1 );
+			globals.bgGraphics	= globals.gStageBgGradient;
+			bgColors	= globals.gStageBgGradient;
+			var color	= createjs.Graphics.getRGB( bgColors.colorR, bgColors.colorG, bgColors.colorB, 0.1 );
 
 		    // change stage background color
-			bgGraphics.beginFill( color );
-			bgGraphics.rect(0,0,STAGE_WIDTH, STAGE_HEIGHT);
-			bgGraphics.endStroke();
+			globals.bgGraphics.beginFill( color );
+			globals.bgGraphics.rect(0,0,globals.STAGE_WIDTH, globals.STAGE_HEIGHT);
+			globals.bgGraphics.endStroke();
 		}
 
 		/*
@@ -27,41 +28,44 @@ function tick()
 		// grass bend
 		if (createjs.Ticker.getTicks() % 3 == 0){
 				// console.log(grassJsonDataArr[i]["quadraticCurveTo"][0]["x"]);
-				grassArr[1].bend();
+				globals.grassArr[1].bend();
 		}
 		if (createjs.Ticker.getTicks() % 6 == 0){
 				// console.log(grassJsonDataArr[i]["quadraticCurveTo"][0]["x"]);
-				grassArr[0].bend();
+				globals.grassArr[0].bend();
 		}
 
 		// grass rotation
 		if (createjs.Ticker.getTicks() % 3 == 0){
 				// console.log(grassJsonDataArr[i]["quadraticCurveTo"][0]["x"]);
-				grassArr[1].offsetX	+= 1;
+				globals.grassArr[1].offsetX	+= 1;
 		}
 
-		grassArr[0].draw();
-		grassArr[1].draw();
+		globals.grassArr[0].draw();
+		globals.grassArr[1].draw();
 
 
-		// background cloud rotation
+		/*
+		* Background cloud rotation
+		*/
 		if ( createjs.Ticker.getTicks() % 1 == 0 ){
-			for( var i=0;i<bgCloudArr.length; i++){
-				if ( (bgCloudArr[i].shape.x) < STAGE_WIDTH ){
-					bgCloudArr[i].shape.x += 2;
+			for( var i=0;i<globals.bgCloudArr.length; i++){
+				if ( (globals.bgCloudArr[i].shape.x) < globals.STAGE_WIDTH ){
+					globals.bgCloudArr[i].shape.x += 2;
 				} else {
- // console.log(bgCloudArr[i]);	
-					bgCloudArr[i].shape.x = 0 - bgCloudArr[i].maxX+bgCloudArr[i].minX;
+					globals.bgCloudArr[i].shape.x = 0 - globals.bgCloudArr[i].maxX+globals.bgCloudArr[i].minX;
 				}
 
 			}
 		}
 
 
-		// bubble movement start
+		/*
+		*	Bubble movement
+		*/
 		if (createjs.Ticker.getTicks() % 2 == 0){		// slow down
-			for( var i=0; i<bubbleArr.length; i++){
-				var bmpAnimation	= bubbleArr[i].bmpAnimation;
+			for( var i=0; i<globals.bubbleArr.length; i++){
+				var bmpAnimation	= globals.bubbleArr[i].bmpAnimation;
 			    // Hit testing the screen width, otherwise our sprite would disappear
 			    if (bmpAnimation.y < 0) {
 					// We've reached the right side of our screen
@@ -70,7 +74,7 @@ function tick()
 					// alert("FENT");
 			    }
 
-			    if (bmpAnimation.y > STAGE_HEIGHT) {
+			    if (bmpAnimation.y > globals.STAGE_HEIGHT) {
 					// We've reached the left side of our screen
 					// We need to walk right now
 					bmpAnimation.direction	= 270;
@@ -90,14 +94,14 @@ function tick()
 				bmpAnimation.x	+= x;
 
 				// shape bubble movevement
-				bubbleArr[i].shape.y	+= y;
-				bubbleArr[i].shape.x	+= x;
+				globals.bubbleArr[i].shape.y	+= y;
+				globals.bubbleArr[i].shape.x	+= x;
 			}
 		}
 		// end bubble movement
 
 		//re-render the stage
-		stage.update();
+		globals.stage.update();
 	}
 }
 
@@ -110,8 +114,8 @@ function tick()
 *	- the simpliest and fastest way is the radius testing(two circle collision)
 */
 function collisionTest(){
-	for ( var i=0; i<cloudArr.length; i++ ){
-		for ( var j=0; j<bubbleArr.length; j++){
+	for ( var i=0; i<globals.cloudArr.length; i++ ){
+		for ( var j=0; j<globals.bubbleArr.length; j++){
 			
 		}
 	}

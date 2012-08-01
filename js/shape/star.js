@@ -48,7 +48,7 @@
 
 		this.shape	= new createjs.Shape(g);
 		shape		= this.shape;
-		shape.x		= starBoxWidth/2-minX+(STAGE_WIDTH-starBoxWidth) + 500;	// the value 500 is the "shape rotation correction"
+		shape.x		= starBoxWidth/2-minX+(globals.STAGE_WIDTH-starBoxWidth) + 500;	// the value 500 is the "shape rotation correction"
 		shape.y		= 2000-200;
 		shape.regX	= starBoxWidth/2 + minX;
 		shape.regY	= 2000;

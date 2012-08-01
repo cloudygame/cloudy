@@ -55,7 +55,7 @@
 
 		this.shape	= new createjs.Shape(this.graphics);
 		this.shape.x	= 0;
-		this.shape.y	= STAGE_HEIGHT-50;
+		this.shape.y	= globals.STAGE_HEIGHT-50;
 		this.shape.scaleX	= 1;
 		this.shape.scaleY	= 1;
 

@@ -46,16 +46,16 @@
 	<div id="dev">
 	
 		<div id="dev_buttons">
-			<input type="button" id="go" value="Felhõt!" onClick="game.main.initClouds();"><br>
-			<input type="button" style="width:150px;" value="Cache On 300x180px" onClick="game.main.turnOnCache(300,180);"><br>
-			<input type="button" style="width:150px;" value="Cache On 300x300px" onClick="game.main.turnOnCache(300,300);"><br>
-			<input type="button" style="width:150px;" value="Cache On 100x100px" onClick="game.main.turnOnCache(100,100);"><br>
-			<input type="button" id="" value="Cache Off" onClick="game.main.turnOffCache();"><br>
-			<input type="button" id="" value="Stop drawing" onClick="STOP_TICK_DRAW=true;"><br>
-			<input type="button" id="" value="Start drawing" onClick="STOP_TICK_DRAW=false;"><br>
+			<input type="button" id="go" value="Felhõt!" onClick="game.Main.initClouds();"><br>
+			<input type="button" style="width:150px;" value="Cache optimal" onClick="game.Main.turnOnCache( globals.cloudArr[0].maxX,globals.cloudArr[0].maxY);"><br>
+			<input type="button" style="width:150px;" value="Cache On 300x300px" onClick="game.Main.turnOnCache(300,300);"><br>
+			<input type="button" style="width:150px;" value="Cache On 100x100px" onClick="game.Main.turnOnCache(100,100);"><br>
+			<input type="button" id="" value="Cache Off" onClick="game.Main.turnOffCache();"><br>
+			<input type="button" id="" value="Stop drawing" onClick="globals.STOP_TICK_DRAW=true;"><br>
+			<input type="button" id="" value="Start drawing" onClick="globals.STOP_TICK_DRAW=false;"><br>
 
 			<input type="button" id="" value="add rain bubbles" onClick="game.Main.havacska();"><br>
-			<input type="button" id="" value="add circles to clouds" onClick="for( var i=0;i<cloudArr.length;i++){cloudArr[i].testDrawSnow(cloudArr[i].shape.graphics)};"><br>
+			<input type="button" id="" value="add circles to clouds" onClick="for( var i=0;i<globals.cloudArr.length;i++){globals.cloudArr[i].testDrawSnow(globals.cloudArr[i].shape.graphics)};"><br>
 			<!-- <input type="button" value="anim_test" onClick="test_kinectanim();"><br> -->
 			<!-- <input type="button" value="teszt" onClick="$('#c2').val( 'FPS: ' + animStartTimeFPS ); "> <br> -->
 

@@ -126,8 +126,8 @@
 		this.minX	= minXY.x;
 		this.minY	= minXY.y;
 
-console.log( game.Common.getMaxXYPointQuadraticJson(inJson));
-console.log( game.Common.getMinXYPointQuadraticJson(inJson));
+// console.log( game.Common.getMaxXYPointQuadraticJson(inJson));
+// console.log( game.Common.getMinXYPointQuadraticJson(inJson));
 
 		graphics.closePath();
 		return graphics;
@@ -185,13 +185,13 @@ console.log( game.Common.getMinXYPointQuadraticJson(inJson));
 
 			var x = mouseEvent.stageX;
     		var y = mouseEvent.stageY;
-			for (var i=0; i<cloudArr.length; i++){
-				if (cloudArr[i].shape===this){
+			for (var i=0; i<globals.cloudArr.length; i++){
+				if (globals.cloudArr[i].shape===this){
 					tmpStr	= " x:" + Math.round(this.x) + " y:" + Math.round(this.y) +
 						" \n skewX:"	+ this.skewX	+ "  skewY:" + this.skewY +
 						" \n regX:"		+ this.regX		+ "  regY:" + this.regY + 
 						" \n alpha: "	+ this.alpha	+ 
-						" \n color: "	+ cloudArr[i].fillColor;
+						" \n color: "	+ globals.cloudArr[i].fillColor;
 						;
 				}
 			}

@@ -2,35 +2,61 @@
 /*
 * Global variables
 */
+	var game	= {};
+	var globals	= {};
+
+	/*
+	*	CONSTS
+	*/
+	globals.DEFAULT_BUBBLE_X		= 150;
+	globals.DEFAULT_BUBBLE_Y		= 150;
+	globals.DEFAULT_BUBBLE_RADIUS	= 30;
 	
-	// Bubble parameters
-	var DEFAULT_BUBBLE_X		= 150;
-	var DEFAULT_BUBBLE_Y		= 150;
-	var DEFAULT_BUBBLE_RADIUS	= 30;
+	globals.STAGE_WIDTH				= 900;
+	globals.STAGE_HEIGHT			= 400;
 	
-	// Layers, stages
-	var layerCloud;		// normal cloud layer
-	var layerBgCloud;	// background layer
-	var layerBubble;
-	var stage;
-	
-	var STAGE_WIDTH				= 900;
-	var STAGE_HEIGHT			= 400;
-	var CLOUD_COLOR_CONTOUR		= "#D8EDF2";
-	var CLOUD_COLOR_FILL		= "lightgray";
+	globals.STOP_TICK_DRAW			= false;	// it stops drawing in tick() (CPU cooling)
+
+	/*
+	*	GAME ABLES
+	*/
+
+	globals.canvas;		// the Main canvas
+	globals.stage;						// Main stage
+
+
+	// Layers
+	globals.layerCloud;		// normal cloud layer
+	globals.layerBgCloud;		// background layer
+	globals.layerBubble;
 	
 	// Cloud parameters
-	var cloudArr				= new Array();
-	var bgCloudArr				= new Array();
-	var cloudCount				= 3;
+	globals.cloudArr				= new Array();
+	globals.bgCloudArr				= new Array();
+	globals.cloudCount				= 3;
 	
 	// Bubbles
-	var bubbleArr				= new Array();
+	globals.bubbleArr				= new Array();
 	
-	// development (temporary) parameters
-	var	sebesseg_oszto			= 2;
-	var	irany_szorzo			= 1;
-	
+	// Grass
+	globals.grassArr		= new Array();
+
+
+	// stage background
+	globals.gStageBgGradient;			// graphics obj of the gradient stage background 
+	globals.sStageBgGradient;			// shape obj
+	globals.StageBackgroundStars;
+
+	// start coordinates when drag occurs
+	globals.dragAndDropStartX	= null;
+	globals.dragAndDropStartY	= null;
+
+
+	/*
+	*	DEVELOPMENT VARIABLES
+	*/	
+
+	// Development: variables for code running time measurement	
 	var programStartDate		= new Date;
 	var programStartTime		= programStartDate.getTime();
 	var lastLogT				= programStartTime;
@@ -38,22 +64,8 @@
 	// for measuring FPS
 	var currDateFPS				= new Date;
 	var currTimeFPS				= currDateFPS.getTime();
-	
-	var canvas				= null;		// the Main canvas
-
-	var dragAndDropStartX	= null;
-	var dragAndDropStartY	= null;
-
-	// stage background
-	var gStageBgGradient;			// graphics obj of the gradient stage background 
-	var sStageBgGradient;			// shape obj
-	var StageBackgroundStars;
 
 
-	var STOP_TICK_DRAW			= false;	// it stops drawing in tick() (CPU heat)
-
-
-	var	grassArr		= new Array();
 
 
 /*
@@ -61,17 +73,17 @@
 */
 $(document).ready( function() {
 
-	/* Get the canvas and set the its size.
+	/* Get the globals.canvas and set the its size.
 	*		(The size setting works only this way. why??)
 	*/
-	canvas		= $('#container').get(0);
-	canvas.width	= STAGE_WIDTH;
-	canvas.height	= STAGE_HEIGHT;
+	globals.canvas		= $('#container').get(0);
+	globals.canvas.width	= globals.STAGE_WIDTH;
+	globals.canvas.height	= globals.STAGE_HEIGHT;
 	//	$('#container').css('width','900px');	// this solution would be nice but the size setting from css is buggy
 	//	$('#container').css('height','300px');
 
-	/* A stage is the root level Container for a display list. Each time its tick method is called, it will render its display list to its target canvas. */
-	stage		= new createjs.Stage(canvas);
+	/* A stage is the root level Container for a display list. Each time its tick method is called, it will render its display list to its target globals.canvas. */
+	globals.stage		= new createjs.Stage(globals.canvas);
 
 
 	/*
@@ -79,27 +91,27 @@ $(document).ready( function() {
 	*/
 
 	// *** Create main layers ***
-	layerBackground	= new createjs.Container();
-	stage.addChild(layerBackground);
+	globals.layerBackground	= new createjs.Container();
+	globals.stage.addChild(globals.layerBackground);
 
-	layerBubble	= new createjs.Container();
-	stage.addChild(layerBubble);
+	globals.layerBubble	= new createjs.Container();
+	globals.stage.addChild(globals.layerBubble);
 
-	layerCloud	= new createjs.Container();
-	stage.addChild(layerCloud);
+	globals.layerCloud	= new createjs.Container();
+	globals.stage.addChild(globals.layerCloud);
 
 
 	// *** Fill the layers ***
 
 	// ** Background **
-	sStageBgGradient	= game.Main.initStageBgGradient();
-	layerBackground.addChild( sStageBgGradient );
+	globals.sStageBgGradient	= game.Main.initStageBgGradient();
+	globals.layerBackground.addChild( globals.sStageBgGradient );
 
 	// stars
-    var StageBackgroundStars	= new game.Star();
-    layerBackground.addChild(StageBackgroundStars.shape);
+    globals.StageBackgroundStars	= new game.Star();
+    globals.layerBackground.addChild(globals.StageBackgroundStars.shape);
 
-	var starsTween = createjs.Tween.get( StageBackgroundStars.shape );
+	var starsTween = createjs.Tween.get( globals.StageBackgroundStars.shape );
 	starsTween.to({alpha:1},6000).to({alpha:1,rotation:17},20000);
 
 	// background clouds
@@ -107,30 +119,30 @@ $(document).ready( function() {
 
 	// sun
 	var sun	= new game.Sun();
-	layerBackground.addChild(sun.shape);
+	globals.layerBackground.addChild(sun.shape);
 
 	// draw grass
-	grassArr[0]	= new game.Grass( 0, STAGE_HEIGHT-60);
-	grassArr[0].shape.alpha = 0.6;
-	layerBackground.addChild(grassArr[0].shape);
+	globals.grassArr[0]	= new game.Grass( 0, globals.STAGE_HEIGHT-60);
+	globals.grassArr[0].shape.alpha = 0.6;
+	globals.layerBackground.addChild(globals.grassArr[0].shape);
 
-	grassArr[1]	= new game.Grass( 0, STAGE_HEIGHT-40);
-	layerBackground.addChild(grassArr[1].shape);
+	globals.grassArr[1]	= new game.Grass( 0, globals.STAGE_HEIGHT-40);
+	globals.layerBackground.addChild(globals.grassArr[1].shape);
 
 
-	// ** initialize clouds into layerCloud **
+	// ** initialize clouds into globals.layerCloud **
 	game.Main.initClouds();
 
 
 
 	// ** sprite and shape Bubble Test **
 	var	i	= 0;
-	bubbleArr[i]	= new game.Bubble( 30, 30, game.Common.getRandomColor() );
+	globals.bubbleArr[i]	= new game.Bubble( 30, 30, game.Common.getRandomColor() );
 	// the test bubble image is ellipsoid a bit ... khmm
-	bubbleArr[i].bmpAnimation.scaleX	= 0.7;
-    layerBubble.addChild(bubbleArr[i].bmpAnimation);
+	globals.bubbleArr[i].bmpAnimation.scaleX	= 0.7;
+    globals.layerBubble.addChild(globals.bubbleArr[i].bmpAnimation);
     // the shape isn't
-	layerBubble.addChild(bubbleArr[i].shape);
+	globals.layerBubble.addChild(globals.bubbleArr[i].shape);
 
 
 	/*
@@ -145,18 +157,18 @@ $(document).ready( function() {
 	// it stops automatically drawing if the user will leave the browser window
 	$(window).bind("blur",function(){
 		createjs.Ticker.setPaused(true);
-		// STOP_TICK_DRAW	= true;
+		// globals.STOP_TICK_DRAW	= true;
 	});
 	$(window).bind("focus",function(){
-		// STOP_TICK_DRAW	= false;
+		// globals.STOP_TICK_DRAW	= false;
 		createjs.Ticker.setPaused(false);
 	});
 
 
 	// ONLY FOR TESTING!! this is a performance killer line
-	stage.enableMouseOver(10);
+	globals.stage.enableMouseOver(10);
 
-	stage.update();
+	globals.stage.update();
 
 }
 );
@@ -176,79 +188,77 @@ $(document).ready( function() {
 	*/
 	Main.initClouds	= function (){
 
-		var offset	= cloudArr.length;
+		var offset	= globals.cloudArr.length;
 
-		// generate (draw) clouds from cloudArr
-		for(var i=offset;i<(cloudCount+offset);i++){
-			x			= Math.round( STAGE_WIDTH/cloudCount )*i;	// x position (equal cloud distance)
+		// generate (draw) clouds from globals.cloudArr
+		for(var i=offset;i<(globals.cloudCount+offset);i++){
+			x			= Math.round( globals.STAGE_WIDTH/globals.cloudCount )*i;	// x position (equal cloud distance)
 			y			= Math.round( (Math.random()-0.5)*40 );		// random y position (offset)
-			color		= game.Common.getRandomColor();							// generate random color
+			color		= game.Common.getRandomColor();				// generate random color
 			alpha		= Math.random();							// alpha
+			alpha	=1;
 			scaleRnd	= (Math.random())/2+0.5;					// random scaling - maximum +-25%
-alpha	=1;
 			var cloud 	= new game.Cloud( x, y, color, alpha, scaleRnd );
 
-			layerCloud.addChild(cloud.shape);
+			globals.layerCloud.addChild(cloud.shape);
 
-			cloudArr[i]	= cloud;				//store clouds in a global array too
-
+			globals.cloudArr[i]	= cloud;		//store clouds in a global array too
+game.Common.log( i );
 		}
 
 		// start the tween effects on every new cloud
 		var tweenArr	= Array();
 		var tmpX,tmpY		= 0;
-		for(var i=offset;i<(cloudCount+offset);i++){
+		for(var i=offset;i<(globals.cloudCount+offset);i++){
 			tmpX		= Math.round((Math.random())*1000)-200;
 			tmpY		= Math.round((Math.random()-0.2)*10);
 			tmpAlpha	= Math.random();
-			tweenArr[i] = createjs.Tween.get( cloudArr[i].shape );
+			tweenArr[i] = createjs.Tween.get( globals.cloudArr[i].shape );
 
-			// complex movement for tests
+			// more complex movement test:
 			// tweenArr[i].to({x:170,y:50,alpha:0.1},4000, createjs.Ease.elasticInOut ).to({x:tmpX, y:tmpY, alpha:0.9},4000, createjs.Ease.bounceInOut).to( {rotation:360}, 4000, createjs.Ease.elasticInOut );
 			// tweenArr[i].to({alpha:1},1000);
 
 			// add simple drag'n drop to every cloud shape
-			Main.addShapeDragAndDrop( cloudArr[i].shape );
+			Main.addShapeDragAndDrop( globals.cloudArr[i].shape );
 		}
 
-
+		globals.stage.update();
 	}	// end Main.initClouds
 
 
 
 	Main.initBgCloud	= function(){
 
+		var offset	= globals.bgCloudArr.length;
 
-		var offset	= bgCloudArr.length;
-
-		// generate (draw) clouds from cloudArr
-		for(var i=offset;i<(cloudCount+offset);i++){
-			x			= Math.round( STAGE_WIDTH/cloudCount )*i;	// x position (equal cloud distance)
+		// generate (draw) clouds from globals.cloudArr
+		for(var i=offset;i<(globals.cloudCount+offset);i++){
+			x			= Math.round( globals.STAGE_WIDTH/globals.cloudCount )*i;	// x position (equal cloud distance)
 			y			= Math.round( (Math.random()-0.5)*30 );		// random y position (offset)
-			color		= "0xffffff";							// generate random color
-			alpha		= 0.3;							// alpha
+			color		= "0xffffff";								// generate random color
+			alpha		= 0.3;										// alpha
 			scaleRnd	= (Math.random())/2+0.2;					// random scaling - maximum +-25%
 
 			var cloud 	= new game.Cloud( x, y, color, alpha, scaleRnd );
 
-			layerBackground.addChild(cloud.shape);
+			globals.layerBackground.addChild(cloud.shape);
 
-			bgCloudArr[i]	= cloud;				//store clouds in a global array too
-
+			globals.bgCloudArr[i]	= cloud;					//store clouds in a global array too
 		}
 
-}
+	}
 
 
 	Main.initStageBgGradient	= function(){
 		// create background gradient
-	    gStageBgGradient	= new createjs.Graphics();
-		gStageBgGradient.colorR	= 80;
-		gStageBgGradient.colorG	= 80;
-		gStageBgGradient.colorB	= 150;
+	    globals.gStageBgGradient	= new createjs.Graphics();
+		globals.gStageBgGradient.colorR	= 80;
+		globals.gStageBgGradient.colorG	= 80;
+		globals.gStageBgGradient.colorB	= 150;
 
-		sStageBgGradient	= new createjs.Shape(gStageBgGradient);
-		return sStageBgGradient;
+		globals.sStageBgGradient	= new createjs.Shape(globals.gStageBgGradient);
+		return globals.sStageBgGradient;
 	}
 
 	// add DnD to a given target shape
@@ -257,8 +267,8 @@ alpha	=1;
 		shape.onPress	= function(evt){
 
 			// store the start position
-			dragAndDropStartX	= shape.x;
-			dragAndDropStartY	= shape.y;
+			globals.dragAndDropStartX	= shape.x;
+			globals.dragAndDropStartY	= shape.y;
 
 			var offset = {x:shape.x-evt.stageX, y:shape.y-evt.stageY};
 
@@ -270,17 +280,17 @@ alpha	=1;
 			}
 			evt.onMouseUp	= function(){
 				tween	= createjs.Tween.get(shape);
-				tween.to({x:dragAndDropStartX,y:dragAndDropStartY},2000,createjs.Ease.elasticOut);
+				tween.to({x:globals.dragAndDropStartX,y:globals.dragAndDropStartY},2000,createjs.Ease.elasticOut);
 			}
 		}
 		shape.onMouseOver = function() {
 			// shape.scaleX = shape.scaleY =1.2;
 				tween	= createjs.Tween.get(shape);
-				tween.to({scaleX:shape.scaleX+0.1,scaleY:shape.scaleY+0.1},300,createjs.Ease.linearOut);
+				tween.to({alpha:.5},200,createjs.Ease.linearOut);
 		}
 		shape.onMouseOut = function() {
 				tween	= createjs.Tween.get(shape);
-				tween.to({scaleX:shape.scaleX-0.1,scaleY:shape.scaleY-0.1},300,createjs.Ease.linearOut);
+				tween.to({alpha:1},300,createjs.Ease.linearOut);
 		}
 	
 	}
@@ -318,7 +328,7 @@ alpha	=1;
 
 			tween.loop=true;
 
-			stage.addChild(s);
+			globals.stage.addChild(s);
 		}
 	}
 
@@ -336,18 +346,18 @@ alpha	=1;
 			sizeY=180;
 		}
 
-		for  ( var i=0; i<cloudArr.length; i++){
+		for  ( var i=0; i<globals.cloudArr.length; i++){
 			//turn on the cache
-			cloudArr[i].shape.cache(130,110,sizeX,sizeY);					// NA EZÉRT SZÍVÁS A DEFAULT FELHŐ OFFSET
+			globals.cloudArr[i].shape.cache(0,0,sizeX,sizeY);					// NA EZÉRT SZÍVÁS A DEFAULT FELHŐ OFFSET
 		}
 	}
 
 
 	Main.turnOffCache	= function(){
 
-		for  ( var i=0; i<cloudArr.length; i++){
+		for  ( var i=0; i<globals.cloudArr.length; i++){
 			//turn on the cache
-			cloudArr[i].shape.uncache();
+			globals.cloudArr[i].shape.uncache();
 		}
 	}
 

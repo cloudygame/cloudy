@@ -9,14 +9,16 @@
 (function (namespace) {
 
 	var Bubble	= function ( inX, inY, inColor ){
-		this.x	= x;
-		this.y	= y;
+		this.x	= inX;
+		this.y	= inY;
 		this.color	= color;
+		this.radius	= 30;
 		this.initSprite();
 		this.initShape();
 	}
 
 
+	Bubble.radius	= null;
 	Bubble.shape	= null;
 	Bubble.graphics	= null;
 
@@ -37,13 +39,12 @@
 		this.graphics.beginRadialGradientFill(["#D1D8F2","#3A5BCB"], [0, 1], 20, 20, 0, 0, 0, 50);
 		this.graphics.setStrokeStyle(3);
 		this.graphics.beginLinearGradientStroke(["#8B9AE2","#E7EAF8"], [0, 1], 0, 0, 60, 60);
-		this.graphics.drawCircle(30, 30, 30);
+		this.graphics.drawCircle(0, 0, this.radius);
 
-
-		this.shape	= new createjs.Shape(this.graphics);
-		this.shape.alpha=0.5;
-		this.shape.x	= STAGE_WIDTH/2-200;
-		this.shape.y	= STAGE_HEIGHT-20;
+		this.shape			= new createjs.Shape(this.graphics);
+		this.shape.alpha	= 0.5;
+		this.shape.x		= globals.STAGE_WIDTH/2-200;
+		this.shape.y		= globals.STAGE_HEIGHT-20;
 
 	}
 
@@ -93,8 +94,8 @@
 		this.bmpAnimation.direction	= 270;
 		this.bmpAnimation.directionPi	= this.bmpAnimation.direction/180*Math.PI;	// degree to radian
 		this.bmpAnimation.speed		= 1;
-		this.bmpAnimation.x			= STAGE_WIDTH/2;
-		this.bmpAnimation.y			= STAGE_HEIGHT;
+		this.bmpAnimation.x			= globals.STAGE_WIDTH/2;
+		this.bmpAnimation.y			= globals.STAGE_HEIGHT;
 	
 		// have each monster start at a specific frame
 		this.bmpAnimation.currentFrame = 0;
