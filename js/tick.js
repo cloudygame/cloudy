@@ -110,5 +110,10 @@ function tick()
 *	- the simpliest and fastest way is the radius testing(two circle collision)
 */
 function collisionTest(){
-
+	for ( var i=0; i<cloudArr.length; i++ ){
+		for ( var j=0; j<bubbleArr.length; j++){
+			
+		}
+	}
 }
+

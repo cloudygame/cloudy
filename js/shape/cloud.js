@@ -80,6 +80,7 @@
 		// I added some random snow to the cloud graphics in this example:
 		// cloudGraphics	= this.testDrawSnow(cloudGraphics);
 		this.drawTestBoundBox();
+		this.drawTestBoundCircle();
 	}
 
 
@@ -143,6 +144,19 @@ console.log( game.Common.getMinXYPointQuadraticJson(inJson));
 		graphics.rect( this.minX, this.minY, this.maxX, this.maxY);
 		graphics.beginStroke('#f55');
 		graphics.rect( 0, 0, this.maxX, this.maxY);
+	}
+
+
+	// for testing show the outer box
+	p.drawTestBoundCircle	= function(){
+		var width	= (this.maxX-this.minX);
+		var height	= (this.maxY-this.minY);
+		var radius	= Math.sqrt( width*width + height*height )/2;
+		graphics	= this.shape.graphics;
+		graphics.endFill();
+		graphics.setStrokeStyle(1);
+		graphics.beginStroke('#fff');
+		graphics.drawCircle( width/2, height/2, radius );
 	}
 
 
