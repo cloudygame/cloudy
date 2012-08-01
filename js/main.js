@@ -190,34 +190,38 @@ $(document).ready( function() {
 
 		var offset	= globals.cloudArr.length;
 
-		// generate (draw) clouds from globals.cloudArr
-		for(var i=offset;i<(globals.cloudCount+offset);i++){
+		// generate (draw) clouds 
+		// add them to globals.cloudArr
+		// draw them on canvas to equal distance
+		for(var i=0;i<(globals.cloudCount);i++){
 			x			= Math.round( globals.STAGE_WIDTH/globals.cloudCount )*i;	// x position (equal cloud distance)
 			y			= Math.round( (Math.random()-0.5)*40 );		// random y position (offset)
 			color		= game.Common.getRandomColor();				// generate random color
 			alpha		= Math.random();							// alpha
-			alpha	=1;
-			scaleRnd	= (Math.random())/2+0.5;					// random scaling - maximum +-25%
+			alpha		= 1;
+			scaleRnd	= (Math.random())/2+0.3;					// random scaling - maximum +-25%
 			var cloud 	= new game.Cloud( x, y, color, alpha, scaleRnd );
+			cloud.shape.alpha	= 0;	// it's a different alpha than drawing alpha!
 
 			globals.layerCloud.addChild(cloud.shape);
 
-			globals.cloudArr[i]	= cloud;		//store clouds in a global array too
-game.Common.log( i );
+			globals.cloudArr[i+offset]	= cloud;		//store clouds in a global array too
+
 		}
 
 		// start the tween effects on every new cloud
 		var tweenArr	= Array();
 		var tmpX,tmpY		= 0;
-		for(var i=offset;i<(globals.cloudCount+offset);i++){
+		for(var i=offset;i<(globals.cloudArr.length);i++){
 			tmpX		= Math.round((Math.random())*1000)-200;
 			tmpY		= Math.round((Math.random()-0.2)*10);
 			tmpAlpha	= Math.random();
 			tweenArr[i] = createjs.Tween.get( globals.cloudArr[i].shape );
 
+			// simple alpha effect:
+			tweenArr[i].to({alpha:1},2000);
 			// more complex movement test:
 			// tweenArr[i].to({x:170,y:50,alpha:0.1},4000, createjs.Ease.elasticInOut ).to({x:tmpX, y:tmpY, alpha:0.9},4000, createjs.Ease.bounceInOut).to( {rotation:360}, 4000, createjs.Ease.elasticInOut );
-			// tweenArr[i].to({alpha:1},1000);
 
 			// add simple drag'n drop to every cloud shape
 			Main.addShapeDragAndDrop( globals.cloudArr[i].shape );
