@@ -196,13 +196,14 @@ $(document).ready( function() {
 		for(var i=0;i<(globals.cloudCount);i++){
 			x			= Math.round( globals.STAGE_WIDTH/(globals.cloudCount+1) )*(i+1)+ Math.round( (Math.random()-0.5)*50 );	// x position (equal cloud distance)
 			y			= 50+Math.round( (Math.random()-0.5)*10 );		// random y position (offset)
-			color		= game.Common.getRandomColor();				// generate random color
+			// color		= game.Common.getRandomColor();				// generate random color
+			color		= cloudColorJson[(Math.round(Math.random()*cloudColorJson.length))];
 			alpha		= Math.random();							// alpha
 			alpha		= 1;
 			scaleRnd	= (Math.random())/2+0.3;					// random scaling - maximum +-25%
 			var cloud 	= new game.Cloud( x, y, color, alpha, scaleRnd );
 			cloud.shape.alpha	= 0;	// it's a different alpha than drawing alpha!
-
+game.Common.log(cloudColorJson[(Math.round(Math.random()*cloudColorJson.length))]);
 			globals.layerCloud.addChild(cloud.shape);
 
 			globals.cloudArr[i+offset]	= cloud;		//store clouds in a global array too
@@ -219,7 +220,7 @@ $(document).ready( function() {
 			tweenArr[i] = createjs.Tween.get( globals.cloudArr[i].shape );
 
 			// simple alpha effect:
-			tweenArr[i].to({alpha:1},2000);
+			tweenArr[i].to({alpha:0.9},2000);
 			// more complex movement test:
 			// tweenArr[i].to({x:170,y:50,alpha:0.1},4000, createjs.Ease.elasticInOut ).to({x:tmpX, y:tmpY, alpha:0.9},4000, createjs.Ease.bounceInOut).to( {rotation:360}, 4000, createjs.Ease.elasticInOut );
 

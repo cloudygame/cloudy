@@ -115,6 +115,16 @@
 	}
 
 
+	p.getCenterX	= function(){
+		var centerX = this.shape.x+this.radius;
+		return centerX;
+	}
+
+	p.getCenterY	= function(){
+		var centerY = this.shape.y+this.radius;
+		return centerY;
+	}
+
 
 
 // connect the Bubble to the game namespace

@@ -23,6 +23,7 @@
 		this.fillColor	= inFillColor;
 		this.scaleRnd	= inScaleRnd;
 		this.initialize( inX,inY, inFillColor, inAlpha, inScaleRnd );
+		
 	}
 
 	// object variables
@@ -36,6 +37,9 @@
 	Cloud.maxY		= null;
 	Cloud.minX		= null;
 	Cloud.minY		= null;
+	Cloud.radius	= null;
+	Cloud.width		= null;
+	Cloud.height	= null;
 
 
 
@@ -74,6 +78,10 @@
 
 		this.shape	= cloudShape;
 
+		this.width	= (this.maxX-this.minX);
+		this.height	= (this.maxY-this.minY);
+		this.radius	= Math.sqrt( this.width*this.width + this.height*this.height )/2;
+
 
 		// ** TESTING: 
 		this.addShadow();
@@ -95,6 +103,16 @@
 	p.getCurrentX	= function(){
 		var currWidth	= this.shape.x-((this.maxX)-this.getCurrentWidth())/2;
 		return currWidth;
+	}
+
+	p.getCenterX	= function(){
+		var centerX = this.shape.x+this.width/2;
+		return centerX;
+	}
+
+	p.getCenterY	= function(){
+		var centerY = this.shape.y+this.height/2;
+		return centerY;
 	}
 
 
@@ -162,14 +180,11 @@
 
 	// for testing show the outer box
 	p.drawTestBoundCircle	= function(){
-		var width	= (this.maxX-this.minX);
-		var height	= (this.maxY-this.minY);
-		var radius	= Math.sqrt( width*width + height*height )/2;
 		graphics	= this.shape.graphics;
 		graphics.endFill();
 		graphics.setStrokeStyle(1);
 		graphics.beginStroke('#fff');
-		graphics.drawCircle( width/2, height/2, radius );
+		graphics.drawCircle( this.width/2, this.height/2, this.radius );
 
 		graphics.drawCircle( this.shape.regX, this.shape.regY, 20 );
 	}

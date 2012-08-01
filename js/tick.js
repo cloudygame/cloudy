@@ -1,3 +1,7 @@
+/*
+*	tick = Easeljs timer
+*/
+
 
 //function called by the Tick instance at a set interval
 function tick()
@@ -54,11 +58,11 @@ function tick()
 				var cloud		= globals.bgCloudArr[i];
 				var offsetScale	= cloud.maxX;//  cloudShape.scaleX
 				if ( cloud.getCurrentX() < globals.STAGE_WIDTH ){
-					cloudShape.x += 6;
+					cloudShape.x += 2;
 				} else {
-					console.log( cloud.getCurrentX()+ " W:" +cloud.getCurrentWidth() + " xxx " +cloudShape.x +","+ cloudShape.regX + " XXX " +(0 - cloud.maxX+cloud.minX) );
+					// console.log( cloud.getCurrentX()+ " W:" +cloud.getCurrentWidth() + " xxx " +cloudShape.x +","+ cloudShape.regX + " XXX " +(0 - cloud.maxX+cloud.minX) );
 					cloudShape.x = 0 - (cloud.maxX+cloud.minX) + ((cloud.maxX+cloud.minX)-cloud.getCurrentWidth())/2;
-					console.log( "X" + cloudShape.x );
+					// console.log( "X" + cloudShape.x );
 				}
 
 			}
@@ -88,7 +92,7 @@ function tick()
 
 			    // calculate the offset vector
 				var angle	= bmpAnimation.direction*0.0174533;		// (Math.PI/180)
-				var radius	= bmpAnimation.speed*2;
+				var radius	= bmpAnimation.speed*4;
 				var x	= Math.round(Math.cos(angle) * radius);
 				var y	= Math.round(Math.sin(angle) * radius);
 
@@ -105,6 +109,11 @@ function tick()
 		}
 		// end bubble movement
 
+
+		// 
+		collisionTest();
+
+
 		//re-render the stage
 		globals.stage.update();
 	}
@@ -120,8 +129,18 @@ function tick()
 */
 function collisionTest(){
 	for ( var i=0; i<globals.cloudArr.length; i++ ){
-		for ( var j=0; j<globals.bubbleArr.length; j++){
-			
+		for ( var j=0; j<globals.bubbleArr.length; j++){ 
+			var currCloud	= globals.cloudArr[i];
+			var currBubble	= globals.bubbleArr[j];
+			var cx	= currCloud.getCenterX();
+			var cy	= currCloud.getCenterY();
+			var bx	= currBubble.getCenterX();
+			var by	= currBubble.getCenterY();
+			// calculate distance:
+			distance	= Math.sqrt( (cx-bx)*(cx-bx) + (cy-by)*(cy-by) ); 
+			if( distance<(currCloud.radius+currBubble.radius)){
+				console.log("dist:"+distance + " clR:" +currCloud.radius +" curr bubble R:"+currBubble.radius);
+			}
 		}
 	}
 }
