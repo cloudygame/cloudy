@@ -5,11 +5,13 @@ UI:
 - cloud drag and drop: you can drag the cloud and after drop it will go back to the drag start position
 - draw: sun, cloud, bubble, grass
 - moving stars in the background
+- background clouds + movement
 
 Other:
 - cache: you can test caching when you click on the right side buttons
 - tween effects
 - energy sparing: turn off drawing when window blur occurs
 - grass: generated grass
+- grass: infinite grass rotation
 - bubble: sprite and gradient filled shape version
 - sun: generated shape with simple tween motion

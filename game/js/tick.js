@@ -102,3 +102,13 @@ function tick()
 }
 
 
+
+/*
+*	Bubble - Cloud collision tester function
+*
+*	- test every bubble with every cloud
+*	- the simpliest and fastest way is the radius testing(two circle collision)
+*/
+function collisionTest(){
+
+}

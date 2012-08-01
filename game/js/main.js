@@ -188,8 +188,6 @@ $(document).ready( function() {
 alpha	=1;
 			var cloud 	= new game.Cloud( x, y, color, alpha, scaleRnd );
 
-			cloud.addShadow();
-
 			layerCloud.addChild(cloud.shape);
 
 			cloudArr[i]	= cloud;				//store clouds in a global array too

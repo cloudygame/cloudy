@@ -15,10 +15,10 @@
 	*	the Cloud object and constructor
 	*/
 	var Cloud	= function( inX,inY, inFillColor, inAlpha, inScaleRnd ){
-		this.maxX		= 0;
-		this.maxY		= 0;
-		this.minX		= 1000;
-		this.minY		= 1000;	
+		// this.maxX		= 0;
+		// this.maxY		= 0;
+		// this.minX		= 1000;
+		// this.minY		= 1000;	
 
 		this.fillColor	= inFillColor;
 		this.scaleRnd	= inScaleRnd;
@@ -50,6 +50,9 @@
 		var jsonStr = '{"fillColor":"'+inFillColor+'","alpha":"'+inAlpha+'","strokeStyle":6,"moveTo":{"x":140,"y":200},"quadraticCurveTo":[{"x":135,"y":155,"ref_x":180,"ref_y":150},{"x":220,"y":110,"ref_x":260,"ref_y":130},{"x":300,"y":100,"ref_x":340,"ref_y":130},{"x":390,"y":125,"ref_x":400,"ref_y":170},{"x":440,"y":190,"ref_x":420,"ref_y":230},{"x":420,"y":270,"ref_x":380,"ref_y":270},{"x":340,"y":290,"ref_x":300,"ref_y":270},{"x":260,"y":290,"ref_x":220,"ref_y":270},{"x":185,"y":275,"ref_x":170,"ref_y":250},{"x":185,"y":275,"ref_x":170,"ref_y":250},{"x":130,"y":240,"ref_x":140,"ref_y":200}]}';
 		var cloudData = jQuery.parseJSON(jsonStr);
 
+		// adjust cloud to the upper left corner
+		cloudData	= game.Common.getAdjustedQuadraticJson( cloudData );
+
 		var cloudGraphics	= new createjs.Graphics();
 		cloudGraphics	= this.drawQuadraticJson(cloudGraphics, cloudData);
 
@@ -69,11 +72,14 @@
 
 		this.shape	= cloudShape;
 
+
 		// ** TESTING: 
+		this.addShadow();
 		this.testGetDataOnDoubleClick();
 		// Multiple drawing methods are possible in the same Graphics instance.
 		// I added some random snow to the cloud graphics in this example:
 		// cloudGraphics	= this.testDrawSnow(cloudGraphics);
+		this.drawTestBoundBox();
 	}
 
 
@@ -103,13 +109,6 @@
 		graphics.moveTo(inJson["moveTo"]["x"], inJson["moveTo"]["y"]);
 
 		for (var i=0; i<inJson.quadraticCurveTo.length; i++){
-			var x		= Number(inJson["quadraticCurveTo"][i]["x"]);
-			var y		= Number(inJson["quadraticCurveTo"][i]["y"]);
-			this.maxX	= this.maxX < x ? x : this.maxX;
-			this.maxY	= this.maxY < y ? y : this.maxX;
-			this.minX	= this.minX > x ? x : this.minX;
-			this.minY	= this.minY > y ? y : this.minY;
-console.log(this.maxX + " x:" + x);
 			graphics.quadraticCurveTo( 
 				inJson["quadraticCurveTo"][i]["x"],
 				inJson["quadraticCurveTo"][i]["y"],
@@ -118,8 +117,32 @@ console.log(this.maxX + " x:" + x);
 				);
 		}
 
+		// set the min/max coords of the drawed cloud
+		minXY	= game.Common.getMinXYPointQuadraticJson( inJson );
+		maxXY	= game.Common.getMaxXYPointQuadraticJson( inJson );
+		this.maxX	= maxXY.x;
+		this.maxY	= maxXY.y;
+		this.minX	= minXY.x;
+		this.minY	= minXY.y;
+
+console.log( game.Common.getMaxXYPointQuadraticJson(inJson));
+console.log( game.Common.getMinXYPointQuadraticJson(inJson));
+
 		graphics.closePath();
 		return graphics;
+	}
+
+
+
+	// for testing show the outer box
+	p.drawTestBoundBox	= function(){
+		graphics	= this.shape.graphics;
+		graphics.endFill();
+		graphics.setStrokeStyle(1);
+		graphics.beginStroke('#fff');
+		graphics.rect( this.minX, this.minY, this.maxX, this.maxY);
+		graphics.beginStroke('#f55');
+		graphics.rect( 0, 0, this.maxX, this.maxY);
 	}
 
 
