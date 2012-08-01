@@ -11,6 +11,7 @@
 	// Layers, stages
 	var layerCloud;		// normal cloud layer
 	var layerBgCloud;	// background layer
+	var layerBubble;
 	var stage;
 	
 	var STAGE_WIDTH				= 900;
@@ -20,6 +21,7 @@
 	
 	// Cloud parameters
 	var cloudArr				= new Array();
+	var bgCloudArr				= new Array();
 	var cloudCount				= 3;
 	
 	// Bubbles
@@ -43,7 +45,8 @@
 	var dragAndDropStartY	= null;
 
 	// stage background
-	var gStageBackground;			// stage background gradient graphic
+	var gStageBgGradient;			// graphics obj of the gradient stage background 
+	var sStageBgGradient;			// shape obj
 	var StageBackgroundStars;
 
 
@@ -51,6 +54,7 @@
 
 
 	var	grassArr		= new Array();
+
 
 /*
 *	the Main function
@@ -68,51 +72,70 @@ $(document).ready( function() {
 
 	/* A stage is the root level Container for a display list. Each time its tick method is called, it will render its display list to its target canvas. */
 	stage		= new createjs.Stage(canvas);
+
+
+	/*
+	* Create layers in proper order
+	*/
+
+	// *** Create main layers ***
+	layerBackground	= new createjs.Container();
+	stage.addChild(layerBackground);
+
+	layerBubble	= new createjs.Container();
+	stage.addChild(layerBubble);
+
 	layerCloud	= new createjs.Container();
+	stage.addChild(layerCloud);
 
 
-	// create bakcground
-    gStageBackground	= new createjs.Graphics();
-	gStageBackground.colorR	= 80;
-	gStageBackground.colorG	= 80;
-	gStageBackground.colorB	= 150;
-	var background	= new createjs.Shape(gStageBackground);
-	stage.addChild(background);
+	// *** Fill the layers ***
+
+	// ** Background **
+	sStageBgGradient	= game.Main.initStageBgGradient();
+	layerBackground.addChild( sStageBgGradient );
 
 	// stars
     var StageBackgroundStars	= new game.Star();
-    stage.addChild(StageBackgroundStars.shape);
-		
+    layerBackground.addChild(StageBackgroundStars.shape);
+
 	var starsTween = createjs.Tween.get( StageBackgroundStars.shape );
-	starsTween.to({alpha:0.3},6000).to({alpha:1,rotation:9},30000).to({alpha:0,rotation:9},150000);
+	starsTween.to({alpha:1},6000).to({alpha:1,rotation:17},20000);
 
+	// background clouds
+	game.Main.initBgCloud();
 
-	// initialize clouds
-	game.Main.initClouds();
-	// stage.enableMouseOver();
-
+	// sun
 	var sun	= new game.Sun();
-	stage.addChild(sun.shape);
-
+	layerBackground.addChild(sun.shape);
 
 	// draw grass
 	grassArr[0]	= new game.Grass( 0, STAGE_HEIGHT-60);
 	grassArr[0].shape.alpha = 0.6;
-	stage.addChild(grassArr[0].shape);
+	layerBackground.addChild(grassArr[0].shape);
 
 	grassArr[1]	= new game.Grass( 0, STAGE_HEIGHT-40);
-	stage.addChild(grassArr[1].shape);
+	layerBackground.addChild(grassArr[1].shape);
 
 
-	// sprite and shape Bubble Test
+	// ** initialize clouds into layerCloud **
+	game.Main.initClouds();
+
+
+
+	// ** sprite and shape Bubble Test **
 	var	i	= 0;
 	bubbleArr[i]	= new game.Bubble( 30, 30, game.Common.getRandomColor() );
-	// the test bubble is ellipsoid a bit ...
+	// the test bubble image is ellipsoid a bit ... khmm
 	bubbleArr[i].bmpAnimation.scaleX	= 0.7;
+    layerBubble.addChild(bubbleArr[i].bmpAnimation);
+    // the shape isn't
+	layerBubble.addChild(bubbleArr[i].shape);
 
-	stage.addChild(bubbleArr[i].shape);
-    stage.addChild(bubbleArr[i].bmpAnimation);
 
+	/*
+	*	Other neccessary settings
+	*/
 
 	// set the global ticker which used by tween.js and easeljs animations
 	createjs.Ticker.setFPS(30);
@@ -129,8 +152,15 @@ $(document).ready( function() {
 		createjs.Ticker.setPaused(false);
 	});
 
+
+	// ONLY FOR TESTING!! this is a performance killer line
+	stage.enableMouseOver(10);
+
+	stage.update();
+
 }
 );
+// *** end $(document).ready function
 
 
 
@@ -155,7 +185,7 @@ $(document).ready( function() {
 			color		= game.Common.getRandomColor();							// generate random color
 			alpha		= Math.random();							// alpha
 			scaleRnd	= (Math.random())/2+0.5;					// random scaling - maximum +-25%
-
+alpha	=1;
 			var cloud 	= new game.Cloud( x, y, color, alpha, scaleRnd );
 
 			cloud.addShadow();
@@ -177,24 +207,51 @@ $(document).ready( function() {
 
 			// complex movement for tests
 			// tweenArr[i].to({x:170,y:50,alpha:0.1},4000, createjs.Ease.elasticInOut ).to({x:tmpX, y:tmpY, alpha:0.9},4000, createjs.Ease.bounceInOut).to( {rotation:360}, 4000, createjs.Ease.elasticInOut );
-			tweenArr[i].to({alpha:0.9},1000);
+			// tweenArr[i].to({alpha:1},1000);
 
 			// add simple drag'n drop to every cloud shape
 			Main.addShapeDragAndDrop( cloudArr[i].shape );
 		}
 
 
-		stage.addChild(layerCloud);
-
-		// ONLY FOR TESTING!! performance killer line
-		stage.enableMouseOver(10);
-
-		stage.update();
-
 	}	// end Main.initClouds
 
 
 
+	Main.initBgCloud	= function(){
+
+
+		var offset	= bgCloudArr.length;
+
+		// generate (draw) clouds from cloudArr
+		for(var i=offset;i<(cloudCount+offset);i++){
+			x			= Math.round( STAGE_WIDTH/cloudCount )*i;	// x position (equal cloud distance)
+			y			= Math.round( (Math.random()-0.5)*30 );		// random y position (offset)
+			color		= "0xffffff";							// generate random color
+			alpha		= 0.3;							// alpha
+			scaleRnd	= (Math.random())/2+0.2;					// random scaling - maximum +-25%
+
+			var cloud 	= new game.Cloud( x, y, color, alpha, scaleRnd );
+
+			layerBackground.addChild(cloud.shape);
+
+			bgCloudArr[i]	= cloud;				//store clouds in a global array too
+
+		}
+
+}
+
+
+	Main.initStageBgGradient	= function(){
+		// create background gradient
+	    gStageBgGradient	= new createjs.Graphics();
+		gStageBgGradient.colorR	= 80;
+		gStageBgGradient.colorG	= 80;
+		gStageBgGradient.colorB	= 150;
+
+		sStageBgGradient	= new createjs.Shape(gStageBgGradient);
+		return sStageBgGradient;
+	}
 
 	// add DnD to a given target shape
 	Main.addShapeDragAndDrop	= function( shape ){

@@ -12,22 +12,48 @@ function tick()
 		*	1. simple background transition
 		*/
 		if (createjs.Ticker.getTicks()%30 == 0){
-			bgGraphics	= gStageBackground;
-			var color	= createjs.Graphics.getRGB( gStageBackground.colorR, gStageBackground.colorG, gStageBackground.colorB, 0.1 );
+			bgGraphics	= gStageBgGradient;
+			var color	= createjs.Graphics.getRGB( gStageBgGradient.colorR, gStageBgGradient.colorG, gStageBgGradient.colorB, 0.1 );
 
 		    // change stage background color
 			bgGraphics.beginFill( color );
-			bgGraphics.setStrokeStyle(3);
-			bgGraphics.beginStroke('#fff');
 			bgGraphics.rect(0,0,STAGE_WIDTH, STAGE_HEIGHT);
 			bgGraphics.endStroke();
 		}
 
+		/*
+		*	2. Grass effects
+		*/
 		// grass bend
 		if (createjs.Ticker.getTicks() % 3 == 0){
-			for( var i=0; i<grassArr.length; i++){
 				// console.log(grassJsonDataArr[i]["quadraticCurveTo"][0]["x"]);
-				grassArr[i].bend();
+				grassArr[1].bend();
+		}
+		if (createjs.Ticker.getTicks() % 6 == 0){
+				// console.log(grassJsonDataArr[i]["quadraticCurveTo"][0]["x"]);
+				grassArr[0].bend();
+		}
+
+		// grass rotation
+		if (createjs.Ticker.getTicks() % 3 == 0){
+				// console.log(grassJsonDataArr[i]["quadraticCurveTo"][0]["x"]);
+				grassArr[1].offsetX	+= 1;
+		}
+
+		grassArr[0].draw();
+		grassArr[1].draw();
+
+
+		// background cloud rotation
+		if ( createjs.Ticker.getTicks() % 1 == 0 ){
+			for( var i=0;i<bgCloudArr.length; i++){
+				if ( (bgCloudArr[i].shape.x) < STAGE_WIDTH ){
+					bgCloudArr[i].shape.x += 2;
+				} else {
+ // console.log(bgCloudArr[i]);	
+					bgCloudArr[i].shape.x = 0 - bgCloudArr[i].maxX+bgCloudArr[i].minX;
+				}
+
 			}
 		}
 
@@ -74,6 +100,5 @@ function tick()
 		stage.update();
 	}
 }
-
 
 

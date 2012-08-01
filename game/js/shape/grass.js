@@ -11,6 +11,9 @@
 		this.graphics			= null;
 		this.bending			= 0;			// bending of the grass (hajlás)
 		this.bendingDirection	= 1;			// bending of the grass (hajlás)
+		this.bladeDistance		= 10;
+		this.offsetX			= 0;			// offset in pixel
+		this.numberOfBlades	=91;
 		
 		this.initialize();
 		this.shape.x	= (typeof offsetX == "undefined") ? 0 : offsetX;	// set default value
@@ -25,6 +28,9 @@
 	Grass.graphics			= null;
 	Grass.bending			= null;
 	Grass.bendingDirection	= null;
+	Grass.bladeDistance		= null;		// blade of grass generation offset in pixel (pixel between neighbourgh blades)
+	Grass.offsetX			= null;
+	Grass.numberOfBlades	= null;
 
 
 	var p	=	Grass.prototype;
@@ -40,7 +46,7 @@
 	
 		var offsetX	= 0;
 		// generate the grass json arr
-		for ( var i=0;i<91;i++){
+		for ( var i=0;i<this.numberOfBlades;i++){
 			offsetX	= i*10;
 			this.graphics.beginLinearGradientFill( [this.grassStartColor,this.grassEndColor], [0.3,1], 0+offsetX,100, 30+offsetX,0 );
 			this.grassJsonDataArr[i]	= this.getRandomBladeOfGrassJSON( offsetX,6 );
@@ -52,11 +58,13 @@
 		this.shape.y	= STAGE_HEIGHT-50;
 		this.shape.scaleX	= 1;
 		this.shape.scaleY	= 1;
+
 	}
 
 
 
-	// bendding effect: redraw the grass with offseted edge
+	// bending effect: redraw the grass with offseted edge
+	// e.g. when wind blows
 	p.bend	= function(){
 
 		var	bendingLimit	= 10;
@@ -69,25 +77,35 @@
 		} else {}
 
 		this.bending	+= this.bendingDirection;
-
-		shape	= this.shape;
-
-		// shape.graphics	= new createjs.Graphics();
-		shape.graphics.clear();
-		shape.graphics.setStrokeStyle(1).beginLinearGradientStroke(["#000","#FFF"], [0, 1], 100, 100, 440, 300);
 	
 		// console.log(this.grassJsonDataArr[0]["quadraticCurveTo"][0]["x"]);
 
 		// change every blade-s edge coord
-		for ( var i=0;i<91;i++){
+		for ( var i=0;i<this.numberOfBlades;i++){
 			this.grassJsonDataArr[i]["quadraticCurveTo"][0]["x"] += this.bendingDirection;
-
-			offsetX	= i*10;
-			shape.graphics.beginLinearGradientFill( [this.grassStartColor,this.grassEndColor], [0.3,1], 0+offsetX,100, 30+offsetX,0 );
-			// this.grassJsonDataArr[i]	= this.getRandomBladeOfGrassJSON( offsetX,6 );
-			shape.graphics	= game.Common.drawQuadraticJson(this.graphics, this.grassJsonDataArr[i]);
 		}
 
+	}
+
+
+	p.draw	= function (){
+		shape	= this.shape;
+
+		shape.graphics.clear();
+		shape.graphics.setStrokeStyle(1).beginLinearGradientStroke(["#000","#FFF"], [0, 1], 100, 100, 440, 300);
+
+		for ( var i=0;i<this.numberOfBlades;i++){
+			lastBlade	= this.numberOfBlades - Math.floor(this.offsetX/this.bladeDistance);
+			if (i>=lastBlade) {
+				tmpOffsetX	= this.offsetX - this.numberOfBlades*this.bladeDistance;
+			}else{
+				tmpOffsetX	= this.offsetX;
+			}
+			gradientOffsetX	= i*this.bladeDistance+tmpOffsetX;
+
+			shape.graphics.beginLinearGradientFill( [this.grassStartColor,this.grassEndColor], [0.3,1], 0+gradientOffsetX,100, 30+gradientOffsetX,0 );
+			shape.graphics	= game.Common.drawQuadraticJson(this.graphics, this.grassJsonDataArr[i], tmpOffsetX);
+		}
 	}
 
 

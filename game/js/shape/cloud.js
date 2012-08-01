@@ -15,6 +15,11 @@
 	*	the Cloud object and constructor
 	*/
 	var Cloud	= function( inX,inY, inFillColor, inAlpha, inScaleRnd ){
+		this.maxX		= 0;
+		this.maxY		= 0;
+		this.minX		= 1000;
+		this.minY		= 1000;	
+
 		this.fillColor	= inFillColor;
 		this.scaleRnd	= inScaleRnd;
 		this.initialize( inX,inY, inFillColor, inAlpha, inScaleRnd );
@@ -27,6 +32,10 @@
 	// Cloud.alpha		= 0;
 	Cloud.scaleRnd	= 0;			// to the scale for size randomizing
 	Cloud.shape		= null;			// generated after the initialize()
+	Cloud.maxX		= null;
+	Cloud.maxY		= null;
+	Cloud.minX		= null;
+	Cloud.minY		= null;
 
 
 
@@ -94,6 +103,13 @@
 		graphics.moveTo(inJson["moveTo"]["x"], inJson["moveTo"]["y"]);
 
 		for (var i=0; i<inJson.quadraticCurveTo.length; i++){
+			var x		= Number(inJson["quadraticCurveTo"][i]["x"]);
+			var y		= Number(inJson["quadraticCurveTo"][i]["y"]);
+			this.maxX	= this.maxX < x ? x : this.maxX;
+			this.maxY	= this.maxY < y ? y : this.maxX;
+			this.minX	= this.minX > x ? x : this.minX;
+			this.minY	= this.minY > y ? y : this.minY;
+console.log(this.maxX + " x:" + x);
 			graphics.quadraticCurveTo( 
 				inJson["quadraticCurveTo"][i]["x"],
 				inJson["quadraticCurveTo"][i]["y"],

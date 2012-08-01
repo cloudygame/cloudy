@@ -51,16 +51,20 @@ Common.log	= function ( text ){
 *		* ref_x
 *		* ref_y
 *	- closepath: true/false (true by default)
+*
+*	offsetX: optional
 */
-Common.drawQuadraticJson	= function( graphics, inJson ){
+Common.drawQuadraticJson	= function( graphics, inJson, inOffsetX ){
 
-		graphics.moveTo(inJson["moveTo"]["x"], inJson["moveTo"]["y"]);
+		var offsetX	= (typeof inOffsetX=="undefined") ? 0 : inOffsetX;
+
+		graphics.moveTo(inJson["moveTo"]["x"]+offsetX, inJson["moveTo"]["y"]);
 
 		for (var i=0; i<inJson.quadraticCurveTo.length; i++){
 			graphics.quadraticCurveTo( 
-				inJson["quadraticCurveTo"][i]["ref_x"],
+				inJson["quadraticCurveTo"][i]["ref_x"]+offsetX,
 				inJson["quadraticCurveTo"][i]["ref_y"],
-				inJson["quadraticCurveTo"][i]["x"],
+				inJson["quadraticCurveTo"][i]["x"]+offsetX,
 				inJson["quadraticCurveTo"][i]["y"]
 				);
 		}
