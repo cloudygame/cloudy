@@ -65,6 +65,8 @@
 		// Peti: The graphics object exists only virtual. We cannot draw it onto the canvas in normal way. (It's possible but not a good idea.)
 		// So we need to add it to a new createjs.Shape.
 		var cloudShape	= new createjs.Shape(cloudGraphics);
+		cloudShape.regX	= (this.maxX-this.minX)/2;		// set the reg points to the center
+		cloudShape.regY	= (this.maxY-this.minY)/2;
 		cloudShape.x	= inX;
 		cloudShape.y	= inY;
 		cloudShape.scaleX	= inScaleRnd;
@@ -83,6 +85,17 @@
 		this.drawTestBoundCircle();
 	}
 
+	// return with the current, scaled width
+	p.getCurrentWidth	= function(){
+		var currWidth	= (this.maxX)*this.shape.scaleX;
+		return currWidth;
+	}
+
+	// return with the scaled cloud X coord
+	p.getCurrentX	= function(){
+		var currWidth	= this.shape.x-((this.maxX)-this.getCurrentWidth())/2;
+		return currWidth;
+	}
 
 
 	/*
@@ -157,6 +170,8 @@
 		graphics.setStrokeStyle(1);
 		graphics.beginStroke('#fff');
 		graphics.drawCircle( width/2, height/2, radius );
+
+		graphics.drawCircle( this.shape.regX, this.shape.regY, 20 );
 	}
 
 

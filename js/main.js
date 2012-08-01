@@ -194,8 +194,8 @@ $(document).ready( function() {
 		// add them to globals.cloudArr
 		// draw them on canvas to equal distance
 		for(var i=0;i<(globals.cloudCount);i++){
-			x			= Math.round( globals.STAGE_WIDTH/globals.cloudCount )*i;	// x position (equal cloud distance)
-			y			= Math.round( (Math.random()-0.5)*40 );		// random y position (offset)
+			x			= Math.round( globals.STAGE_WIDTH/(globals.cloudCount+1) )*(i+1)+ Math.round( (Math.random()-0.5)*50 );	// x position (equal cloud distance)
+			y			= 50+Math.round( (Math.random()-0.5)*10 );		// random y position (offset)
 			color		= game.Common.getRandomColor();				// generate random color
 			alpha		= Math.random();							// alpha
 			alpha		= 1;
@@ -238,8 +238,8 @@ $(document).ready( function() {
 
 		// generate (draw) clouds from globals.cloudArr
 		for(var i=offset;i<(globals.cloudCount+offset);i++){
-			x			= Math.round( globals.STAGE_WIDTH/globals.cloudCount )*i;	// x position (equal cloud distance)
-			y			= Math.round( (Math.random()-0.5)*30 );		// random y position (offset)
+			x			= Math.round( globals.STAGE_WIDTH/(globals.cloudCount+1) )*(i)  + Math.round( (Math.random()-0.5)*200 );	// x position (equal cloud distance)
+			y			= 100 + Math.round( (Math.random()-0.5)*20 );		// random y position (offset)
 			color		= "0xffffff";								// generate random color
 			alpha		= 0.3;										// alpha
 			scaleRnd	= (Math.random())/2+0.2;					// random scaling - maximum +-25%

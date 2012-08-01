@@ -46,14 +46,19 @@ function tick()
 
 
 		/*
-		* Background cloud rotation
+		* Background cloud "rotation"
 		*/
 		if ( createjs.Ticker.getTicks() % 1 == 0 ){
 			for( var i=0;i<globals.bgCloudArr.length; i++){
-				if ( (globals.bgCloudArr[i].shape.x) < globals.STAGE_WIDTH ){
-					globals.bgCloudArr[i].shape.x += 2;
+				var cloudShape	= globals.bgCloudArr[i].shape;
+				var cloud		= globals.bgCloudArr[i];
+				var offsetScale	= cloud.maxX;//  cloudShape.scaleX
+				if ( cloud.getCurrentX() < globals.STAGE_WIDTH ){
+					cloudShape.x += 6;
 				} else {
-					globals.bgCloudArr[i].shape.x = 0 - globals.bgCloudArr[i].maxX+globals.bgCloudArr[i].minX;
+					console.log( cloud.getCurrentX()+ " W:" +cloud.getCurrentWidth() + " xxx " +cloudShape.x +","+ cloudShape.regX + " XXX " +(0 - cloud.maxX+cloud.minX) );
+					cloudShape.x = 0 - (cloud.maxX+cloud.minX) + ((cloud.maxX+cloud.minX)-cloud.getCurrentWidth())/2;
+					console.log( "X" + cloudShape.x );
 				}
 
 			}
