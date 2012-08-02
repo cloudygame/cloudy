@@ -66,7 +66,7 @@
 		var radius	= this.speed*4;
 		var moveX	= Math.round(Math.cos(radian) * radius);
 		var moveY	= Math.round(Math.sin(radian) * radius);
-console.log( "dir" + radian + " --" + moveX + " - " + moveY);
+
 		this.shape.x		+= moveX;
 		this.shape.y		+= moveY;
 	}

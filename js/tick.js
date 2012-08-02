@@ -31,22 +31,25 @@ function tick()
 		*/
 		// grass bend
 		if (createjs.Ticker.getTicks() % 3 == 0){
-				// console.log(grassJsonDataArr[i]["quadraticCurveTo"][0]["x"]);
-				globals.grassArr[1].bend();
+			// game.Common.log( "tick: Grass draw start" );	// time measurement START
+			globals.grassArr[1].bend();
 		}
 		if (createjs.Ticker.getTicks() % 6 == 0){
-				// console.log(grassJsonDataArr[i]["quadraticCurveTo"][0]["x"]);
-				globals.grassArr[0].bend();
+			globals.grassArr[0].bend();
 		}
 
 		// grass rotation
 		if (createjs.Ticker.getTicks() % 3 == 0){
-				// console.log(grassJsonDataArr[i]["quadraticCurveTo"][0]["x"]);
-				globals.grassArr[1].offsetX	+= 1;
+			// console.log(grassJsonDataArr[i]["quadraticCurveTo"][0]["x"]);
+			globals.grassArr[1].offsetX	+= 1;
 		}
 
-		globals.grassArr[0].draw();
-		globals.grassArr[1].draw();
+		// the draw is needed only on tick/3
+		if (createjs.Ticker.getTicks() % 3 == 0){
+			globals.grassArr[0].draw();
+			globals.grassArr[1].draw();
+			// game.Common.log( "tick: Grass draw end" );	// time measurement END
+		}
 
 
 		/*
@@ -96,42 +99,14 @@ function tick()
 		// end bubble movement
 
 
-		//
-
+		// check it on every 10th tick
 		if ( createjs.Ticker.getTicks() % 10 == 0 ){
-			collisionRadiusTest();
+			collision.RadiusTest();
 		}
 
 
 		//re-render the stage
 		globals.stage.update();
-	}
-}
-
-
-
-/*
-*	Bubble - Cloud collision tester function
-*
-*	- test every bubble with every cloud
-*	- the simpliest and fastest way is the radius testing(two circle collision)
-*/
-function collisionRadiusTest(){
-	for ( var i=0; i<globals.cloudArr.length; i++ ){
-		for ( var j=0; j<globals.bubbleArr.length; j++){ 
-			var currCloud	= globals.cloudArr[i];
-			var currBubble	= globals.bubbleArr[j];
-			var cx	= currCloud.shape.x;
-			var cy	= currCloud.shape.y;
-			var bx	= currBubble.shape.x;
-			var by	= currBubble.shape.y;
-			// calculate distance:
-			distance	= Math.sqrt( (cx-bx)*(cx-bx) + (cy-by)*(cy-by) ); 
-			if( distance<(currCloud.scaledRadius+currBubble.scaledRadius)){
-				console.log("Collision:   Bubble:" + j + " Cloud:" + i);
-			}
-				// console.log(" cx:" + cx + " cy:" + cy + " bx:" + bx +  " by:" + by +  " dist:"+distance + " cloud R:" + Math.round(currCloud.scaledRadius) +" bubble R:"+currBubble.scaledRadius);
-		}
 	}
 }
 

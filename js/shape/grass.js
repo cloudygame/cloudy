@@ -68,6 +68,8 @@
 	p.bend	= function(){
 
 		var	bendingLimit	= 10;
+		var jsonArr			= this.grassJsonDataArr;
+		var numberOfBlades	= this.numberOfBlades;
 
 		// set the direction
 		if (this.bending > bendingLimit) {
@@ -78,24 +80,23 @@
 
 		this.bending	+= this.bendingDirection;
 	
-		// console.log(this.grassJsonDataArr[0]["quadraticCurveTo"][0]["x"]);
-
 		// change every blade-s edge coord
-		for ( var i=0;i<this.numberOfBlades;i++){
-			this.grassJsonDataArr[i]["quadraticCurveTo"][0]["x"] += this.bendingDirection;
+		for ( var i=0;i<numberOfBlades;i++){
+			jsonArr[i]["quadraticCurveTo"][0]["x"] += this.bendingDirection;
 		}
 
 	}
 
 
 	p.draw	= function (){
-		shape	= this.shape;
+		var shape			= this.shape;
+		var numberOfBlades	= this.numberOfBlades;
+		var	lastBlade		= numberOfBlades - Math.floor(this.offsetX/this.bladeDistance);
 
 		shape.graphics.clear();
 		shape.graphics.setStrokeStyle(1).beginLinearGradientStroke(["#000","#FFF"], [0, 1], 100, 100, 440, 300);
 
-		for ( var i=0;i<this.numberOfBlades;i++){
-			lastBlade	= this.numberOfBlades - Math.floor(this.offsetX/this.bladeDistance);
+		for ( var i=0;i<numberOfBlades;i++){
 			if (i>=lastBlade) {
 				tmpOffsetX	= this.offsetX - this.numberOfBlades*this.bladeDistance;
 			}else{
