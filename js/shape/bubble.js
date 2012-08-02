@@ -9,21 +9,33 @@
 (function (namespace) {
 
 	var Bubble	= function ( inX, inY, inColor ){
-		this.x	= inX;
-		this.y	= inY;
-		this.color	= color;
-		this.radius	= 30;
-		this.initSprite();
+		this.x				= inX;
+		this.y				= inY;
+		this.color			= color;
+		this.directionAngle	= 270;			// default
+		this.speed			= 1;
+
+		
+		var graphics		= new createjs.Graphics;
+		this.shape			= new createjs.Shape(graphics);
+
+		this.scaledRadius	= 30;
+
+		// bubble sprite test:
+		// this.initSprite();
+
 		this.initShape();
 	}
 
 
-	Bubble.radius	= null;
-	Bubble.shape	= null;
-	Bubble.graphics	= null;
-
+	Bubble.scaledRadius	= null;
+	Bubble.shape		= null;
+	Bubble.graphics		= null;
+	
 	Bubble.spriteImg	= null;
 	Bubble.bmpAnimation	= null;
+	Bubble.directionAngle= null;
+	Bubble.speed		= null;
 
 
 	var p	= Bubble.prototype;
@@ -35,17 +47,28 @@
 
 	// creates a simple circle bubble shape with gradient fill
 	p.initShape	= function(){
-		this.graphics	= new createjs.Graphics;
-		this.graphics.beginRadialGradientFill(["#D1D8F2","#3A5BCB"], [0, 1], 20, 20, 0, 0, 0, 50);
-		this.graphics.setStrokeStyle(3);
-		this.graphics.beginLinearGradientStroke(["#8B9AE2","#E7EAF8"], [0, 1], 0, 0, 60, 60);
-		this.graphics.drawCircle(0, 0, this.radius);
+		var graphics	= this.shape.graphics;
+		graphics.beginRadialGradientFill(["#D1D8F2","#3A5BCB"], [0, 1], 20, 20, 0, 0, 0, 50);
+		graphics.setStrokeStyle(3);
+		graphics.beginLinearGradientStroke(["#8B9AE2","#E7EAF8"], [0, 1], 0, 0, 60, 60);
+		graphics.drawCircle(0, 0, this.scaledRadius);
 
-		this.shape			= new createjs.Shape(this.graphics);
 		this.shape.alpha	= 0.5;
 		this.shape.x		= globals.STAGE_WIDTH/2-200;
 		this.shape.y		= globals.STAGE_HEIGHT-20;
 
+	}
+
+
+	p.move	= function(){
+	    // calculate the offset vector
+		var radian	= this.directionAngle * 0.0174533;		// (Math.PI/180)
+		var radius	= this.speed*4;
+		var moveX	= Math.round(Math.cos(radian) * radius);
+		var moveY	= Math.round(Math.sin(radian) * radius);
+console.log( "dir" + radian + " --" + moveX + " - " + moveY);
+		this.shape.x		+= moveX;
+		this.shape.y		+= moveY;
 	}
 
 
@@ -90,17 +113,16 @@
 		// of animated rats if you disabled the shadow.
 		this.bmpAnimation.shadow = new createjs.Shadow("#454", 33, 125, 41);
 		
-		this.bmpAnimation.name		= "monster1";
-		this.bmpAnimation.direction	= 270;
-		this.bmpAnimation.directionPi	= this.bmpAnimation.direction/180*Math.PI;	// degree to radian
-		this.bmpAnimation.speed		= 1;
-		this.bmpAnimation.x			= globals.STAGE_WIDTH/2;
-		this.bmpAnimation.y			= globals.STAGE_HEIGHT;
+		this.bmpAnimation.name	= "monster1";
+		this.bmpAnimation.x		= globals.STAGE_WIDTH/2;
+		this.bmpAnimation.y		= globals.STAGE_HEIGHT;
 	
 		// have each monster start at a specific frame
 		this.bmpAnimation.currentFrame = 0;
 		this.bmpAnimation.alpha	= 0.6;
 		
+		// the test bubble image is ellipsoid a bit ... khmm
+		this.bmpAnimation.scaleX	= 0.7;
 	}
 
 
@@ -115,15 +137,15 @@
 	}
 
 
-	p.getCenterX	= function(){
-		var centerX = this.shape.x+this.radius;
-		return centerX;
-	}
+	// p.getCenterX	= function(){
+	// 	var centerX = this.shape.x+this.scaledRadius;
+	// 	return centerX;
+	// }
 
-	p.getCenterY	= function(){
-		var centerY = this.shape.y+this.radius;
-		return centerY;
-	}
+	// p.getCenterY	= function(){
+	// 	var centerY = this.shape.y+this.scaledRadius;
+	// 	return centerY;
+	// }
 
 
 

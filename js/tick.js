@@ -57,7 +57,7 @@ function tick()
 				var cloudShape	= globals.bgCloudArr[i].shape;
 				var cloud		= globals.bgCloudArr[i];
 				var offsetScale	= cloud.maxX;//  cloudShape.scaleX
-				if ( cloud.getCurrentX() < globals.STAGE_WIDTH ){
+				if ( (cloud.shape.x - (cloud.getCurrentWidth()/2)) < globals.STAGE_WIDTH ){
 					cloudShape.x += 2;
 				} else {
 					// console.log( cloud.getCurrentX()+ " W:" +cloud.getCurrentWidth() + " xxx " +cloudShape.x +","+ cloudShape.regX + " XXX " +(0 - cloud.maxX+cloud.minX) );
@@ -74,44 +74,33 @@ function tick()
 		*/
 		if (createjs.Ticker.getTicks() % 2 == 0){		// slow down
 			for( var i=0; i<globals.bubbleArr.length; i++){
-				var bmpAnimation	= globals.bubbleArr[i].bmpAnimation;
+				var bubble	= globals.bubbleArr[i];
 			    // Hit testing the screen width, otherwise our sprite would disappear
-			    if (bmpAnimation.y < 0) {
+			    if (bubble.shape.y < 0) {
 					// We've reached the right side of our screen
 					// We need to walk left now to go back to our initial position
-					bmpAnimation.direction	= 90;
+					bubble.directionAngle	= 80;
 					// alert("FENT");
 			    }
 
-			    if (bmpAnimation.y > globals.STAGE_HEIGHT) {
+			    if (bubble.shape.y > globals.STAGE_HEIGHT) {
 					// We've reached the left side of our screen
 					// We need to walk right now
-					bmpAnimation.direction	= 270;
-					// alert("LENT");
+					bubble.directionAngle	= 290;
 			    }
 
-			    // calculate the offset vector
-				var angle	= bmpAnimation.direction*0.0174533;		// (Math.PI/180)
-				var radius	= bmpAnimation.speed*4;
-				var x	= Math.round(Math.cos(angle) * radius);
-				var y	= Math.round(Math.sin(angle) * radius);
-
-				// console.log( "Y" + y );
-
-				// image bubble movevement
-				bmpAnimation.y	+= y;
-				bmpAnimation.x	+= x;
-
 				// shape bubble movevement
-				globals.bubbleArr[i].shape.y	+= y;
-				globals.bubbleArr[i].shape.x	+= x;
+				bubble.move();
 			}
 		}
 		// end bubble movement
 
 
-		// 
-		collisionTest();
+		//
+
+		if ( createjs.Ticker.getTicks() % 10 == 0 ){
+			collisionRadiusTest();
+		}
 
 
 		//re-render the stage
@@ -127,20 +116,21 @@ function tick()
 *	- test every bubble with every cloud
 *	- the simpliest and fastest way is the radius testing(two circle collision)
 */
-function collisionTest(){
+function collisionRadiusTest(){
 	for ( var i=0; i<globals.cloudArr.length; i++ ){
 		for ( var j=0; j<globals.bubbleArr.length; j++){ 
 			var currCloud	= globals.cloudArr[i];
 			var currBubble	= globals.bubbleArr[j];
-			var cx	= currCloud.getCenterX();
-			var cy	= currCloud.getCenterY();
-			var bx	= currBubble.getCenterX();
-			var by	= currBubble.getCenterY();
+			var cx	= currCloud.shape.x;
+			var cy	= currCloud.shape.y;
+			var bx	= currBubble.shape.x;
+			var by	= currBubble.shape.y;
 			// calculate distance:
 			distance	= Math.sqrt( (cx-bx)*(cx-bx) + (cy-by)*(cy-by) ); 
-			if( distance<(currCloud.radius+currBubble.radius)){
-				console.log("dist:"+distance + " clR:" +currCloud.radius +" curr bubble R:"+currBubble.radius);
+			if( distance<(currCloud.scaledRadius+currBubble.scaledRadius)){
+				console.log("Collision:   Bubble:" + j + " Cloud:" + i);
 			}
+				// console.log(" cx:" + cx + " cy:" + cy + " bx:" + bx +  " by:" + by +  " dist:"+distance + " cloud R:" + Math.round(currCloud.scaledRadius) +" bubble R:"+currBubble.scaledRadius);
 		}
 	}
 }

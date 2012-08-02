@@ -138,8 +138,6 @@ $(document).ready( function() {
 	// ** sprite and shape Bubble Test **
 	var	i	= 0;
 	globals.bubbleArr[i]	= new game.Bubble( 30, 30, game.Common.getRandomColor() );
-	// the test bubble image is ellipsoid a bit ... khmm
-	globals.bubbleArr[i].bmpAnimation.scaleX	= 0.7;
     globals.layerBubble.addChild(globals.bubbleArr[i].bmpAnimation);
     // the shape isn't
 	globals.layerBubble.addChild(globals.bubbleArr[i].shape);

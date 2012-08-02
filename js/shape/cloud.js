@@ -14,32 +14,32 @@
 	/*
 	*	the Cloud object and constructor
 	*/
-	var Cloud	= function( inX,inY, inFillColor, inAlpha, inScaleRnd ){
+	var Cloud	= function( inX,inY, inFillColor, inAlpha, inScale ){
 		// this.maxX		= 0;
 		// this.maxY		= 0;
 		// this.minX		= 1000;
 		// this.minY		= 1000;	
 
 		this.fillColor	= inFillColor;
-		this.scaleRnd	= inScaleRnd;
-		this.initialize( inX,inY, inFillColor, inAlpha, inScaleRnd );
+		this.scale	= inScale;
+		this.initialize( inX,inY, inFillColor, inAlpha, inScale );
 		
 	}
 
 	// object variables
-	Cloud.lastX			= null;		// last x position for drag n' drop
-	Cloud.lastY			= null;		// last y position for drag n' drop
-	Cloud.fillColor	= 0;
-	// Cloud.alpha		= 0;
-	Cloud.scaleRnd	= 0;			// to the scale for size randomizing
-	Cloud.shape		= null;			// generated after the initialize()
-	Cloud.maxX		= null;
-	Cloud.maxY		= null;
-	Cloud.minX		= null;
-	Cloud.minY		= null;
-	Cloud.radius	= null;
-	Cloud.width		= null;
-	Cloud.height	= null;
+	Cloud.lastX				= null;		// last x position for drag n' drop
+	Cloud.lastY				= null;		// last y position for drag n' drop
+	Cloud.fillColor			= null;
+	// Cloud.alpha			= null;
+	Cloud.scale				= null;			// to the scale for size randomizing
+	Cloud.shape				= null;			// generated after the initialize()
+	Cloud.maxX				= null;		// unscaled maxX
+	Cloud.maxY				= null;
+	Cloud.minX				= null;
+	Cloud.minY				= null;
+	Cloud.unscaledRadius	= null;		// unscaled Radius
+	Cloud.unscaledWidth		= null;		// unscaled Width
+	Cloud.unscaledHeight	= null;		// unscaled unscaledHeight
 
 
 
@@ -48,7 +48,7 @@
 	/*
 	*	draw a new cloud from JSON data and return with a Shape object
 	*/
-	p.initialize	= function ( inX,inY, inFillColor, inAlpha, inScaleRnd  ){
+	p.initialize	= function ( inX,inY, inFillColor, inAlpha, inScale  ){
 
 		// load data from JSON
 		var jsonStr = '{"fillColor":"'+inFillColor+'","alpha":"'+inAlpha+'","strokeStyle":6,"moveTo":{"x":140,"y":200},"quadraticCurveTo":[{"x":135,"y":155,"ref_x":180,"ref_y":150},{"x":220,"y":110,"ref_x":260,"ref_y":130},{"x":300,"y":100,"ref_x":340,"ref_y":130},{"x":390,"y":125,"ref_x":400,"ref_y":170},{"x":440,"y":190,"ref_x":420,"ref_y":230},{"x":420,"y":270,"ref_x":380,"ref_y":270},{"x":340,"y":290,"ref_x":300,"ref_y":270},{"x":260,"y":290,"ref_x":220,"ref_y":270},{"x":185,"y":275,"ref_x":170,"ref_y":250},{"x":185,"y":275,"ref_x":170,"ref_y":250},{"x":130,"y":240,"ref_x":140,"ref_y":200}]}';
@@ -73,15 +73,15 @@
 		cloudShape.regY	= (this.maxY-this.minY)/2;
 		cloudShape.x	= inX;
 		cloudShape.y	= inY;
-		cloudShape.scaleX	= inScaleRnd;
-		cloudShape.scaleY	= inScaleRnd;
+		cloudShape.scaleX	= inScale;
+		cloudShape.scaleY	= inScale;
 
 		this.shape	= cloudShape;
 
-		this.width	= (this.maxX-this.minX);
-		this.height	= (this.maxY-this.minY);
-		this.radius	= Math.sqrt( this.width*this.width + this.height*this.height )/2;
-
+		this.unscaledWidth	= (this.maxX-this.minX);
+		this.unscaledHeight	= (this.maxY-this.minY);
+		this.unscaledRadius	= Math.sqrt( this.unscaledWidth*this.unscaledWidth + this.unscaledHeight*this.unscaledHeight )/2;
+		this.scaledRadius	= this.unscaledRadius*inScale;
 
 		// ** TESTING: 
 		this.addShadow();
@@ -93,26 +93,34 @@
 		this.drawTestBoundCircle();
 	}
 
-	// return with the current, scaled width
+	// return with the current, scaled unscaledWidth
 	p.getCurrentWidth	= function(){
 		var currWidth	= (this.maxX)*this.shape.scaleX;
 		return currWidth;
 	}
 
-	// return with the scaled cloud X coord
-	p.getCurrentX	= function(){
-		var currWidth	= this.shape.x-((this.maxX)-this.getCurrentWidth())/2;
-		return currWidth;
-	}
+	// // return with the scaled cloud X coord
+	// p.getCurrentX	= function(){
+	// 	var currWidth	= this.shape.x-((this.maxX)-this.getCurrentWidth())/2;
+	// 	return currWidth;
+	// }
 
-	p.getCenterX	= function(){
-		var centerX = this.shape.x+this.width/2;
-		return centerX;
-	}
+	// // scaled centerX							=> equal to shape.regX
+	// p.getCurrentCenterX	= function(){
+	// 	var centerX = this.shape.regX;
+	// 	return centerX;
+	// }
 
-	p.getCenterY	= function(){
-		var centerY = this.shape.y+this.height/2;
-		return centerY;
+	// // scaled centerY							=> equal to shape.regY
+	// p.getCurrentCenterY	= function(){
+	// 	var centerY = this.shape.y+this.unscaledHeight/2;
+	// 	return centerY;
+	// }
+
+	// scaled unscaledRadius
+	p.getCurrentRadius	= function(){
+		var radius = this.unscaledRadius*this.scale;
+		return radius;
 	}
 
 
@@ -180,13 +188,36 @@
 
 	// for testing show the outer box
 	p.drawTestBoundCircle	= function(){
+
+
 		graphics	= this.shape.graphics;
 		graphics.endFill();
 		graphics.setStrokeStyle(1);
 		graphics.beginStroke('#fff');
-		graphics.drawCircle( this.width/2, this.height/2, this.radius );
 
-		graphics.drawCircle( this.shape.regX, this.shape.regY, 20 );
+		// draw outer circle
+		graphics.drawCircle( this.unscaledWidth/2, this.unscaledHeight/2, this.unscaledRadius );
+		// draw reg point
+		graphics.setStrokeStyle(2);
+		graphics.beginStroke('#f00');
+		graphics.drawCircle( this.shape.regX, this.shape.regY, 10 );
+
+		g	= new createjs.Graphics();
+
+		// draw calculated center point
+		// g.setStrokeStyle(3);
+		// g.beginStroke('#0f0');
+		// g.drawCircle( this.getCurrentCenterX(), this.getCurrentCenterY(), 5 );
+
+		// draw shape x,y
+		g.setStrokeStyle(3);
+		g.beginStroke('#80f');
+		g.drawCircle( this.shape.x, this.shape.y, 5 );
+
+		console.log( "x, y" + this.shape.x + ":" + this.shape.y );
+
+		s	= new createjs.Shape(g);
+		globals.stage.addChild(s);
 	}
 
 
