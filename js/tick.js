@@ -75,7 +75,7 @@ function tick()
 		/*
 		*	Bubble movement
 		*/
-		if (createjs.Ticker.getTicks() % 2 == 0){		// slow down
+		if (createjs.Ticker.getTicks() % 1 == 0){		// slow down
 			for( var i=0; i<globals.bubbleArr.length; i++){
 				var bubble	= globals.bubbleArr[i];
 			    // Hit testing the screen width, otherwise our sprite would disappear
@@ -93,7 +93,9 @@ function tick()
 			    }
 
 				// shape bubble movevement
+				bubble.speed = 1;
 				bubble.move();
+				bubble.shape.rotation += 5;
 			}
 		}
 		// end bubble movement

@@ -14,6 +14,7 @@
 		this.color			= color;
 		this.directionAngle	= 270;			// default
 		this.speed			= 1;
+		this.alpha			= 0.8;
 
 		
 		var graphics		= new createjs.Graphics;
@@ -36,6 +37,7 @@
 	Bubble.bmpAnimation	= null;
 	Bubble.directionAngle= null;
 	Bubble.speed		= null;
+	Bubble.alpha		= null;
 
 
 	var p	= Bubble.prototype;
@@ -48,12 +50,12 @@
 	// creates a simple circle bubble shape with gradient fill
 	p.initShape	= function(){
 		var graphics	= this.shape.graphics;
-		graphics.beginRadialGradientFill(["#D1D8F2","#3A5BCB"], [0, 1], 20, 20, 0, 0, 0, 50);
-		graphics.setStrokeStyle(3);
-		graphics.beginLinearGradientStroke(["#8B9AE2","#E7EAF8"], [0, 1], 0, 0, 60, 60);
+		graphics.beginRadialGradientFill(["#E7EAF8","#3A5BCB"], [0, 1], 20, 20, 0, 0, 0, 50);
+		graphics.setStrokeStyle(1);
+		graphics.beginLinearGradientStroke(["#9AA7E4","#F4F5FD"], [0, 1], -1*this.scaledRadius, -1*this.scaledRadius, this.scaledRadius, this.scaledRadius);
 		graphics.drawCircle(0, 0, this.scaledRadius);
 
-		this.shape.alpha	= 0.5;
+		this.shape.alpha	= this.alpha;
 		this.shape.x		= globals.STAGE_WIDTH/2-200;
 		this.shape.y		= globals.STAGE_HEIGHT-20;
 
@@ -63,7 +65,7 @@
 	p.move	= function(){
 	    // calculate the offset vector
 		var radian	= this.directionAngle * 0.0174533;		// (Math.PI/180)
-		var radius	= this.speed*4;
+		var radius	= this.speed;
 		var moveX	= Math.round(Math.cos(radian) * radius);
 		var moveY	= Math.round(Math.sin(radian) * radius);
 
