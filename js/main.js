@@ -8,6 +8,9 @@
 	/*
 	*	CONSTS
 	*/
+
+	globals.DEBUG	= true;
+
 	globals.DEFAULT_BUBBLE_X		= 150;
 	globals.DEFAULT_BUBBLE_Y		= 150;
 	globals.DEFAULT_BUBBLE_RADIUS	= 30;
@@ -18,16 +21,17 @@
 	globals.STOP_TICK_DRAW			= false;	// it stops drawing in tick() (CPU cooling)
 
 	/*
-	*	GAME ABLES
+	*	GAME VARIABLES
 	*/
 
-	globals.canvas;		// the Main canvas
-	globals.stage;						// Main stage
+	globals.canvas;			// the Main canvas
+	globals.stage;			// Main stage
+	globals.effectTimeMultiplier	= 5;
 
 
 	// Layers
 	globals.layerCloud;		// normal cloud layer
-	globals.layerBgCloud;		// background layer
+	globals.layerBgCloud;	// background layer
 	globals.layerBubble;
 	
 	// Cloud parameters
@@ -103,23 +107,43 @@ $(document).ready( function() {
 
 	// *** Fill the layers ***
 
-	// ** Background **
+	// ** BACKGROUND **
 	globals.sStageBgGradient	= game.Main.initStageBgGradient();
 	globals.layerBackground.addChild( globals.sStageBgGradient );
 
-	// stars
+	// STARS
     globals.StageBackgroundStars	= new game.Star();
-    globals.layerBackground.addChild(globals.StageBackgroundStars.shape);
+    globals.layerBackground.addChild(globals.StageBackgroundStars.container);
 
-	var starsTween = createjs.Tween.get( globals.StageBackgroundStars.shape );
-	starsTween.to({alpha:1},6000).to({alpha:1,rotation:17},20000);
+	var starsTween = createjs.Tween.get( globals.StageBackgroundStars.container );
+	var starContainer	= globals.StageBackgroundStars.container;
+	starContainer.y	+= 0;
+	// 70 sec day-night tween effect
+	starsTween.wait(1000*globals.effectTimeMultiplier).to({alpha:1, rotation:starContainer.rotation+6 }, 3000*globals.effectTimeMultiplier, createjs.Ease.quartIn)
+		.to({alpha:1,rotation:starContainer.rotation+12}, 1000*globals.effectTimeMultiplier)
+		.to({rotation:starContainer.rotation+18},1000*globals.effectTimeMultiplier)
+		.to({alpha:0, rotation:starContainer.rotation+22}, 1000*globals.effectTimeMultiplier, createjs.Ease.sineOut)
+		// .wait(2000*globals.effectTimeMultiplier)
+		.to({alpha:0,rotation:starContainer.rotation},0)
+		;
+	starsTween.loop	= true;
+
+	// show the contellation lines sometimes
+	var consLineTween = createjs.Tween.get( globals.StageBackgroundStars.consShape );
+	consLineTween.wait(1000*globals.effectTimeMultiplier).to({visible:true,alpha:0.8},1500,createjs.Ease.bounceOut).to({alpha:0,visible:false},1000,createjs.Ease.backIn);
+	consLineTween.loop	= true;
+
 
 	// background clouds
 	game.Main.initBgCloud();
 
 	// sun
 	var sun	= new game.Sun();
-	globals.layerBackground.addChild(sun.shape);
+	globals.layerBackground.addChild(sun.container);
+	var sunTween2	= createjs.Tween.get( sun.container );
+	sunTween2.to({rotation:35},3000*globals.effectTimeMultiplier).wait(4000*globals.effectTimeMultiplier);
+	sunTween2.loop	= true;
+
 
 	// draw grass
 	globals.grassArr[0]	= new game.Grass( 0, globals.STAGE_HEIGHT-60);
@@ -237,7 +261,7 @@ game.Common.log(cloudColorJson[(Math.round(Math.random()*cloudColorJson.length))
 
 		// generate (draw) clouds from globals.cloudArr
 		for(var i=offset;i<(globals.cloudCount+offset);i++){
-			x			= Math.round( globals.STAGE_WIDTH/(globals.cloudCount+1) )*(i)  + Math.round( (Math.random()-0.5)*200 );	// x position (equal cloud distance)
+			x			= Math.round( globals.STAGE_WIDTH/(globals.cloudCount+1) )*(i)  + Math.round( (Math.random()-0.5)*400 );	// x position (equal cloud distance)
 			y			= 100 + Math.round( (Math.random()-0.5)*20 );		// random y position (offset)
 			color		= "0xffffff";								// generate random color
 			alpha		= 0.3;										// alpha
@@ -247,7 +271,9 @@ game.Common.log(cloudColorJson[(Math.round(Math.random()*cloudColorJson.length))
 
 			globals.layerBackground.addChild(cloud.shape);
 
-			globals.bgCloudArr[i]	= cloud;					//store clouds in a global array too
+			globals.bgCloudArr[i]			= cloud;					//store clouds in a global array too
+			globals.bgCloudArr[i].direction	= Math.random()<0.5 ?  "right" : "left";
+			globals.bgCloudArr[i].speed	= Math.round((Math.random()+0.33)*2);
 		}
 
 	}

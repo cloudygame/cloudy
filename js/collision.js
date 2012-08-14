@@ -20,7 +20,7 @@ collision.RadiusTest = function (){
 			// calculate distance:
 			distance	= Math.sqrt( (cx-bx)*(cx-bx) + (cy-by)*(cy-by) ); 
 			if( distance<(currCloud.scaledRadius+currBubble.scaledRadius)){
-				console.log("Collision:   Bubble:" + j + " Cloud:" + i);
+				game.Common.log("Collision:   Bubble:" + j + " Cloud:" + i);
 			}
 				// console.log(" cx:" + cx + " cy:" + cy + " bx:" + bx +  " by:" + by +  " dist:"+distance + " cloud R:" + Math.round(currCloud.scaledRadius) +" bubble R:"+currBubble.scaledRadius);
 		}

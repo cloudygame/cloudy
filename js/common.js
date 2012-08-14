@@ -28,15 +28,17 @@ Common.getRandomColor	= function ( type ) {
 *	log text to console
 */
 Common.log	= function ( text ){
-	var currD	= new Date;
-	var currT	= currD.getTime();
-	var elapsedTimePrgStart	= (currT-programStartTime)/1000;
-	var elapsedTimeLastLog	= (currT-lastLogT)/1000;
-	var callerFunctionName	= arguments.callee.caller.name.toString();
+	if(globals.DEBUG){
+		var currD	= new Date;
+		var currT	= currD.getTime();
+		var elapsedTimePrgStart	= (currT-programStartTime)/1000;
+		var elapsedTimeLastLog	= (currT-lastLogT)/1000;
+		var callerFunctionName	= arguments.callee.caller.name.toString();
 
-	console.log( elapsedTimePrgStart + 's: ' + callerFunctionName + ' -- ' + text + ' -- Elõzõ log óta eltelt: ' + elapsedTimeLastLog +'s');
+		console.log( elapsedTimePrgStart + 's: ' + callerFunctionName + ' -- ' + text + ' -- Elõzõ log óta eltelt: ' + elapsedTimeLastLog +'s');
 
-	lastLogT	= currT;
+		lastLogT	= currT;
+	}
 }
 
 
@@ -54,18 +56,19 @@ Common.log	= function ( text ){
 *
 *	offsetX: optional
 */
-Common.drawQuadraticJson	= function( graphics, inJson, inOffsetX ){
+Common.drawQuadraticJson	= function( graphics, inJson, inOffsetX, inOffsetY ){
 
 		var offsetX	= (typeof inOffsetX=="undefined") ? 0 : inOffsetX;
+		var offsetY	= (typeof inOffsetY=="undefined") ? 0 : inOffsetY;
 
-		graphics.moveTo(inJson["moveTo"]["x"]+offsetX, inJson["moveTo"]["y"]);
+		graphics.moveTo(inJson["moveTo"]["x"]+offsetX, inJson["moveTo"]["y"]+offsetY);
 
 		for (var i=0; i<inJson.quadraticCurveTo.length; i++){
 			graphics.quadraticCurveTo( 
 				inJson["quadraticCurveTo"][i]["ref_x"]+offsetX,
-				inJson["quadraticCurveTo"][i]["ref_y"],
+				inJson["quadraticCurveTo"][i]["ref_y"]+offsetY,
 				inJson["quadraticCurveTo"][i]["x"]+offsetX,
-				inJson["quadraticCurveTo"][i]["y"]
+				inJson["quadraticCurveTo"][i]["y"]+offsetY
 				);
 		}
 

@@ -9,7 +9,8 @@
 	}
 	
 
-	Sun.shape	= null;
+	Sun.shape		= null;
+	Sun.container	= null;
 
 
 	Sun.prototype.initialize = function() {
@@ -43,18 +44,19 @@
 		this.shape.x	= -20;
 		this.shape.y	= 50;
 
+		// add default rotation effect to sun
+		var sunTween	= createjs.Tween.get( this.shape );
+		sunTween.to({rotation:360},6000).to({rotation:-360},0);
+		sunTween.loop	= true;
 
-		// add effects to sun
-		var tween	= createjs.Tween.get( this.shape );
+		// we need a container with offsetted regY for movement (day-night)
+		this.container	= new createjs.Container();
+		this.container.addChild(this.shape);
+		this.container.regY=1000;
+		this.container.y=950;
+		this.container.rotation=-30;
+		this.container.x=globals.STAGE_WIDTH/2;
 
-		var timeline = new createjs.Timeline();
-		timeline.addTween(
-					tween.to({rotation:360,x:300,y:0,alpha:0.4},4000, createjs.Ease.linearOut )
-					.to({rotation:0, x:600,y:0,alpha:0.8},4000, createjs.Ease.linearOut )
-					.to({rotation:360, x:1000,y:100,alpha:1},4000, createjs.Ease.linearOut )
-			);
-
-		tween.loop	= true;
 	};
 
 

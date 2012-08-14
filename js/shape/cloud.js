@@ -21,7 +21,7 @@
 		// this.minY		= 1000;	
 
 		this.fillColor	= inFillColor;
-		this.scale	= inScale;
+		this.scale		= inScale;
 		this.initialize( inX,inY, inFillColor, inAlpha, inScale );
 		
 	}
@@ -89,8 +89,11 @@
 		// Multiple drawing methods are possible in the same Graphics instance.
 		// I added some random snow to the cloud graphics in this example:
 		// cloudGraphics	= this.testDrawSnow(cloudGraphics);
-		this.drawTestBoundBox();
-		this.drawTestBoundCircle();
+
+		if (globals.debug==true){
+			this.drawTestBoundBox();
+			this.drawTestBoundCircle();
+		}
 	}
 
 	// return with the current, scaled unscaledWidth

@@ -13,12 +13,26 @@ function tick()
 	if (!globals.STOP_TICK_DRAW){
 
 		/*
-		*	1. simple background transition
+		*	1. simple background transition (~70sec now)
 		*/
-		if (createjs.Ticker.getTicks()%30 == 0){
+		if (createjs.Ticker.getTicks()%10 == 0){
 			globals.bgGraphics	= globals.gStageBgGradient;
-			bgColors	= globals.gStageBgGradient;
-			var color	= createjs.Graphics.getRGB( bgColors.colorR, bgColors.colorG, bgColors.colorB, 0.1 );
+			bgColors		= globals.gStageBgGradient;
+			var tmpAlpha	= 0.03;
+
+			// game day hour check
+			var elapsedTime	= createjs.Ticker.getTime()/(100*globals.effectTimeMultiplier);
+			if ( elapsedTime % 70 > 30 ){		// evening
+				var color	= createjs.Graphics.getRGB( '0x000000', tmpAlpha );
+				game.Common.log("go to midnight");
+			}else if(elapsedTime % 70 > 15 ){	// lunchtime:)
+				var color	= createjs.Graphics.getRGB( '0x000088', tmpAlpha );
+				game.Common.log("go to evening");
+			}else if(elapsedTime % 70 > 0 ){	// morning
+				var color	= createjs.Graphics.getRGB( '0xffffff', tmpAlpha );
+				game.Common.log("go to lunch :)");
+			}
+
 
 		    // change stage background color
 			globals.bgGraphics.beginFill( color );
@@ -60,12 +74,38 @@ function tick()
 				var cloudShape	= globals.bgCloudArr[i].shape;
 				var cloud		= globals.bgCloudArr[i];
 				var offsetScale	= cloud.maxX;//  cloudShape.scaleX
-				if ( (cloud.shape.x - (cloud.getCurrentWidth()/2)) < globals.STAGE_WIDTH ){
-					cloudShape.x += 2;
-				} else {
-					// console.log( cloud.getCurrentX()+ " W:" +cloud.getCurrentWidth() + " xxx " +cloudShape.x +","+ cloudShape.regX + " XXX " +(0 - cloud.maxX+cloud.minX) );
-					cloudShape.x = 0 - (cloud.maxX+cloud.minX) + ((cloud.maxX+cloud.minX)-cloud.getCurrentWidth())/2;
-					// console.log( "X" + cloudShape.x );
+				if( globals.bgCloudArr[i].direction=="right" ){
+					if ( (cloud.shape.x - (cloud.getCurrentWidth()/2)) < globals.STAGE_WIDTH ){
+						cloudShape.x += globals.bgCloudArr[i].speed;
+					} else {
+						// console.log( cloud.getCurrentX()+ " W:" +cloud.getCurrentWidth() + " xxx " +cloudShape.x +","+ cloudShape.regX + " XXX " +(0 - cloud.maxX+cloud.minX) );
+						cloudShape.x = 0 - cloud.getCurrentWidth()/2;
+
+						// randomize cloud
+						cloudShape.x += Math.random()*200;
+						cloudShape.y += ((Math.random()/2)-0.5)*50;
+						var rndScale	= (Math.random()/3+0.1);
+						cloudShape.scaleX	= rndScale;
+						cloudShape.scaleY	= rndScale;
+						globals.bgCloudArr[i].speed	= Math.round((Math.random()+0.33)*2);
+						// console.log( "X" + cloudShape.x );
+					}
+				}else{
+					if ( (cloud.shape.x + cloud.getCurrentWidth()/2) > 0){
+						cloudShape.x -= 2;
+					} else {
+						// randomize cloud
+						cloudShape.x += -1*Math.random()*200;
+						cloudShape.y += ((Math.random()/2)-0.5)*50;
+						var rndScale	= (Math.random()/3+0.1);
+						cloudShape.scaleY	= rndScale;
+						cloudShape.scaleX	= rndScale;
+						globals.bgCloudArr[i].speed	= Math.round((Math.random()+0.33)*2);
+
+						// set the start position
+						// console.log( cloud.getCurrentX()+ " W:" +cloud.getCurrentWidth() + " xxx " +cloudShape.x +","+ cloudShape.regX + " XXX " +(0 - cloud.maxX+cloud.minX) );
+						cloudShape.x = globals.STAGE_WIDTH + cloud.getCurrentWidth()/2;
+					}
 				}
 
 			}
@@ -82,7 +122,7 @@ function tick()
 			    if (bubble.shape.y < 0) {
 					// We've reached the right side of our screen
 					// We need to walk left now to go back to our initial position
-					bubble.directionAngle	= 80;
+					bubble.directionAngle	= 70;
 					// alert("FENT");
 			    }
 
@@ -102,7 +142,7 @@ function tick()
 
 
 		// check it on every 10th tick
-		if ( createjs.Ticker.getTicks() % 10 == 0 ){
+		if ( createjs.Ticker.getTicks() % 50 == 0 ){
 			collision.RadiusTest();
 		}
 
