@@ -11,9 +11,9 @@
 
 	globals.DEBUG	= true;
 
-	globals.DEFAULT_BUBBLE_X		= 150;
-	globals.DEFAULT_BUBBLE_Y		= 150;
-	globals.DEFAULT_BUBBLE_RADIUS	= 30;
+	// globals.DEFAULT_BUBBLE_X		= 150;
+	// globals.DEFAULT_BUBBLE_Y		= 150;
+	// globals.DEFAULT_BUBBLE_RADIUS	= 30;
 	
 	globals.STAGE_WIDTH				= 900;
 	globals.STAGE_HEIGHT			= 400;
@@ -161,10 +161,8 @@ $(document).ready( function() {
 
 	// ** sprite and shape Bubble Test **
 	var	i	= 0;
-	globals.bubbleArr[i]	= new game.Bubble( 30, 30, game.Common.getRandomColor() );
-    globals.layerBubble.addChild(globals.bubbleArr[i].bmpAnimation);
-    // the shape isn't
-	globals.layerBubble.addChild(globals.bubbleArr[i].shape);
+	globals.bubbleArr[i]	= new game.Bubble( 30, 30 );
+	globals.layerBubble.addChild(globals.bubbleArr[i].container);
 
 
 	/*

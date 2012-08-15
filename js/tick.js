@@ -141,14 +141,13 @@ function tick()
 			    if (bubble.shape.y < 0) {
 					// We've reached the right side of our screen
 					// We need to walk left now to go back to our initial position
-					bubble.setDirectionAngle(60);
-					// alert("FENT");
+					bubble.setDirectionAngle(75);
 			    }
 
 			    if (bubble.shape.y > globals.STAGE_HEIGHT) {
 					// We've reached the left side of our screen
 					// We need to walk right now
-					bubble.setDirectionAngle(310);
+					bubble.setDirectionAngle(285);
 			    }
 
 				// shape bubble movevement

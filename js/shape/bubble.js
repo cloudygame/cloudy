@@ -8,15 +8,21 @@
 // this "outer/empty" function is needed becuase the inner functions, variables shouldn't generate into global namespace
 (function (namespace) {
 
-	var Bubble	= function ( inX, inY, inColor ){
+	var Bubble	= function ( inX, inY ){
 		this.x				= inX;
 		this.y				= inY;
-		this.color			= color;
+		// this.color			= color;
 		this.speed			= 1;
-		this.alpha			= 0.8;
+		this.shapeAlpha		= 0.8;
 		
 		var graphics		= new createjs.Graphics;
 		this.shape			= new createjs.Shape(graphics);
+		var debugGraphics	= new createjs.Graphics;
+		this.debugShape		= new createjs.Shape(debugGraphics);
+
+		this.container		= new createjs.Container();
+		this.container.addChild( this.shape );
+		this.container.addChild( this.debugShape );
 
 		this.scaledRadius	= 30;
 
@@ -31,20 +37,23 @@
 	}
 
 
-	Bubble.scaledRadius	= null;
-	Bubble.shape		= null;
-	Bubble.graphics		= null;
-	
+	Bubble.scaledRadius		= null;
+	Bubble.container		= null;
+	Bubble.shape			= null;
+	Bubble.debugShape		= null;
+	Bubble.shapeAlpha		= null;
+
 	Bubble.spriteImg		= null;
 	Bubble.bmpAnimation		= null;
+
+	// animation data
 	Bubble.directionAngle	= null;
 	Bubble.directionToX		= null;
 	Bubble.directionToY		= null;
-	Bubble.directionFromX		= null;
-	Bubble.directionFromY		= null;
+	Bubble.directionFromX	= null;
+	Bubble.directionFromY	= null;
 	Bubble.directionStep	= null;
 	Bubble.speed			= null;
-	Bubble.alpha			= null;
 
 
 	var p	= Bubble.prototype;
@@ -62,7 +71,7 @@
 		graphics.beginLinearGradientStroke(["#9AA7E4","#F4F5FD"], [0, 1], -1*this.scaledRadius, -1*this.scaledRadius, this.scaledRadius, this.scaledRadius);
 		graphics.drawCircle(0, 0, this.scaledRadius);
 
-		this.shape.alpha	= this.alpha;
+		this.shape.alpha	= this.shapeAlpha;
 		this.shape.x		= globals.STAGE_WIDTH/2-200;
 		this.shape.y		= globals.STAGE_HEIGHT-20;
 
@@ -103,10 +112,20 @@
 		this.directionStep	= 0;
 		var radian	= angle * 0.0174533;		// (Math.PI/180)
 		var radius	= globals.STAGE_WIDTH;
-		this.directionToX		= Math.round(Math.cos(radian) * radius);
-		this.directionToY		= Math.round(Math.sin(radian) * radius);
+		this.directionToX		= Math.round(Math.cos(radian) * radius) + this.shape.x;
+		this.directionToY		= Math.round(Math.sin(radian) * radius) + this.shape.y;
 		this.directionFromX		= this.shape.x;
 		this.directionFromY		= this.shape.y;
+
+		game.Common.log('Bubble.setDirectionAngle: angle=' + angle + ' from x:y=' + this.directionFromX + ':' + this.directionFromY + ' to x:y=' + this.directionToX + ':' + this.directionToY );
+		if ( globals.DEBUG ) {
+			this.debugShape.graphics.setStrokeStyle(1);
+			this.debugShape.graphics.beginStroke('#fff');
+			this.debugShape.graphics.moveTo( this.directionFromX, this.directionFromY );
+			this.debugShape.graphics.lineTo( this.directionToX, this.directionToY );
+			// this.debugShape.graphics.lineTo( this.shape.regX, this.shape.regY );
+			// this.debugShape.graphics.lineTo( this.shape.x, this.shape.y );
+		}
 	}
 
 	// creates a sprite bubble
