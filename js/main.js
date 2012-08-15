@@ -188,7 +188,10 @@ $(document).ready( function() {
 
 
 	// ONLY FOR TESTING!! this is a performance killer line
-	globals.stage.enableMouseOver(10);
+	// globals.stage.enableMouseOver(10);
+
+	var controlBar	= new game.Control();
+	globals.stage.addChild(controlBar.drawControlBar());
 
 	globals.stage.update();
 
@@ -225,7 +228,6 @@ $(document).ready( function() {
 			scaleRnd	= (Math.random())/2+0.3;					// random scaling - maximum +-25%
 			var cloud 	= new game.Cloud( x, y, color, alpha, scaleRnd );
 			cloud.shape.alpha	= 0;	// it's a different alpha than drawing alpha!
-game.Common.log(cloudColorJson[(Math.round(Math.random()*cloudColorJson.length))]);
 			globals.layerCloud.addChild(cloud.shape);
 
 			globals.cloudArr[i+offset]	= cloud;		//store clouds in a global array too

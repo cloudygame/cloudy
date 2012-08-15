@@ -12,10 +12,8 @@
 		this.x				= inX;
 		this.y				= inY;
 		this.color			= color;
-		this.directionAngle	= 270;			// default
 		this.speed			= 1;
 		this.alpha			= 0.8;
-
 		
 		var graphics		= new createjs.Graphics;
 		this.shape			= new createjs.Shape(graphics);
@@ -26,6 +24,10 @@
 		// this.initSprite();
 
 		this.initShape();
+
+		// set the direction for the movement
+		this.setDirectionAngle(270);			// default
+		this.speed	= 3;
 	}
 
 
@@ -33,11 +35,16 @@
 	Bubble.shape		= null;
 	Bubble.graphics		= null;
 	
-	Bubble.spriteImg	= null;
-	Bubble.bmpAnimation	= null;
-	Bubble.directionAngle= null;
-	Bubble.speed		= null;
-	Bubble.alpha		= null;
+	Bubble.spriteImg		= null;
+	Bubble.bmpAnimation		= null;
+	Bubble.directionAngle	= null;
+	Bubble.directionToX		= null;
+	Bubble.directionToY		= null;
+	Bubble.directionFromX		= null;
+	Bubble.directionFromY		= null;
+	Bubble.directionStep	= null;
+	Bubble.speed			= null;
+	Bubble.alpha			= null;
 
 
 	var p	= Bubble.prototype;
@@ -62,17 +69,45 @@
 	}
 
 
+	// We have to move the bubble on a calculated line to the target direction X and Y because the current angle*speed = always 1/0 when the speed is low.
 	p.move	= function(){
-	    // calculate the offset vector
-		var radian	= this.directionAngle * 0.0174533;		// (Math.PI/180)
-		var radius	= this.speed;
-		var moveX	= Math.round(Math.cos(radian) * radius);
-		var moveY	= Math.round(Math.sin(radian) * radius);
+	    // calculate the offset vector with angle * speed - WRONG
+		// var radian	= this.directionAngle * 0.0174533;		// (Math.PI/180)
+		// var radius	= this.speed;
+		// var moveX	= Math.round(Math.cos(radian) * radius);
+		// var moveY	= Math.round(Math.sin(radian) * radius);
 
-		this.shape.x		+= moveX;
-		this.shape.y		+= moveY;
+		// this.directionStep	+= this.speed+1;
+		this.directionStep	+= this.speed;
+
+		var Ax	= this.directionFromX;
+		var Ay	= this.directionFromY;
+		var Bx	= this.directionToX;
+		var By	= this.directionToY;
+		var	i	= this.directionStep;
+
+		var lineLength = Math.sqrt( (Ax-Bx)*(Ax-Bx)+(Ay-By)*(Ay-By) );
+		var moveX	= Math.round( Ax+(Bx-Ax)*i/lineLength );
+		var moveY	= Math.round( Ay+(By-Ay)*i/lineLength );
+
+		// game.Common.log( moveX + "--" + moveY + " - -" + this.directionStep +" Ax"+ Ax + '--' +Ay + 'ttt' + Bx + '--' + By);
+
+		this.shape.x		= moveX;
+		this.shape.y		= moveY;
 	}
 
+
+	// set the angle and the target points and store the start points
+	p.setDirectionAngle	= function( angle ){
+		this.directionAngle	= angle;
+		this.directionStep	= 0;
+		var radian	= angle * 0.0174533;		// (Math.PI/180)
+		var radius	= globals.STAGE_WIDTH;
+		this.directionToX		= Math.round(Math.cos(radian) * radius);
+		this.directionToY		= Math.round(Math.sin(radian) * radius);
+		this.directionFromX		= this.shape.x;
+		this.directionFromY		= this.shape.y;
+	}
 
 	// creates a sprite bubble
 	p.initSprite	= function(){

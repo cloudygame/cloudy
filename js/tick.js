@@ -13,8 +13,27 @@ function tick()
 	if (!globals.STOP_TICK_DRAW){
 
 		/*
+		*	0. Control
+		*/
+		if ((createjs.Ticker.getTicks()%10 == 0) && globals.stage.mouseInBounds ){
+			game.Common.log( globals.stage.mouseInBounds + '-' + globals.stage.mouseX + '-' + globals.stage.mouseY );
+
+			// the mouse is over the control bar
+			if( globals.stage.mouseY > globals.STAGE_HEIGHT-60 ){
+				var direction	= Math.round((globals.stage.mouseX - (globals.STAGE_WIDTH/2))/100);
+				game.Common.log( 'direction: ' + direction );
+			}
+		}
+
+
+
+		/*
 		*	1. simple background transition (~70sec now)
 		*/
+/*
+
+		MUST FIX!!!! -> brutal performance loss
+
 		if (createjs.Ticker.getTicks()%10 == 0){
 			globals.bgGraphics	= globals.gStageBgGradient;
 			bgColors		= globals.gStageBgGradient;
@@ -24,13 +43,13 @@ function tick()
 			var elapsedTime	= createjs.Ticker.getTime()/(100*globals.effectTimeMultiplier);
 			if ( elapsedTime % 70 > 30 ){		// evening
 				var color	= createjs.Graphics.getRGB( '0x000000', tmpAlpha );
-				game.Common.log("go to midnight");
+				// game.Common.log("go to midnight");
 			}else if(elapsedTime % 70 > 15 ){	// lunchtime:)
 				var color	= createjs.Graphics.getRGB( '0x000088', tmpAlpha );
-				game.Common.log("go to evening");
+				// game.Common.log("go to evening");
 			}else if(elapsedTime % 70 > 0 ){	// morning
 				var color	= createjs.Graphics.getRGB( '0xffffff', tmpAlpha );
-				game.Common.log("go to lunch :)");
+				// game.Common.log("go to lunch :)");
 			}
 
 
@@ -39,7 +58,7 @@ function tick()
 			globals.bgGraphics.rect(0,0,globals.STAGE_WIDTH, globals.STAGE_HEIGHT);
 			globals.bgGraphics.endStroke();
 		}
-
+*/
 		/*
 		*	2. Grass effects
 		*/
@@ -122,18 +141,18 @@ function tick()
 			    if (bubble.shape.y < 0) {
 					// We've reached the right side of our screen
 					// We need to walk left now to go back to our initial position
-					bubble.directionAngle	= 70;
+					bubble.setDirectionAngle(60);
 					// alert("FENT");
 			    }
 
 			    if (bubble.shape.y > globals.STAGE_HEIGHT) {
 					// We've reached the left side of our screen
 					// We need to walk right now
-					bubble.directionAngle	= 290;
+					bubble.setDirectionAngle(310);
 			    }
 
 				// shape bubble movevement
-				bubble.speed = 1;
+				// bubble.speed = 1;
 				bubble.move();
 				bubble.shape.rotation += 5;
 			}
