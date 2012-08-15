@@ -15,13 +15,23 @@ function tick()
 		/*
 		*	0. Control
 		*/
-		if ((createjs.Ticker.getTicks()%10 == 0) && globals.stage.mouseInBounds ){
+		if ((createjs.Ticker.getTicks()%5 == 0) && globals.stage.mouseInBounds ){
 			game.Common.log( globals.stage.mouseInBounds + '-' + globals.stage.mouseX + '-' + globals.stage.mouseY );
 
 			// the mouse is over the control bar
 			if( globals.stage.mouseY > globals.STAGE_HEIGHT-60 ){
-				var direction	= Math.round((globals.stage.mouseX - (globals.STAGE_WIDTH/2))/100);
-				game.Common.log( 'direction: ' + direction );
+				var direction	= Math.round((globals.stage.mouseX - (globals.STAGE_WIDTH/2))/(globals.BubbleDirGranularity*10));
+				var angleChange	= (globals.prevBubbleDir - direction)*(globals.BubbleDirGranularity);
+
+
+				for( var i=0; i<globals.bubbleArr.length; i++){
+					var bubble	= globals.bubbleArr[i];
+
+					// convert direction to angle
+					bubble.setDirectionAngle(bubble.directionAngle + angleChange);
+				game.Common.log( 'tick Bubble prev direction: ' + bubble.directionAngle + ' Current direction: ' + direction + ' angleChange:' + angleChange);
+				}
+				globals.prevBubbleDir	= direction;
 			}
 		}
 
@@ -139,15 +149,17 @@ function tick()
 				var bubble	= globals.bubbleArr[i];
 			    // Hit testing the screen width, otherwise our sprite would disappear
 			    if (bubble.shape.y < 0) {
-					// We've reached the right side of our screen
-					// We need to walk left now to go back to our initial position
-					bubble.setDirectionAngle(75);
+					// We've reached the top of our screen
+					// We need to go back
+					bubble.setDirectionAngle(90);
+					globals.prevBubbleDir	= 0;
 			    }
 
 			    if (bubble.shape.y > globals.STAGE_HEIGHT) {
-					// We've reached the left side of our screen
-					// We need to walk right now
-					bubble.setDirectionAngle(285);
+					// We've reached the bottom of our screen
+					// We need to go back
+					bubble.setDirectionAngle(270);
+					globals.prevBubbleDir	= 0;
 			    }
 
 				// shape bubble movevement

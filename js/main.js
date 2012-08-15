@@ -9,7 +9,7 @@
 	*	CONSTS
 	*/
 
-	globals.DEBUG	= true;
+	globals.DEBUG	= false;
 
 	// globals.DEFAULT_BUBBLE_X		= 150;
 	// globals.DEFAULT_BUBBLE_Y		= 150;
@@ -41,7 +41,9 @@
 	
 	// Bubbles
 	globals.bubbleArr				= new Array();
-	
+	globals.prevBubbleDir			= 0;
+	globals.BubbleDirGranularity	= 1;		// direction movement granularity: the lower the detailed (100=-4->+4)
+
 	// Grass
 	globals.grassArr		= new Array();
 

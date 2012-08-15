@@ -106,7 +106,7 @@
 	}
 
 
-	// set the angle and the target points and store the start points
+	// set the angle, target points and store the start points for the movement line
 	p.setDirectionAngle	= function( angle ){
 		this.directionAngle	= angle;
 		this.directionStep	= 0;
