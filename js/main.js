@@ -30,6 +30,7 @@
 
 
 	// Layers
+	globals.mainContainer;		// normal cloud layer
 	globals.layerCloud;		// normal cloud layer
 	globals.layerBgCloud;	// background layer
 	globals.layerBubble;
@@ -97,14 +98,25 @@ $(document).ready( function() {
 	*/
 
 	// *** Create main layers ***
+	globals.mainContainer	= new createjs.Container();
+	globals.stage.addChild(globals.mainContainer);
+
 	globals.layerBackground	= new createjs.Container();
-	globals.stage.addChild(globals.layerBackground);
+	globals.mainContainer.addChild(globals.layerBackground);
 
 	globals.layerBubble	= new createjs.Container();
-	globals.stage.addChild(globals.layerBubble);
+	globals.mainContainer.addChild(globals.layerBubble);
 
 	globals.layerCloud	= new createjs.Container();
-	globals.stage.addChild(globals.layerCloud);
+	globals.mainContainer.addChild(globals.layerCloud);
+
+	// set the scale
+	// globals.mainContainer.scaleX	= 0.5;
+	// globals.mainContainer.scaleY	= 0.5;
+	// globals.canvas.width	= globals.STAGE_WIDTH/2;
+	// globals.canvas.height	= globals.STAGE_HEIGHT/2;
+// 
+
 
 
 	// *** Fill the layers ***
@@ -191,7 +203,7 @@ $(document).ready( function() {
 	// globals.stage.enableMouseOver(10);
 
 	var controlBar	= new game.Control();
-	globals.stage.addChild(controlBar.drawControlBar());
+	globals.mainContainer.addChild(controlBar.drawControlBar());
 
 	globals.stage.update();
 
@@ -359,7 +371,7 @@ $(document).ready( function() {
 
 			tween.loop=true;
 
-			globals.stage.addChild(s);
+			globals.mainContainer.addChild(s);
 		}
 	}
 

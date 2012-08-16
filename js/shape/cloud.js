@@ -84,13 +84,13 @@
 		this.scaledRadius	= this.unscaledRadius*inScale;
 
 		// ** TESTING: 
-		this.addShadow();
-		this.testGetDataOnDoubleClick();
-		// Multiple drawing methods are possible in the same Graphics instance.
-		// I added some random snow to the cloud graphics in this example:
-		// cloudGraphics	= this.testDrawSnow(cloudGraphics);
-
 		if (globals.debug==true){
+			this.addShadow();
+			this.testGetDataOnDoubleClick();
+			// Multiple drawing methods are possible in the same Graphics instance.
+			// I added some random snow to the cloud graphics in this example:
+			// cloudGraphics	= this.testDrawSnow(cloudGraphics);
+
 			this.drawTestBoundBox();
 			this.drawTestBoundCircle();
 		}

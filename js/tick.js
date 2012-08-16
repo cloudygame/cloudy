@@ -8,9 +8,12 @@ function tick()
 {
 
 	// FPS measurement for testing
-	$('#FPS').val('FPS: '+ createjs.Ticker.getMeasuredFPS() );
 
 	if (!globals.STOP_TICK_DRAW){
+		
+		if ((createjs.Ticker.getTicks()%30 == 0)){ 
+			$('#FPS').val('FPS: '+ createjs.Ticker.getMeasuredFPS() );
+		}
 
 		/*
 		*	0. Control
