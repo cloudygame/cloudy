@@ -18,7 +18,7 @@
 	globals.STAGE_WIDTH				= 900;
 	globals.STAGE_HEIGHT			= 400;
 	
-	globals.STOP_TICK_DRAW			= false;	// it stops drawing in tick() (CPU cooling)
+	globals.STOP_TICK_DRAW			= true;	// it stops drawing in tick() (CPU cooling)
 
 	/*
 	*	GAME VARIABLES
@@ -30,8 +30,9 @@
 
 
 	// Layers
-	globals.layerCloud;		// normal cloud layer
-	globals.layerBgCloud;	// background layer
+	globals.layerMainContainer;		// main container of the layers (~stage)
+	globals.layerCloud;				// normal cloud layer
+	globals.layerBgCloud;			// background layer
 	globals.layerBubble;
 	
 	// Cloud parameters
@@ -98,20 +99,34 @@ $(document).ready( function() {
 	/* A stage is the root level Container for a display list. Each time its tick method is called, it will render its display list to its target globals.canvas. */
 	globals.stage		= new createjs.Stage(globals.canvas);
 
+	// initialize menu
+	game.Menu.initialize();
+
 
 	/*
 	* Create layers in proper order
 	*/
 
 	// *** Create main layers ***
+	globals.layerMainContainer	= new createjs.Container();
+	globals.stage.addChild(globals.layerMainContainer);
+
 	globals.layerBackground	= new createjs.Container();
-	globals.stage.addChild(globals.layerBackground);
+	globals.layerMainContainer.addChild(globals.layerBackground);
 
 	globals.layerBubble	= new createjs.Container();
-	globals.stage.addChild(globals.layerBubble);
+	globals.layerMainContainer.addChild(globals.layerBubble);
 
 	globals.layerCloud	= new createjs.Container();
-	globals.stage.addChild(globals.layerCloud);
+	globals.layerMainContainer.addChild(globals.layerCloud);
+
+	// set the scale
+	// globals.layerMainContainer.scaleX	= 0.5;
+	// globals.layerMainContainer.scaleY	= 0.5;
+	// globals.canvas.width	= globals.STAGE_WIDTH/2;
+	// globals.canvas.height	= globals.STAGE_HEIGHT/2;
+// 
+
 
 
 	// *** Fill the layers ***
@@ -198,7 +213,7 @@ $(document).ready( function() {
 	// globals.stage.enableMouseOver(10);
 
 	var controlBar	= new game.Control();
-	globals.stage.addChild(controlBar.drawControlBar());
+	globals.layerMainContainer.addChild(controlBar.drawControlBar());
 
 	globals.stage.update();
 
@@ -366,7 +381,7 @@ $(document).ready( function() {
 
 			tween.loop=true;
 
-			globals.stage.addChild(s);
+			globals.layerMainContainer.addChild(s);
 		}
 	}
 
