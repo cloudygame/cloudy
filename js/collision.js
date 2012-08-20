@@ -27,3 +27,22 @@ collision.RadiusTest = function (){
 	}
 }
 
+/**
+ *
+ *
+ */
+collision.PolygonTest = function (){
+	var colliding = false;
+	for ( var i=0; i<globals.cloudArr.length; i++ ){
+		for ( var j=0; j<globals.bubbleArr.length; j++){ 
+			var currCloud	= globals.cloudArr[i];
+			var currBubble	= globals.bubbleArr[j];
+			colliding		= currBubble.boundingPolygon.intersectsWith(currCloud.boundingPolygon);
+			if (colliding != false) {
+				// Return on the first collision
+				return colliding;
+			}
+		}
+	}
+	return colliding;
+}

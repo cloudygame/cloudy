@@ -30,9 +30,9 @@
 
 
 	// Layers
-	globals.mainContainer;		// normal cloud layer
-	globals.layerCloud;		// normal cloud layer
-	globals.layerBgCloud;	// background layer
+	globals.layerMainContainer;		// main container of the layers (~stage)
+	globals.layerCloud;				// normal cloud layer
+	globals.layerBgCloud;			// background layer
 	globals.layerBubble;
 	
 	// Cloud parameters
@@ -57,6 +57,13 @@
 	// start coordinates when drag occurs
 	globals.dragAndDropStartX	= null;
 	globals.dragAndDropStartY	= null;
+
+	// bounding polygon related stuff
+	globals.COLOUR_BOUNDING_POLYGON_INTERSECT		= 'red';
+	globals.COLOUR_BOUNDING_POLYGON_NON_INTERSECT	= 'blue';
+	globals.DEBUG_COLLISION							= true;
+	globals.colliding								= false;
+
 
 
 	/*
@@ -101,24 +108,24 @@ $(document).ready( function() {
 	*/
 
 	// *** Create main layers ***
-	globals.mainContainer	= new createjs.Container();
-	globals.stage.addChild(globals.mainContainer);
+	globals.layerMainContainer	= new createjs.Container();
+	globals.stage.addChild(globals.layerMainContainer);
 
 	globals.layerBackground	= new createjs.Container();
-	globals.mainContainer.addChild(globals.layerBackground);
+	globals.layerMainContainer.addChild(globals.layerBackground);
 
 	globals.layerBubble	= new createjs.Container();
-	globals.mainContainer.addChild(globals.layerBubble);
+	globals.layerMainContainer.addChild(globals.layerBubble);
 
 	globals.layerCloud	= new createjs.Container();
-	globals.mainContainer.addChild(globals.layerCloud);
+	globals.layerMainContainer.addChild(globals.layerCloud);
 
 	// set the scale
-	// globals.mainContainer.scaleX	= 0.5;
-	// globals.mainContainer.scaleY	= 0.5;
+	// globals.layerMainContainer.scaleX	= 0.5;
+	// globals.layerMainContainer.scaleY	= 0.5;
 	// globals.canvas.width	= globals.STAGE_WIDTH/2;
 	// globals.canvas.height	= globals.STAGE_HEIGHT/2;
-// 
+	// 
 
 
 
@@ -206,7 +213,7 @@ $(document).ready( function() {
 	// globals.stage.enableMouseOver(10);
 
 	var controlBar	= new game.Control();
-	globals.mainContainer.addChild(controlBar.drawControlBar());
+	globals.layerMainContainer.addChild(controlBar.drawControlBar());
 
 	globals.stage.update();
 
@@ -374,7 +381,8 @@ $(document).ready( function() {
 
 			tween.loop=true;
 
-			globals.mainContainer.addChild(s);
+			globals.layerMainContainer.addChild(s);
+
 		}
 	}
 
