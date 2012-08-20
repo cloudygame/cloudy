@@ -18,7 +18,7 @@
 	globals.STAGE_WIDTH				= 900;
 	globals.STAGE_HEIGHT			= 400;
 	
-	globals.STOP_TICK_DRAW			= false;	// it stops drawing in tick() (CPU cooling)
+	globals.STOP_TICK_DRAW			= true;	// it stops drawing in tick() (CPU cooling)
 
 	/*
 	*	GAME VARIABLES
@@ -91,6 +91,9 @@ $(document).ready( function() {
 
 	/* A stage is the root level Container for a display list. Each time its tick method is called, it will render its display list to its target globals.canvas. */
 	globals.stage		= new createjs.Stage(globals.canvas);
+
+	// initialize menu
+	game.Menu.initialize();
 
 
 	/*

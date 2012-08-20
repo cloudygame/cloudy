@@ -1,0 +1,64 @@
+/* keyframes for menuSlidein from sides */
+@-webkit-keyframes menuSlideinfromright {
+    from { -webkit-transform: translateX(100%); }
+    to { -webkit-transform: translateX(0); }
+}
+@-moz-keyframes menuSlideinfromright {
+    from { -moz-transform: translateX(100%); }
+    to { -moz-transform: translateX(0); }
+}
+@-webkit-keyframes menuSlideinfromleft {
+    from { -webkit-transform: translateX(-100%); }
+    to { -webkit-transform: translateX(0); }
+}
+@-moz-keyframes menuSlideinfromleft {
+    from { -moz-transform: translateX(-100%); }
+    to { -moz-transform: translateX(0); }
+}
+/* keyframes for menuSlideout to sides */
+@-webkit-keyframes menuSlideouttoleft {
+    from { -webkit-transform: translateX(0); }
+    to { -webkit-transform: translateX(-100%); }
+}
+@-moz-keyframes menuSlideouttoleft {
+    from { -moz-transform: translateX(0); }
+    to { -moz-transform: translateX(-100%); }
+}
+@-webkit-keyframes menuSlideouttoright {
+    from { -webkit-transform: translateX(0); }
+    to { -webkit-transform: translateX(100%); }
+}
+@-moz-keyframes menuSlideouttoright {
+    from { -moz-transform: translateX(0); }
+    to { -moz-transform: translateX(100%); }
+}
+.menuSlide.out, .menuSlide.in {
+	-webkit-animation-timing-function: ease-out;
+	-webkit-animation-duration: 500ms;
+	-moz-animation-timing-function: ease-out;
+	-moz-animation-duration: 500ms;
+}
+.menuSlide.out {
+	-webkit-transform: translateX(-100%);
+	-webkit-animation-name: menuSlideouttoleft;
+	-moz-transform: translateX(-100%);
+	-moz-animation-name: menuSlideouttoleft;
+}
+.menuSlide.in {
+	-webkit-transform: translateX(0);
+	-webkit-animation-name: menuSlideinfromright;
+	-moz-transform: translateX(0);
+	-moz-animation-name: menuSlideinfromright;
+}
+.menuSlide.out.reverse {
+	-webkit-transform: translateX(100%);
+	-webkit-animation-name: menuSlideouttoright;
+	-moz-transform: translateX(100%);
+	-moz-animation-name: menuSlideouttoright;
+}
+.menuSlide.in.reverse {
+	-webkit-transform: translateX(0);
+	-webkit-animation-name: menuSlideinfromleft;
+	-moz-transform: translateX(0);
+	-moz-animation-name: menuSlideinfromleft;
+}

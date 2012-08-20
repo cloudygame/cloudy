@@ -4,7 +4,11 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<title>Cloudy canvas demo</title>
 
+	<meta name="viewport" content="width=device-width, initial-scale=1"> 
+
+	<link rel="stylesheet" href="css/menu.css" />
 	<link rel="stylesheet" href="css/main.css" type="text/css" media="screen" />
+	<link rel="stylesheet" href="css/jquery.mobile-1.2.0-alpha.1.min.css" />
 
 	<!-- 
 	Hosted version
@@ -12,15 +16,22 @@
 	Latest stable without namespace:
 	<script src="http://code.createjs.com/easeljs-0.4.1.min.js"></script>
 	<script src="http://code.createjs.com/tweenjs-0.2.0.min.js"></script>
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0-alpha.1/jquery.mobile-1.2.0-alpha.1.min.css" />
+	<script src="http://code.jquery.com/mobile/1.2.0-alpha.1/jquery.mobile-1.2.0-alpha.1.min.js"></script>
 	-->
+
+
+
 
 	<!-- Local version of the frameworks -->
 	<script src="js/lib/easeljs-NEXT.min.js"></script>
 	<script src="js/lib/tweenjs-NEXT.min.js"></script>
 	<script src="js/lib/jquery-1.7.2.min.js"></script>
+	<script src="js/lib/jquery.mobile-1.2.0-alpha.1.min.js"></script>
 
 	<!-- "common" -->
 	<script src="js/main.js"></script>
+	<script src="js/menu.js"></script>
 	<script src="js/common.js"></script>
 	<script src="js/tick.js"></script>
 	<script src="js/collision.js"></script>
@@ -37,47 +48,118 @@
 	<script src="js/json/stars.js"></script>
 	<script src="js/json/cloud.js"></script>
 
-
 </head>
 	
 <body>
 
-	<canvas id="container"></canvas>
+<!-- Start of HOME page -->
+<div data-role="page" id="pageHome">
 
+	<div data-role="header">
+		<h1>Page Home</h1>
+	</div><!-- /header -->
 
-	<!-- DEVELOPMENT BUTTONS, MESSAGES -->
-	<div id="dev">
-	
-		<div id="dev_buttons">
-			<input type="button" id="go" value="Felhõt!" onClick="game.Main.initClouds();"><br>
-			<input type="button" style="width:150px;" value="Cache optimal" onClick="game.Main.turnOnCache( globals.cloudArr[0].maxX,globals.cloudArr[0].maxY);"><br>
-			<input type="button" style="width:150px;" value="Cache On 300x300px" onClick="game.Main.turnOnCache(300,300);"><br>
-			<input type="button" style="width:150px;" value="Cache On 100x100px" onClick="game.Main.turnOnCache(100,100);"><br>
-			<input type="button" id="" value="Cache Off" onClick="game.Main.turnOffCache();"><br>
-			<input type="button" id="" value="Stop drawing" onClick="globals.STOP_TICK_DRAW=true;"><br>
-			<input type="button" id="" value="Start drawing" onClick="globals.STOP_TICK_DRAW=false;"><br>
+	<div data-role="content">	
+		<p>Page content goes here.</p>		
+		<p><a href="#pageSettings" data-role="button" data-transition="menuSlide">Settings</a></p>	
+ 		<p><a href="#pageGame" data-role="button" data-transition="menuSlide">Game</a></p>
+ 		</div>
+ 		<!-- /content -->
+	<div data-role="footer">
+		<h4>Page Footer</h4>
 
-			<input type="button" id="" value="add rain bubbles" onClick="game.Main.havacska();"><br>
-			<input type="button" id="" value="add circles to clouds" onClick="for( var i=0;i<globals.cloudArr.length;i++){globals.cloudArr[i].testDrawSnow(globals.cloudArr[i].shape.graphics)};"><br>
-			<!-- <input type="button" value="anim_test" onClick="test_kinectanim();"><br> -->
-			<!-- <input type="button" value="teszt" onClick="$('#c2').val( 'FPS: ' + animStartTimeFPS ); "> <br> -->
-
+		<div data-role="navbar">
+			<ul>
+				<li><a href="#pageSettings" data-role="button" data-transition="menuSlide">Settings</a></li>
+ 				<li><a href="#pageGame" data-role="button" data-transition="menuSlide">Game</a></li>
+			</ul>
 		</div>
 
-		<div id="dev_messages">
-			<div id="coords">
-				C1: <input type="text" id="c1" value="teszt">
-				C2: <input type="text" id="c2" value="teszt">
-				FPS: <input type="text" id="FPS" value="teszt">
+	</div><!-- /footer -->
+</div><!-- /page -->
+
+
+
+<!-- Start of SETTINGS page -->
+<div data-role="page" id="pageSettings">
+
+	<div data-role="header">
+		<h1>Settings</h1>
+	</div><!-- /header -->
+
+	<div data-role="content">	
+		<p>I'm first in the source order so I'm shown as the page.</p>		
+ 		<p><a href="#pageGame" data-role="button" data-transition="menuSlide">Game screen</a></p>
+ 		<p><a href="#pageHome" data-role="button" data-transition="menuSlide">Home</a></p>
+
+			<div id="dev_buttons">
+				<input type="button" id="go" value="Felhõt!" onClick="game.Main.initClouds();"><br>
+				<input type="button" style="width:150px;" value="Cache optimal" onClick="game.Main.turnOnCache( globals.cloudArr[0].maxX,globals.cloudArr[0].maxY);"><br>
+				<input type="button" style="width:150px;" value="Cache On 300x300px" onClick="game.Main.turnOnCache(300,300);"><br>
+				<input type="button" style="width:150px;" value="Cache On 100x100px" onClick="game.Main.turnOnCache(100,100);"><br>
+				<input type="button" id="" value="Cache Off" onClick="game.Main.turnOffCache();"><br>
+				<input type="button" id="" value="Stop drawing" onClick="globals.STOP_TICK_DRAW=true;"><br>
+				<input type="button" id="" value="Start drawing" onClick="globals.STOP_TICK_DRAW=false;"><br>
+
+				<input type="button" id="" value="add rain bubbles" onClick="game.Main.havacska();"><br>
+				<input type="button" id="" value="add circles to clouds" onClick="for( var i=0;i<globals.cloudArr.length;i++){globals.cloudArr[i].testDrawSnow(globals.cloudArr[i].shape.graphics)};"><br>
+				<!-- <input type="button" value="anim_test" onClick="test_kinectanim();"><br> -->
+				<!-- <input type="button" value="teszt" onClick="$('#c2').val( 'FPS: ' + animStartTimeFPS ); "> <br> -->
+
 			</div>
-			<br>
-			
-			<div id="message"></div>
-			
+
+			<div id="dev_messages">
+				
+				<div id="message"></div>
+				
+			</div>
+
+
+	</div><!-- /content -->
+
+	<div data-role="footer">
+		<div data-role="navbar">
+			<ul>
+				<li><a href="#pageHome" data-role="button" data-transition="menuSlide">Home</a></li>
+ 				<li><a href="#pageGame" data-role="button" data-transition="menuSlide">Game</a></li>
+			</ul>
+		</div>
+	</div><!-- /footer -->
+</div><!-- /page -->
+
+
+<!-- Start of GAME page -->
+<div data-role="page" id="pageGame">
+
+	<div data-role="header">
+		<h1>Game</h1>
+	</div><!-- /header -->
+
+	<div data-role="content" style="padding:0px;">	
+
+
+		<canvas id="container"></canvas>
+
+
+		<!-- DEVELOPMENT BUTTONS, MESSAGES -->
+		<div id="devPageGame">
+				<a href="#" data-role="button" data-mini="true" id="btnDrawStart" onClick="game.Menu.startDrawing();">Start drawing</a>
+				<a href="#" data-role="button" data-mini="true" id="btnDrawStop" onClick="game.Menu.stopDrawing();" style="visibility:hidden;position:absolute;top:0px;width:100%;">Stop drawing</a>
+		
+				<input type="text" id="FPS" value="" readonly="readonly" />
 		</div>
 
-	</div>
+	</div><!-- /content -->
 
+	<div data-role="footer">
+		<div data-role="navbar">
+			<ul>
+				<li><a href="#pageSettings" data-role="button" data-transition="menuSlide">Settings</a></li>
+ 				<li><a href="#pageHome" data-role="button" data-transition="menuSlide">Home</a></li>
+			</ul>
+		</div>
+	</div><!-- /footer -->
+</div><!-- /page -->
 
 </body>
 </html>

@@ -32,10 +32,10 @@ canvas {
 	height: 640px;
 	width: 900px;
 */
-	position:absolute;
-	left:10px;
-	top:10px;
-	border:2px solid black;
+	position:relative;
+	left:0px;
+	top:0px;
+	border:2px solid gray;
 }
 
 
@@ -43,12 +43,12 @@ input{
 	width:100px;
 }
 
-#dev{
-	position: absolute;
-	top:10px;
-	left:920px;
-	width: 200px;
-	height:640px;
+#devPageGame{
+	position: fixed;
+	top:5px;
+	right:5px;
+	width: 125px;
+	border:2px solid red;
 }
 #dev_buttons{
 	border:2px solid gray;
@@ -56,8 +56,4 @@ input{
 
 #dev_messages{
 	border:2px solid gray;
-}
-
-#coords{
-	border:1px solid red;
 }
