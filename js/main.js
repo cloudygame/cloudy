@@ -57,6 +57,13 @@
 	globals.dragAndDropStartX	= null;
 	globals.dragAndDropStartY	= null;
 
+	// bounding polygon related stuff
+	globals.COLOUR_BOUNDING_POLYGON_INTERSECT		= 'red';
+	globals.COLOUR_BOUNDING_POLYGON_NON_INTERSECT	= 'blue';
+	globals.DEBUG_COLLISION							= true;
+	globals.colliding								= false;
+
+
 
 	/*
 	*	DEVELOPMENT VARIABLES

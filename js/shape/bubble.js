@@ -42,6 +42,7 @@
 	Bubble.shape			= null;
 	Bubble.debugShape		= null;
 	Bubble.shapeAlpha		= null;
+	Bubble.boundingPolygon 	= null; // a Polygon object that bounds the Cloud. Used for collision detection
 
 	Bubble.spriteImg		= null;
 	Bubble.bmpAnimation		= null;
@@ -75,6 +76,20 @@
 		this.shape.x		= globals.STAGE_WIDTH/2-200;
 		this.shape.y		= globals.STAGE_HEIGHT-20;
 
+		var pCenter = new Point(this.shape.x, this.shape.y);
+		this.boundingPolygon = new Polygon(pCenter);
+		this.boundingPolygon.addPoint(new Point(this.shape.x - this.scaledRadius, this.shape.y));
+		this.boundingPolygon.addPoint(new Point(this.shape.x - (this.scaledRadius * 0.707), this.shape.y - (this.scaledRadius * 0.707)));
+		this.boundingPolygon.addPoint(new Point(this.shape.x, this.shape.y - this.scaledRadius));
+		this.boundingPolygon.addPoint(new Point(this.shape.x + (this.scaledRadius * 0.707), this.shape.y - (this.scaledRadius * 0.707)));
+		this.boundingPolygon.addPoint(new Point(this.shape.x + this.scaledRadius, this.shape.y));
+		this.boundingPolygon.addPoint(new Point(this.shape.x + (this.scaledRadius * 0.707), this.shape.y + (this.scaledRadius * 0.707)));
+		this.boundingPolygon.addPoint(new Point(this.shape.x, this.shape.y + this.scaledRadius));
+		this.boundingPolygon.addPoint(new Point(this.shape.x - (this.scaledRadius * 0.707), this.shape.y + (this.scaledRadius * 0.707)));
+
+		if (globals.DEBUG_COLLISION) {
+			this.drawBoundingPolygon(globals.COLOUR_BOUNDING_POLYGON_NON_INTERSECT);
+		}
 	}
 
 
@@ -103,6 +118,8 @@
 
 		this.shape.x		= moveX;
 		this.shape.y		= moveY;
+
+		this.boundingPolygon.move(new Point(this.shape.x, this.shape.y));
 	}
 
 
@@ -117,7 +134,7 @@
 		this.directionFromX		= this.shape.x;
 		this.directionFromY		= this.shape.y;
 
-		game.Common.log('Bubble.setDirectionAngle: angle=' + angle + ' from x:y=' + this.directionFromX + ':' + this.directionFromY + ' to x:y=' + this.directionToX + ':' + this.directionToY );
+//		game.Common.log('Bubble.setDirectionAngle: angle=' + angle + ' from x:y=' + this.directionFromX + ':' + this.directionFromY + ' to x:y=' + this.directionToX + ':' + this.directionToY );
 		if ( globals.DEBUG ) {
 			this.debugShape.graphics.setStrokeStyle(1);
 			this.debugShape.graphics.beginStroke('#fff');
@@ -181,6 +198,21 @@
 		this.bmpAnimation.scaleX	= 0.7;
 	}
 
+
+	p.drawBoundingPolygon = function(colour) {
+		graphics = this.shape.graphics;
+		graphics.endFill();
+		graphics.setStrokeStyle(1);
+		graphics.beginStroke(colour);
+		for (var ixSide = 0; ixSide < this.boundingPolygon.getNumberOfSides(); ixSide++) {
+			if (ixSide == 0) {
+				graphics.moveTo(this.boundingPolygon.center.x - this.boundingPolygon.points[ixSide].x, this.boundingPolygon.center.y - this.boundingPolygon.points[ixSide].y);
+			} else {
+				graphics.lineTo(this.boundingPolygon.center.x - this.boundingPolygon.points[ixSide].x, this.boundingPolygon.center.y - this.boundingPolygon.points[ixSide].y);
+			}
+		}
+		graphics.closePath();
+	}
 
 
 	//called if there is an error loading the image (usually due to a 404)

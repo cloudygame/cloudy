@@ -16,7 +16,7 @@ function tick()
 		*	0. Control
 		*/
 		if ((createjs.Ticker.getTicks()%5 == 0) && globals.stage.mouseInBounds ){
-			game.Common.log( globals.stage.mouseInBounds + '-' + globals.stage.mouseX + '-' + globals.stage.mouseY );
+//			game.Common.log( globals.stage.mouseInBounds + '-' + globals.stage.mouseX + '-' + globals.stage.mouseY );
 
 			// the mouse is over the control bar
 			if( globals.stage.mouseY > globals.STAGE_HEIGHT-60 ){
@@ -29,7 +29,7 @@ function tick()
 
 					// convert direction to angle
 					bubble.setDirectionAngle(bubble.directionAngle + angleChange);
-				game.Common.log( 'tick Bubble prev direction: ' + bubble.directionAngle + ' Current direction: ' + direction + ' angleChange:' + angleChange);
+//				game.Common.log( 'tick Bubble prev direction: ' + bubble.directionAngle + ' Current direction: ' + direction + ' angleChange:' + angleChange);
 				}
 				globals.prevBubbleDir	= direction;
 			}
@@ -172,8 +172,22 @@ function tick()
 
 
 		// check it on every 10th tick
-		if ( createjs.Ticker.getTicks() % 50 == 0 ){
-			collision.RadiusTest();
+		if ( createjs.Ticker.getTicks() % 10 == 0 ){
+//			collision.RadiusTest();
+			var colliding = collision.PolygonTest();
+			if (colliding != globals.colliding) {
+				if (colliding != false) {
+					game.Common.log('colliding TRUE');
+					if (globals.DEBUG_COLLISION) {
+						bubble.drawBoundingPolygon(globals.COLOUR_BOUNDING_POLYGON_INTERSECT);
+					}
+				} else {
+					if (globals.DEBUG_COLLISION) {
+						bubble.drawBoundingPolygon(globals.COLOUR_BOUNDING_POLYGON_NON_INTERSECT);
+					}
+				}
+			}
+			globals.colliding = colliding;
 		}
 
 
