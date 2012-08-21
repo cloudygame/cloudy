@@ -93,6 +93,8 @@
 		<p>Development settings:</p>		
 
 			<div id="dev_buttons">
+				<input type="button" id="go" value="Debug on" onClick="globals.DEBUG=true;">
+				<input type="button" id="go" value="Debug off" onClick="globals.DEBUG=false;">
 				<input type="button" id="lng" value="Change Language to English"
 					 onClick="game.Lng.loadFile('en', function(){game.Lng.replace( $('body') )} );">
 				<input type="button" id="lng" value="Magyar"

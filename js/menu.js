@@ -7,6 +7,11 @@
 
 	// set menu navigation
 	Menu.initialize	= function(){
+
+		$('#pageGame').live('pagehide', function (event) { globals.STOP_TICK_DRAW=true;});
+		$('#pageGame').live('pageshow', function (event) { globals.STOP_TICK_DRAW=false;});
+
+
 		$('#pageHome').bind('swipeleft', function(){
 			$.mobile.changePage( "#pageSettings", { transition: "menuSlide"} );
 		})
