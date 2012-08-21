@@ -27,6 +27,7 @@
 	globals.canvas;			// the Main canvas
 	globals.stage;			// Main stage
 	globals.effectTimeMultiplier	= 5;
+	// globals.lng					= null;
 
 
 	// Layers
@@ -81,11 +82,24 @@
 
 
 
+// run before jQuery Mobile pageinit
+$( '[data-role]="page"' ).live( 'pageinit',function(event){
+		globals.lngInit	= true;
+		game.Common.log('page init: ' + $(this).attr('id'));
+		game.Lng.replace( $(this) );
+});
+
 
 /*
-*	the Main function
+*	the Main init function
 */
 $(document).ready( function() {
+
+	// localize
+	game.Lng.initialize();
+
+	// initialize menu
+	game.Menu.initialize();
 
 	/* Get the globals.canvas and set the its size.
 	*		(The size setting works only this way. why??)
@@ -98,12 +112,6 @@ $(document).ready( function() {
 
 	/* A stage is the root level Container for a display list. Each time its tick method is called, it will render its display list to its target globals.canvas. */
 	globals.stage		= new createjs.Stage(globals.canvas);
-
-	// load language
-	game.Lng.initialize();
-
-	// initialize menu
-	game.Menu.initialize();
 
 
 	/*

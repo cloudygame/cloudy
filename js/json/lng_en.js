@@ -1,15 +1,12 @@
 
-var lngJSON	= [
+globals.LNG_JSON	= {
 	
-	{ name:'home',				value:'Home'	},
-	{ name:'settings',			value:'Settings'	},
-	{ name:'game',				value:'Game'	},
-	{ name:'start_drawing',		value:'Start drawing'	},
-	{ name:'stop_drawing',		value:'Stop drawing'	},
-	{ name:'turn_on_debug',		value:'Turn on debug'	},
-	{ name:'turn_off_debug',	value:'Turn off debug'	},
+	'home'				:'Home',
+	'settings'			:'Settings',
+	'game'				:'Game',
+	'start_drawing'		:'Draw on',
+	'stop_drawing'		:'Draw off',
+	'turn_on_debug'		:'Debug on',
+	'turn_off_debug'	:'Debug off',
 
-	{ name:'add_rain_bubble',	value:'' },
-	{ name:'',		value:'' },
-
-];
+};

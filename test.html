@@ -58,8 +58,8 @@
 <div data-role="page" id="pageHome">
 
 	<div data-role="header">
-		<h1>Home</h1>
-		<a data-game-lng="true" data-icon="gear" class="ui-btn-right" data-transition="menuSlide" href="#pageSettings">Settings</a>
+		<h1 data-game-localize="home">Home</h1>
+		<a data-game-localize="settings" data-icon="gear" class="ui-btn-left" data-transition="menuSlide" href="#pageSettings">##aaaaaaaaaaaaaasettings##</a>
 	</div><!-- /header -->
 
 	<div data-role="content">	
@@ -71,9 +71,9 @@
 
 		<div data-role="navbar">
 			<ul>
- 				<li><a data-role="button" href="#" class="ui-btn-active">Home</a></li>
-				<li><a data-icon="gear" data-role="button" data-transition="menuSlide" href="#pageSettings" >Settings</a></li>
- 				<li><a data-role="button" data-transition="reverse menuSlide" href="#pageGame" >Game</a></li>
+ 				<li><a data-game-localize="home" data-role="button" href="#" class="ui-btn-active">Home</a></li>
+				<li><a data-game-localize="settings" data-role="button" data-transition="menuSlide" href="#pageSettings" >Settings</a></li>
+ 				<li><a data-game-localize="game" data-role="button" data-transition="reverse menuSlide" href="#pageGame" >Game</a></li>
 			</ul>
 		</div>
 
@@ -86,13 +86,17 @@
 <div data-role="page" id="pageSettings">
 
 	<div data-role="header">
-		<h1>Settings</h1>
+		<h1 data-game-localize="settings">Settings</h1>
 	</div><!-- /header -->
 
 	<div data-role="content">	
 		<p>Development settings:</p>		
 
 			<div id="dev_buttons">
+				<input type="button" id="lng" value="Change Language to English"
+					 onClick="game.Lng.loadFile('en', function(){game.Lng.replace( $('body') )} );">
+				<input type="button" id="lng" value="Magyar"
+					 onClick="game.Lng.loadFile('hu', function(){game.Lng.replace( $('body') )} );">
 				<input type="button" id="go" value="Add cloud" onClick="game.Main.initClouds();">
 				<input type="button" style="width:150px;" value="Cache optimal" onClick="game.Main.turnOnCache( globals.cloudArr[0].maxX,globals.cloudArr[0].maxY);">
 				<input type="button" style="width:150px;" value="Cache On 300x300px" onClick="game.Main.turnOnCache(300,300);">
@@ -114,15 +118,14 @@
 				
 			</div>
 
-
 	</div><!-- /content -->
 
 	<div data-role="footer">
 		<div data-role="navbar">
 			<ul>
-				<li><a href="#pageHome" data-role="button" data-transition="reverse menuSlide">Home</a></li>
- 				<li><a data-role="button" href="#" class="ui-btn-active">Settings</a></li>
- 				<li><a href="#pageGame" data-role="button" data-transition="menuSlide">Game</a></li>
+				<li><a data-game-localize="home" href="#pageHome" data-role="button" data-transition="reverse menuSlide">Home</a></li>
+ 				<li><a data-game-localize="settings" data-role="button" href="#" class="ui-btn-active">Settings</a></li>
+ 				<li><a data-game-localize="game" href="#pageGame" data-role="button" data-transition="menuSlide">Game</a></li>
 			</ul>
 		</div>
 	</div><!-- /footer -->
@@ -134,7 +137,7 @@
 
 	<div data-role="header">
 		<h1>Game</h1>
-		<a data-game-lng="true" data-icon="gear" class="ui-btn-left" data-transition="menuSlide" href="#pageSettings">Settings</a>
+		<a data-game-localize="settings" data-icon="gear" class="ui-btn-left" data-transition="menuSlide" href="#pageSettings">	</a>
 	</div><!-- /header -->
 
 	<div data-role="content" style="padding:0px;">	
@@ -145,8 +148,8 @@
 
 		<!-- DEVELOPMENT BUTTONS, MESSAGES -->
 		<div id="devPageGame">
-				<a href="#" data-role="button" data-mini="true" id="btnDrawStart" onClick="game.Menu.startDrawing();">Start drawing</a>
-				<a href="#" data-role="button" data-mini="true" id="btnDrawStop" onClick="game.Menu.stopDrawing();" style="visibility:hidden;position:absolute;top:0px;width:100%;">Stop drawing</a>
+				<a data-game-localize="start_drawing" href="#" data-role="button" data-mini="true" id="btnDrawStart" onClick="game.Menu.startDrawing();"></a>
+				<a data-game-localize="stop_drawing" href="#" data-role="button" data-mini="true" id="btnDrawStop" onClick="game.Menu.stopDrawing();" style="visibility:hidden;position:absolute;top:0px;width:100%;"></a>
 		
 				<input type="text" id="FPS" value="" readonly="readonly" />
 		</div>
@@ -156,9 +159,9 @@
 	<div data-role="footer">
 		<div data-role="navbar">
 			<ul>
- 				<li><a href="#pageHome" data-role="button" data-transition="menuSlide">Home</a></li>
-				<li><a href="#pageSettings" data-role="button" data-transition="reverse menuSlide">Settings</a></li>
- 				<li><a data-role="button" href="#" class="ui-btn-active">Game</a></li>
+ 				<li><a data-game-localize="home" href="#pageHome" data-role="button" data-transition="menuSlide">Home</a></li>
+				<li><a  data-game-localize="settings" href="#pageSettings" data-role="button" data-transition="reverse menuSlide">Settings</a></li>
+ 				<li><a data-game-localize="game" data-role="button" href="#" class="ui-btn-active">Game</a></li>
 			</ul>
 		</div>
 	</div><!-- /footer -->
@@ -166,17 +169,3 @@
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-

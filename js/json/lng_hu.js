@@ -1,15 +1,12 @@
 
-var lngJSON	= [
+globals.LNG_JSON	= {
 	
-	{ name:'home',				value:'Kezdőlap'	},
-	{ name:'settings',			value:'Beállítások'	},
-	{ name:'game',				value:'Játék'	},
-	{ name:'start_drawing',		value:'Rajzolás be'	},
-	{ name:'stop_drawing',		value:'Rajzolás ki'	},
-	{ name:'turn_on_debug',		value:'Debug bekapcsolása'	},
-	{ name:'turn_off_debug',	value:'Debug kikapcsolása'	},
+	'home'				:'Kezdőlap',
+	'settings'			:'Beállítások',
+	'game'				:'Játék',
+	'start_drawing'		:'Rajzolás be',
+	'stop_drawing'		:'Rajzolás ki',
+	'turn_on_debug'		:'Debug be',
+	'turn_off_debug'	:'Debug ki',
 
-	{ name:'add_rain_bubble',	value:'' },
-	{ name:'',		value:'' },
-
-];
+};
