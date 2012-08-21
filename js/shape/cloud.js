@@ -88,13 +88,15 @@
 		// I added some random snow to the cloud graphics in this example:
 		// cloudGraphics	= this.testDrawSnow(cloudGraphics);
 		if (globals.DEBUG) {
-			this.addShadow();
-			this.testGetDataOnDoubleClick();
-			this.drawTestBoundBox();
-			this.drawTestBoundCircle();
-		}
-		if (globals.DEBUG_COLLISION) {
-			this.drawBoundingPolygon(globals.COLOUR_BOUNDING_POLYGON_NON_INTERSECT);
+			// this.addShadow();
+			if (globals.DEBUG_CLOUD) {
+				this.testGetDataOnDoubleClick();
+				this.drawTestBoundBox();
+				this.drawTestBoundCircle();
+			}
+			if (globals.DEBUG_COLLISION) {
+				this.drawBoundingPolygon(globals.COLOUR_BOUNDING_POLYGON_NON_INTERSECT);
+			}
 		}
 	}
 

@@ -9,7 +9,9 @@
 	*	CONSTS
 	*/
 
-	globals.DEBUG	= true;
+	globals.DEBUG				= true;
+	globals.DEBUG_COLLISION		= true;
+	globals.DEBUG_CLOUD			= false;
 
 	// globals.DEFAULT_BUBBLE_X		= 150;
 	// globals.DEFAULT_BUBBLE_Y		= 150;
@@ -62,7 +64,6 @@
 	// bounding polygon related stuff
 	globals.COLOUR_BOUNDING_POLYGON_INTERSECT		= 'red';
 	globals.COLOUR_BOUNDING_POLYGON_NON_INTERSECT	= 'blue';
-	globals.DEBUG_COLLISION							= true;
 	globals.colliding								= false;
 
 
