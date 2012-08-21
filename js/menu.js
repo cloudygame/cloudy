@@ -7,8 +7,12 @@
 
 	// set menu navigation
 	Menu.initialize	= function(){
-		$('#pageHome').bind('swipe', function(){
+		$('#pageHome').bind('swipeleft', function(){
 			$.mobile.changePage( "#pageSettings", { transition: "menuSlide"} );
+		})
+		
+		$('#pageHome').bind('swiperight', function(){
+			$.mobile.changePage( "#pageGame", { transition: "reverse menuSlide"} );
 		})
 
 		$('#pageSettings').bind('swipeleft', function(){
@@ -16,7 +20,7 @@
 		})
 		
 		$('#pageSettings').bind('swiperight', function(){
-			$.mobile.changePage( "#pageHome", { transition: "menuSlide"} );
+			$.mobile.changePage( "#pageHome", { transition: "reverse menuSlide"} );
 		})
 		
 		$('#pageGame').bind('swipeleft', function(){
@@ -24,7 +28,7 @@
 		})
 
 		$('#pageGame').bind('swiperight', function(){
-			$.mobile.changePage( "#pageSettings", { transition: "menuSlide"} );
+			$.mobile.changePage( "#pageSettings", { transition: "reverse menuSlide"} );
 		})
 	}
 

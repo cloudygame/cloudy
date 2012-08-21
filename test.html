@@ -32,8 +32,9 @@
 
 	<!-- "common" -->
 	<script src="js/main.js"></script>
-	<script src="js/menu.js"></script>
 	<script src="js/common.js"></script>
+	<script src="js/lng.js"></script>
+	<script src="js/menu.js"></script>
 	<script src="js/tick.js"></script>
 	<script src="js/collision.js"></script>
 	<script src="js/control.js"></script>
@@ -57,22 +58,22 @@
 <div data-role="page" id="pageHome">
 
 	<div data-role="header">
-		<h1>Page Home</h1>
+		<h1>Home</h1>
+		<a data-game-lng="true" data-icon="gear" class="ui-btn-right" data-transition="menuSlide" href="#pageSettings">Settings</a>
 	</div><!-- /header -->
 
 	<div data-role="content">	
-		<p>Page content goes here.</p>		
-		<p><a href="#pageSettings" data-role="button" data-transition="menuSlide">Settings</a></p>	
- 		<p><a href="#pageGame" data-role="button" data-transition="menuSlide">Game</a></p>
- 		</div>
- 		<!-- /content -->
+		<p>Here will be some doc and instruction soon.</p>
+	</div><!-- /content -->
+
 	<div data-role="footer">
 		<h4>Page Footer</h4>
 
 		<div data-role="navbar">
 			<ul>
-				<li><a href="#pageSettings" data-role="button" data-transition="menuSlide">Settings</a></li>
- 				<li><a href="#pageGame" data-role="button" data-transition="menuSlide">Game</a></li>
+ 				<li><a data-role="button" href="#" class="ui-btn-active">Home</a></li>
+				<li><a data-icon="gear" data-role="button" data-transition="menuSlide" href="#pageSettings" >Settings</a></li>
+ 				<li><a data-role="button" data-transition="reverse menuSlide" href="#pageGame" >Game</a></li>
 			</ul>
 		</div>
 
@@ -89,21 +90,19 @@
 	</div><!-- /header -->
 
 	<div data-role="content">	
-		<p>I'm first in the source order so I'm shown as the page.</p>		
- 		<p><a href="#pageGame" data-role="button" data-transition="menuSlide">Game screen</a></p>
- 		<p><a href="#pageHome" data-role="button" data-transition="menuSlide">Home</a></p>
+		<p>Development settings:</p>		
 
 			<div id="dev_buttons">
-				<input type="button" id="go" value="Felhõt!" onClick="game.Main.initClouds();"><br>
-				<input type="button" style="width:150px;" value="Cache optimal" onClick="game.Main.turnOnCache( globals.cloudArr[0].maxX,globals.cloudArr[0].maxY);"><br>
-				<input type="button" style="width:150px;" value="Cache On 300x300px" onClick="game.Main.turnOnCache(300,300);"><br>
-				<input type="button" style="width:150px;" value="Cache On 100x100px" onClick="game.Main.turnOnCache(100,100);"><br>
-				<input type="button" id="" value="Cache Off" onClick="game.Main.turnOffCache();"><br>
-				<input type="button" id="" value="Stop drawing" onClick="globals.STOP_TICK_DRAW=true;"><br>
-				<input type="button" id="" value="Start drawing" onClick="globals.STOP_TICK_DRAW=false;"><br>
+				<input type="button" id="go" value="Add cloud" onClick="game.Main.initClouds();">
+				<input type="button" style="width:150px;" value="Cache optimal" onClick="game.Main.turnOnCache( globals.cloudArr[0].maxX,globals.cloudArr[0].maxY);">
+				<input type="button" style="width:150px;" value="Cache On 300x300px" onClick="game.Main.turnOnCache(300,300);">
+				<input type="button" style="width:150px;" value="Cache On 100x100px" onClick="game.Main.turnOnCache(100,100);">
+				<input type="button" id="" value="Cache Off" onClick="game.Main.turnOffCache();">
+				<input type="button" id="" value="Stop drawing" onClick="globals.STOP_TICK_DRAW=true;">
+				<input type="button" id="" value="Start drawing" onClick="globals.STOP_TICK_DRAW=false;">
 
-				<input type="button" id="" value="add rain bubbles" onClick="game.Main.havacska();"><br>
-				<input type="button" id="" value="add circles to clouds" onClick="for( var i=0;i<globals.cloudArr.length;i++){globals.cloudArr[i].testDrawSnow(globals.cloudArr[i].shape.graphics)};"><br>
+				<input type="button" id="" value="add rain bubbles" onClick="game.Main.havacska();">
+				<input type="button" id="" value="add circles to clouds" onClick="for( var i=0;i<globals.cloudArr.length;i++){globals.cloudArr[i].testDrawSnow(globals.cloudArr[i].shape.graphics)};">
 				<!-- <input type="button" value="anim_test" onClick="test_kinectanim();"><br> -->
 				<!-- <input type="button" value="teszt" onClick="$('#c2').val( 'FPS: ' + animStartTimeFPS ); "> <br> -->
 
@@ -121,7 +120,8 @@
 	<div data-role="footer">
 		<div data-role="navbar">
 			<ul>
-				<li><a href="#pageHome" data-role="button" data-transition="menuSlide">Home</a></li>
+				<li><a href="#pageHome" data-role="button" data-transition="reverse menuSlide">Home</a></li>
+ 				<li><a data-role="button" href="#" class="ui-btn-active">Settings</a></li>
  				<li><a href="#pageGame" data-role="button" data-transition="menuSlide">Game</a></li>
 			</ul>
 		</div>
@@ -134,6 +134,7 @@
 
 	<div data-role="header">
 		<h1>Game</h1>
+		<a data-game-lng="true" data-icon="gear" class="ui-btn-left" data-transition="menuSlide" href="#pageSettings">Settings</a>
 	</div><!-- /header -->
 
 	<div data-role="content" style="padding:0px;">	
@@ -155,8 +156,9 @@
 	<div data-role="footer">
 		<div data-role="navbar">
 			<ul>
-				<li><a href="#pageSettings" data-role="button" data-transition="menuSlide">Settings</a></li>
  				<li><a href="#pageHome" data-role="button" data-transition="menuSlide">Home</a></li>
+				<li><a href="#pageSettings" data-role="button" data-transition="reverse menuSlide">Settings</a></li>
+ 				<li><a data-role="button" href="#" class="ui-btn-active">Game</a></li>
 			</ul>
 		</div>
 	</div><!-- /footer -->

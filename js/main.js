@@ -9,7 +9,7 @@
 	*	CONSTS
 	*/
 
-	globals.DEBUG	= false;
+	globals.DEBUG	= true;
 
 	// globals.DEFAULT_BUBBLE_X		= 150;
 	// globals.DEFAULT_BUBBLE_Y		= 150;
@@ -98,6 +98,9 @@ $(document).ready( function() {
 
 	/* A stage is the root level Container for a display list. Each time its tick method is called, it will render its display list to its target globals.canvas. */
 	globals.stage		= new createjs.Stage(globals.canvas);
+
+	// load language
+	game.Lng.initialize();
 
 	// initialize menu
 	game.Menu.initialize();

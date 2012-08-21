@@ -33,9 +33,8 @@ Common.log	= function ( text ){
 		var currT	= currD.getTime();
 		var elapsedTimePrgStart	= (currT-programStartTime)/1000;
 		var elapsedTimeLastLog	= (currT-lastLogT)/1000;
-		var callerFunctionName	= arguments.callee.caller.name.toString();
 
-		console.log( elapsedTimePrgStart + 's: ' + callerFunctionName + ' -- ' + text + ' -- Elõzõ log óta eltelt: ' + elapsedTimeLastLog +'s');
+		console.log( elapsedTimePrgStart + 's: ' + text + ' -- Elõzõ log óta eltelt: ' + elapsedTimeLastLog +'s');
 
 		lastLogT	= currT;
 	}

@@ -216,8 +216,6 @@
 		g.beginStroke('#80f');
 		g.drawCircle(this.shape.x, this.shape.y, 5);
 
-		console.log("x, y" + this.shape.x + ":" + this.shape.y);
-
 		s = new createjs.Shape(g);
 		globals.stage.addChild(s);
 	}
