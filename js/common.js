@@ -5,6 +5,25 @@
 
 var Common	= new Object;
 
+/*	Disallow user selection (very annoying when you use swipe)
+	using: 
+	// disable selection on #theDiv object
+	$('#theDiv').disableSelection(); 
+*/
+jQuery.fn.extend({ 
+        disableSelection : function() { 
+                return this.each(function() { 
+                        this.onselectstart = function() { return false; }; 
+                        this.unselectable = "on"; 
+                        jQuery(this).css('user-select', 'none'); 
+                        jQuery(this).css('-o-user-select', 'none'); 
+                        jQuery(this).css('-moz-user-select', 'none'); 
+                        jQuery(this).css('-khtml-user-select', 'none'); 
+                        jQuery(this).css('-webkit-user-select', 'none'); 
+                }); 
+        } 
+}); 
+	
 
 /*
 *	random color generator for testing

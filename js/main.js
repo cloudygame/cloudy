@@ -81,6 +81,7 @@
 	var currDateFPS				= new Date;
 	var currTimeFPS				= currDateFPS.getTime();
 
+	globals.controlBar;		// temporary 
 
 
 // run before jQuery Mobile pageinit
@@ -101,6 +102,8 @@ $(document).ready( function() {
 
 	// initialize menu
 	game.Menu.initialize();
+
+	$('*').disableSelection();
 
 	/* Get the globals.canvas and set the its size.
 	*		(The size setting works only this way. why??)
@@ -224,8 +227,8 @@ $(document).ready( function() {
 	// ONLY FOR TESTING!! this is a performance killer line
 	// globals.stage.enableMouseOver(10);
 
-	var controlBar	= new game.Control();
-	globals.layerMainContainer.addChild(controlBar.drawControlBar());
+	globals.controlBar	= new game.Control();
+	globals.layerMainContainer.addChild(globals.controlBar.shape);
 
 	globals.stage.update();
 

@@ -12,7 +12,7 @@ function tick()
 	if (!globals.STOP_TICK_DRAW){
 		
 		if ((createjs.Ticker.getTicks()%30 == 0)){ 
-			$('#FPS').val('FPS: '+ createjs.Ticker.getMeasuredFPS() );
+			$('#FPS').val('FPS: '+ Math.round(createjs.Ticker.getMeasuredFPS()) );
 		}
 
 		/*
@@ -22,10 +22,10 @@ function tick()
 //			game.Common.log( globals.stage.mouseInBounds + '-' + globals.stage.mouseX + '-' + globals.stage.mouseY );
 
 			// the mouse is over the control bar
-			if( globals.stage.mouseY > globals.STAGE_HEIGHT-60 ){
+			if( globals.stage.mouseY > globals.STAGE_HEIGHT-100 ){
 				var direction	= Math.round((globals.stage.mouseX - (globals.STAGE_WIDTH/2))/(globals.BubbleDirGranularity*10));
 				var angleChange	= (globals.prevBubbleDir - direction)*(globals.BubbleDirGranularity);
-
+				globals.controlBar.draw2( globals.stage.mouseX );
 
 				for( var i=0; i<globals.bubbleArr.length; i++){
 					var bubble	= globals.bubbleArr[i];

@@ -8,8 +8,8 @@
 	// set menu navigation
 	Menu.initialize	= function(){
 
-		$('#pageGame').live('pagehide', function (event) { globals.STOP_TICK_DRAW=true;});
-		$('#pageGame').live('pageshow', function (event) { globals.STOP_TICK_DRAW=false;});
+		$('#pageGame').live('pagehide', function (event) { Menu.stopDrawing();});
+		$('#pageGame').live('pageshow', function (event) { Menu.startDrawing();});
 
 
 		$('#pageHome').bind('swipeleft', function(){

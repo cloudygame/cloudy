@@ -6,9 +6,10 @@
 
 	<meta name="viewport" content="width=device-width, initial-scale=1"> 
 
+	<!-- don't change the order! -->
+	<link rel="stylesheet" href="css/jquery.mobile-1.2.0-alpha.1.min.css" />
 	<link rel="stylesheet" href="css/menu.css" />
 	<link rel="stylesheet" href="css/main.css" type="text/css" media="screen" />
-	<link rel="stylesheet" href="css/jquery.mobile-1.2.0-alpha.1.min.css" />
 
 	<!-- 
 	Hosted version
@@ -93,24 +94,64 @@
 		<p>Development settings:</p>		
 
 			<div id="dev_buttons">
-				<input type="button" id="go" value="Debug on" onClick="globals.DEBUG=true;">
-				<input type="button" id="go" value="Debug off" onClick="globals.DEBUG=false;">
-				<input type="button" id="lng" value="Change Language to English"
-					 onClick="game.Lng.loadFile('en', function(){game.Lng.replace( $('body') )} );">
-				<input type="button" id="lng" value="Magyar"
-					 onClick="game.Lng.loadFile('hu', function(){game.Lng.replace( $('body') )} );">
-				<input type="button" id="go" value="Add cloud" onClick="game.Main.initClouds();">
-				<input type="button" style="width:150px;" value="Cache optimal" onClick="game.Main.turnOnCache( globals.cloudArr[0].maxX,globals.cloudArr[0].maxY);">
-				<input type="button" style="width:150px;" value="Cache On 300x300px" onClick="game.Main.turnOnCache(300,300);">
-				<input type="button" style="width:150px;" value="Cache On 100x100px" onClick="game.Main.turnOnCache(100,100);">
-				<input type="button" id="" value="Cache Off" onClick="game.Main.turnOffCache();">
-				<input type="button" id="" value="Stop drawing" onClick="globals.STOP_TICK_DRAW=true;">
-				<input type="button" id="" value="Start drawing" onClick="globals.STOP_TICK_DRAW=false;">
+
+				<!-- debug -->
+				<div class="ui-grid-a">
+					<div class="ui-block-a game-grid-block ui-bar-d">
+							<label class="game-grid-label">Debug:</label>
+					</div>
+					<div class="ui-block-b game-grid-block ui-bar-d">
+							<fieldset data-role="controlgroup" data-type="horizontal">
+
+						     	<input type="radio" name="radio_dbg" id="radio_dbg0" value="true" checked="checked" onChange="globals.DEBUG=true;" />
+						     	<label for="radio_dbg0">On</label>
+
+						     	<input type="radio" name="radio_dbg" id="radio_dbg1" value="false" onChange="globals.DEBUG=false;"/>
+						     	<label for="radio_dbg1">Off</label>
+							</fieldset>
+					</div>
+				</div><!-- /grid-a -->
+
+				<!-- lang -->
+				<div class="ui-grid-a">
+					<div class="ui-block-a game-grid-block ui-bar-d">
+							<label class="game-grid-label">Language:</label>
+					</div>
+					<div class="ui-block-b game-grid-block ui-bar-d">
+							<fieldset data-role="controlgroup" data-type="horizontal">
+
+						     	<input type="radio" name="radio_lng" id="radio_lng0" value="true" checked="checked" onChange="game.Lng.loadFile('en', function(){game.Lng.replace( $('body') )} );" />
+						     	<label for="radio_lng0">English</label>
+
+						     	<input type="radio" name="radio_lng" id="radio_lng1" value="false" onChange="game.Lng.loadFile('hu', function(){game.Lng.replace( $('body') )} );"/>
+						     	<label for="radio_lng1">Magyar</label>
+							</fieldset>
+					</div>
+				</div><!-- /grid-a -->
+
+				<!-- cache -->
+				<div class="ui-grid-a">
+					<div class="ui-block-a ui-bar-d" style="height:100px;">
+							<label class="game-grid-label">Cache:</label>
+					</div>
+					<div class="ui-block-b ui-bar-d" style="height:100px;">
+					<fieldset data-role="controlgroup">
+						<input type="checkbox" name="chk_cache_0" id="chk_cache_0" onChange="
+							this.checked ? game.Main.turnOnCache( globals.cloudArr[0].maxX,globals.cloudArr[0].maxY) : game.Main.turnOffCache();
+							" />
+						<label for="chk_cache_0"> Cloud </label>
+				
+						<input type="checkbox" name="chk_cache_1" id="chk_cache_1" />
+						<label for="chk_cache_1"> ?? Sun ?? </label>
+					</fieldset>
+					</div>
+				</div><!-- /grid-a -->
+
+
 
 				<input type="button" id="" value="add rain bubbles" onClick="game.Main.havacska();">
 				<input type="button" id="" value="add circles to clouds" onClick="for( var i=0;i<globals.cloudArr.length;i++){globals.cloudArr[i].testDrawSnow(globals.cloudArr[i].shape.graphics)};">
-				<!-- <input type="button" value="anim_test" onClick="test_kinectanim();"><br> -->
-				<!-- <input type="button" value="teszt" onClick="$('#c2').val( 'FPS: ' + animStartTimeFPS ); "> <br> -->
+				<input type="button" id="go" value="Add cloud" onClick="game.Main.initClouds();">
 
 			</div>
 

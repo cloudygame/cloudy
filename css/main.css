@@ -52,8 +52,19 @@ input{
 }
 #dev_buttons{
 	border:2px solid gray;
+	width:600px;
 }
 
 #dev_messages{
 	border:2px solid gray;
+}
+
+.game-grid-block{
+	height:60px;
+}
+
+.game-grid-label{
+	display:block;
+	font-size: 20px;
+	margin: 15px 0 0 10px;
 }
