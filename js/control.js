@@ -26,11 +26,11 @@
 		g.setStrokeStyle(3);
 		g.beginStroke('#555');
 
-		g.moveTo( 3, globals.STAGE_HEIGHT-3 );
-		g.lineTo( globals.STAGE_WIDTH-3, globals.STAGE_HEIGHT-3 );
-		g.lineTo( globals.STAGE_WIDTH-3, globals.STAGE_HEIGHT-30 );
-		g.lineTo( globals.STAGE_WIDTH/2, globals.STAGE_HEIGHT-3 );
-		g.lineTo( 3, globals.STAGE_HEIGHT-30 );
+		g.moveTo( 3, globals.STAGE_DEFAULT_HEIGHT-3 );
+		g.lineTo( globals.STAGE_DEFAULT_WIDTH-3, globals.STAGE_DEFAULT_HEIGHT-3 );
+		g.lineTo( globals.STAGE_DEFAULT_WIDTH-3, globals.STAGE_DEFAULT_HEIGHT-30 );
+		g.lineTo( globals.STAGE_DEFAULT_WIDTH/2, globals.STAGE_DEFAULT_HEIGHT-3 );
+		g.lineTo( 3, globals.STAGE_DEFAULT_HEIGHT-30 );
 
 		g.closePath();
 	}
@@ -49,9 +49,10 @@
 			var toX	= globals.STAGE_WIDTH;
 		}
 		
-		g.beginLinearGradientFill([createjs.Graphics.getRGB('0x0000ff',0.2),createjs.Graphics.getRGB('0xff0000',0.8)], [0, 1], Math.round(globals.STAGE_WIDTH/2) , globals.STAGE_HEIGHT-5 , toX , globals.STAGE_HEIGHT-5  );
-		g.rect( globals.STAGE_WIDTH/2,  globals.STAGE_HEIGHT-15, mouseX-globals.STAGE_WIDTH/2, globals.STAGE_HEIGHT-3 );
+		g.beginLinearGradientFill([createjs.Graphics.getRGB('0x0000ff',0.2),createjs.Graphics.getRGB('0xff0000',0.8)], [0, 1], Math.round(globals.STAGE_DEFAULT_WIDTH/2) , globals.STAGE_DEFAULT_HEIGHT-5 , toX , globals.STAGE_DEFAULT_HEIGHT-5  );
+		g.rect( globals.STAGE_DEFAULT_WIDTH/2,  globals.STAGE_DEFAULT_HEIGHT-15, (mouseX-globals.STAGE_WIDTH/2)/globals.layerMainContainer.scaleX, globals.STAGE_DEFAULT_HEIGHT-3 );
 
+		game.Common.log("CONTROL C size: " + globals.STAGE_DEFAULT_WIDTH + ":" + globals.STAGE_DEFAULT_HEIGHT + "---" + (globals.STAGE_DEFAULT_WIDTH/2) +","+  (globals.STAGE_DEFAULT_HEIGHT-15)+","+ (mouseX-globals.STAGE_DEFAULT_WIDTH/2)+","+ (globals.STAGE_DEFAULT_HEIGHT-3)) ;
 	}
 
 

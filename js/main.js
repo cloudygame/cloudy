@@ -10,17 +10,21 @@
 	*/
 
 	globals.DEBUG				= true;
-	globals.DEBUG_COLLISION		= true;
+	globals.DEBUG_COLLISION		= false;
 	globals.DEBUG_CLOUD			= false;
 
 	// globals.DEFAULT_BUBBLE_X		= 150;
 	// globals.DEFAULT_BUBBLE_Y		= 150;
 	// globals.DEFAULT_BUBBLE_RADIUS	= 30;
 	
-	globals.STAGE_WIDTH				= 900;
-	globals.STAGE_HEIGHT			= 400;
+	globals.STAGE_DEFAULT_WIDTH		= 900;	// 
+	globals.STAGE_DEFAULT_HEIGHT	= 400;	
+	globals.MAX_STAGE_WIDTH			= globals.STAGE_DEFAULT_WIDTH;	// max size for resizing
+	globals.MIN_STAGE_WIDTH			= 200;							// min size for resizing
+	globals.STAGE_WIDTH				= globals.STAGE_DEFAULT_WIDTH;	// the current size
+	globals.STAGE_HEIGHT			= globals.STAGE_DEFAULT_HEIGHT;
 	
-	globals.STOP_TICK_DRAW			= true;	// it stops drawing in tick() (CPU cooling)
+	globals.STOP_TICK_DRAW			= false;	// it stops drawing in tick() (CPU cooling)
 
 	/*
 	*	GAME VARIABLES
@@ -103,12 +107,12 @@ $(document).ready( function() {
 	// initialize menu
 	game.Menu.initialize();
 
-	$('*').disableSelection();
+	// turn off text selection in the whole document
+	$('body *').disableSelection();
 
-	/* Get the globals.canvas and set the its size.
-	*		(The size setting works only this way. why??)
-	*/
+	// get the canvas
 	globals.canvas		= $('#container').get(0);
+	// initialize the game with the default size
 	globals.canvas.width	= globals.STAGE_WIDTH;
 	globals.canvas.height	= globals.STAGE_HEIGHT;
 	//	$('#container').css('width','900px');	// this solution would be nice but the size setting from css is buggy
@@ -134,14 +138,6 @@ $(document).ready( function() {
 
 	globals.layerCloud	= new createjs.Container();
 	globals.layerMainContainer.addChild(globals.layerCloud);
-
-	// set the scale
-	// globals.layerMainContainer.scaleX	= 0.5;
-	// globals.layerMainContainer.scaleY	= 0.5;
-	// globals.canvas.width	= globals.STAGE_WIDTH/2;
-	// globals.canvas.height	= globals.STAGE_HEIGHT/2;
-	// 
-
 
 
 	// *** Fill the layers ***
@@ -230,6 +226,15 @@ $(document).ready( function() {
 	globals.controlBar	= new game.Control();
 	globals.layerMainContainer.addChild(globals.controlBar.shape);
 
+
+
+	/*
+	* set the current viewport size
+	*/
+	game.Main.viewportResize();						// set for the first time
+	$(window).resize( game.Main.viewportResize );	// and add automatic trigger resize
+
+
 	globals.stage.update();
 
 }
@@ -244,6 +249,35 @@ $(document).ready( function() {
 
 (function(namespace){
 	var Main	= new Object;
+
+
+	/*
+	*	Get the current viewport size and set the proper scale.
+	*/
+	Main.viewportResize	= function(){
+		var newWidth	= $(window).width();
+		newWidth	= newWidth < globals.MAX_STAGE_WIDTH ? newWidth : globals.MAX_STAGE_WIDTH;
+		newWidth	= newWidth > globals.MIN_STAGE_WIDTH ? newWidth : globals.MIN_STAGE_WIDTH;
+
+		var scale	= newWidth/globals.STAGE_DEFAULT_WIDTH;
+		globals.layerMainContainer.scaleX = scale;
+		globals.layerMainContainer.scaleY = scale;
+
+		// set the current size
+		globals.STAGE_WIDTH		= Math.round(globals.STAGE_DEFAULT_WIDTH*scale);
+		globals.STAGE_HEIGHT	= Math.round(globals.STAGE_DEFAULT_HEIGHT*scale);
+
+		// resize the canvas too
+		globals.canvas.width	= globals.STAGE_WIDTH;
+		globals.canvas.height	= globals.STAGE_HEIGHT;
+
+		// set the jqm page size
+		$("div[data-role='page']").css( "width", newWidth );
+
+		game.Common.log("Viewport scale change: " + scale + " new width:" + newWidth);
+		game.Common.log("New size: " + globals.STAGE_WIDTH + ":" + globals.STAGE_HEIGHT);
+	}
+
 
 	/*
 	*	first time cloud generating
