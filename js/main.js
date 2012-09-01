@@ -12,6 +12,7 @@
 	globals.DEBUG				= true;
 	globals.DEBUG_COLLISION		= false;
 	globals.DEBUG_CLOUD			= false;
+	globals.DEBUG_BUBBLE		= false;
 
 	// globals.DEFAULT_BUBBLE_X		= 150;
 	// globals.DEFAULT_BUBBLE_Y		= 150;
@@ -163,7 +164,7 @@ $(document).ready( function() {
 		;
 	starsTween.loop	= true;
 
-	// show the contellation lines sometimes
+	// show the constellation lines periodically
 	var consLineTween = createjs.Tween.get( globals.StageBackgroundStars.consShape );
 	consLineTween.wait(1000*globals.effectTimeMultiplier).to({visible:true,alpha:0.8},1500,createjs.Ease.bounceOut).to({alpha:0,visible:false},1000,createjs.Ease.backIn);
 	consLineTween.loop	= true;
@@ -363,8 +364,14 @@ $(document).ready( function() {
 		return globals.sStageBgGradient;
 	}
 
-	// add DnD to a given target shape
+	// add Drag and Drop to the main clouds
 	Main.addShapeDragAndDrop	= function( shape ){
+
+		// enable touch interactions if supported on the current device:
+		createjs.Touch.enable(globals.stage);
+
+		// enabled mouse over / out events
+		globals.stage.enableMouseOver(10);
 
 		shape.onPress	= function(evt){
 

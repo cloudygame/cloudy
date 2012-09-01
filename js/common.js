@@ -53,7 +53,7 @@ Common.log	= function ( text ){
 		var elapsedTimePrgStart	= (currT-programStartTime)/1000;
 		var elapsedTimeLastLog	= (currT-lastLogT)/1000;
 
-		console.log( elapsedTimePrgStart + 's: ' + text + ' -- Elõzõ log óta eltelt: ' + elapsedTimeLastLog +'s');
+		console.log( elapsedTimePrgStart + 's: ' + text + ' -- Time since last log: ' + elapsedTimeLastLog +'s');
 
 		lastLogT	= currT;
 	}

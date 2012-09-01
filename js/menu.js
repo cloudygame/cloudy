@@ -27,13 +27,14 @@
 		$('#pageSettings').bind('swiperight', function(){
 			$.mobile.changePage( "#pageHome", { transition: "reverse menuSlide"} );
 		})
-		
+
+		// turn off the swipe on the game screen because it interfere with game controls	
 		$('#pageGame').bind('swipeleft', function(){
-			$.mobile.changePage( "#pageHome", { transition: "menuSlide"} );
+			// $.mobile.changePage( "#pageHome", { transition: "menuSlide"} );
 		})
 
 		$('#pageGame').bind('swiperight', function(){
-			$.mobile.changePage( "#pageSettings", { transition: "reverse menuSlide"} );
+			// $.mobile.changePage( "#pageSettings", { transition: "reverse menuSlide"} );
 		})
 	}
 

@@ -135,7 +135,7 @@
 		this.directionFromY		= this.shape.y;
 
 //		game.Common.log('Bubble.setDirectionAngle: angle=' + angle + ' from x:y=' + this.directionFromX + ':' + this.directionFromY + ' to x:y=' + this.directionToX + ':' + this.directionToY );
-		if ( globals.DEBUG ) {
+		if ( globals.DEBUG_BUBBLE ) {
 			this.debugShape.graphics.setStrokeStyle(1);
 			this.debugShape.graphics.beginStroke('#fff');
 			this.debugShape.graphics.moveTo( this.directionFromX, this.directionFromY );
