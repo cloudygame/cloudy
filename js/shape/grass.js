@@ -42,15 +42,13 @@
 	p.initialize	= function(){
 
 		this.graphics	= new createjs.Graphics();
-		this.graphics.setStrokeStyle(1).beginLinearGradientStroke(["#000","#FFF"], [0, 1], 100, 100, 440, 300);
 	
 		var offsetX	= 0;
+		
 		// generate the grass json arr
 		for ( var i=0;i<this.numberOfBlades;i++){
 			offsetX	= i*10;
-			this.graphics.beginLinearGradientFill( [this.grassStartColor,this.grassEndColor], [0.3,1], 0+offsetX,100, 30+offsetX,0 );
 			this.grassJsonDataArr[i]	= this.getRandomBladeOfGrassJSON( offsetX,6 );
-			this.graphics				= game.Common.drawQuadraticJson(this.graphics, this.grassJsonDataArr[i]);
 		}
 
 		this.shape	= new createjs.Shape(this.graphics);
@@ -58,6 +56,9 @@
 		this.shape.y	= globals.STAGE_HEIGHT-50;
 		this.shape.scaleX	= 1;
 		this.shape.scaleY	= 1;
+
+		this.shape.cache(0, 0, globals.STAGE_WIDTH, globals.STAGE_HEIGHT);
+		this.draw();
 
 	}
 
@@ -107,6 +108,9 @@
 			shape.graphics.beginLinearGradientFill( [this.grassStartColor,this.grassEndColor], [0.3,1], 0+gradientOffsetX,100, 30+gradientOffsetX,0 );
 			shape.graphics	= game.Common.drawQuadraticJson(this.graphics, this.grassJsonDataArr[i], tmpOffsetX);
 		}
+
+		console.log("grass draw");
+		this.shape.updateCache(0, 0, globals.STAGE_WIDTH, globals.STAGE_HEIGHT);
 	}
 
 

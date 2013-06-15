@@ -72,30 +72,8 @@ function tick()
 			globals.bgGraphics.endStroke();
 		}
 */
-		/*
-		*	2. Grass effects
-		*/
-		// grass bend
-		if (createjs.Ticker.getTicks() % 3 == 0){
-			// game.Common.log( "tick: Grass draw start" );	// time measurement START
-			globals.grassArr[1].bend();
-		}
-		if (createjs.Ticker.getTicks() % 6 == 0){
-			globals.grassArr[0].bend();
-		}
-
-		// grass rotation
-		if (createjs.Ticker.getTicks() % 3 == 0){
-			// console.log(grassJsonDataArr[i]["quadraticCurveTo"][0]["x"]);
-			globals.grassArr[1].offsetX	+= 1;
-		}
-
-		// the draw is needed only on tick/3
-		if (createjs.Ticker.getTicks() % 3 == 0){
-			globals.grassArr[0].draw();
-			globals.grassArr[1].draw();
-			// game.Common.log( "tick: Grass draw end" );	// time measurement END
-		}
+		// grass bend and rotate
+		// tick_grass_effects();
 
 
 		/*
@@ -176,7 +154,7 @@ function tick()
 
 		// check it on every 10th tick
 		if ( createjs.Ticker.getTicks() % 10 == 0 ){
-//			collision.RadiusTest();
+			collision.RadiusTest();
 			var colliding = collision.PolygonTest();
 			if (colliding != globals.colliding) {
 				if (colliding != false) {
@@ -197,5 +175,27 @@ function tick()
 		//re-render the stage
 		globals.stage.update();
 	}
+}
+
+
+
+
+function tick_grass_effects(){
+		if (createjs.Ticker.getTicks() % 3 == 0){
+			// game.Common.log( "tick: Grass draw start" );	// time measurement START
+			globals.grassArr[1].bend();
+			globals.grassArr[1].draw();
+		}
+		if (createjs.Ticker.getTicks() % 6 == 0){
+			globals.grassArr[0].bend();
+			globals.grassArr[0].draw();
+		}
+
+		// grass rotation
+		if (createjs.Ticker.getTicks() % 3 == 0){
+			// console.log(grassJsonDataArr[i]["quadraticCurveTo"][0]["x"]);
+			globals.grassArr[1].offsetX	+= 1;
+		}
+
 }
 

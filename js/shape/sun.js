@@ -5,15 +5,6 @@
 (function(namespace){
 
 	var Sun	= function(){
-		this.initialize();
-	}
-	
-
-	Sun.shape		= null;
-	Sun.container	= null;
-
-
-	Sun.prototype.initialize = function() {
 		var g		= new createjs.Graphics;
 		var x		= 50;
 		var y		= 50;
@@ -32,12 +23,15 @@
 			x	= Math.round(Math.cos(i*radianOffset) * radius);
 			y	= Math.round(Math.sin(i*radianOffset) * radius);
 			g.drawCircle( x, y, 3 );
+			g.endStroke();
 			x	= Math.round(Math.cos(i*radianOffset) * (radius+10));
 			y	= Math.round(Math.sin(i*radianOffset) * (radius+10));
 			g.drawCircle( x, y, 3 );
+			g.endStroke();
 			x	= Math.round(Math.cos(i*radianOffset) * (radius+20));
 			y	= Math.round(Math.sin(i*radianOffset) * (radius+20));
 			g.drawCircle( x, y, 3 );
+			g.endStroke();
 		}
 
 		this.shape	= new createjs.Shape(g);
@@ -58,7 +52,19 @@
 		this.container.x=globals.STAGE_WIDTH/2;
 
 	};
+	
 
+	Sun.shape		= null;
+	Sun.container	= null;
+
+
+	Sun.prototype.drawShineCircle = function() {
+
+	};
+
+	Sun.prototype.addRotation = function(){
+
+	};
 
 
 	namespace.Sun	= Sun;

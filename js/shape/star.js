@@ -80,11 +80,8 @@
 			this.minY	= this.minY > y ? y : this.minY;
 
 			angle	= Math.round( Math.random()*360 );
-			// g.setStrokeStyle(1);
-			// g.beginStroke('#fff');
 			g.drawPolyStar (  x, y , size*2 , 7 , 2 , 0 );
 
-			// g.endStroke();
 		}
 
 		var shape	= new createjs.Shape(g);
