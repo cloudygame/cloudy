@@ -199,22 +199,6 @@
 	}
 
 
-	p.drawBoundingPolygon = function(colour) {
-		graphics = this.shape.graphics;
-		graphics.endFill();
-		graphics.setStrokeStyle(1);
-		graphics.beginStroke(colour);
-		for (var ixSide = 0; ixSide < this.boundingPolygon.getNumberOfSides(); ixSide++) {
-			if (ixSide == 0) {
-				graphics.moveTo(this.boundingPolygon.center.x - this.boundingPolygon.points[ixSide].x, this.boundingPolygon.center.y - this.boundingPolygon.points[ixSide].y);
-			} else {
-				graphics.lineTo(this.boundingPolygon.center.x - this.boundingPolygon.points[ixSide].x, this.boundingPolygon.center.y - this.boundingPolygon.points[ixSide].y);
-			}
-		}
-		graphics.closePath();
-	}
-
-
 	//called if there is an error loading the image (usually due to a 404)
 	p.handleImageError	= function (e) {
 		alert("Error Loading Image : " + e.target.src);
