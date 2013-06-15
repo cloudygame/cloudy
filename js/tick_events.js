@@ -91,7 +91,7 @@ game.TickEvents = {
 					// console.log( "X" + cloudShape.x );
 				}
 			}else{
-				if ( (cloud.shape.x + cloud.getCurrentWidth()/2) > 0){
+				if ( (cloud.shape.x + cloud.getCurrentWidth()) > 0){
 					cloudShape.x -= 2;
 				} else {
 					// randomize cloud

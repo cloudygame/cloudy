@@ -296,7 +296,7 @@ $(document).ready( function() {
 			// color		= game.Common.getRandomColor();				// generate random color
 			color		= cloudColorJson[(Math.round(Math.random()*cloudColorJson.length))];
 			alpha		= Math.random();							// alpha
-			alpha		= 1;
+			alpha		= 0.8;
 			scaleRnd	= (Math.random())/2+0.3;					// random scaling - maximum +-25%
 			var cloud 	= new game.Cloud( x, y, color, alpha, scaleRnd );
 			cloud.shape.alpha	= 0;	// it's a different alpha than drawing alpha!
@@ -342,6 +342,7 @@ $(document).ready( function() {
 			scaleRnd	= (Math.random())/2+0.2;					// random scaling - maximum +-25%
 
 			var cloud 	= new game.Cloud( x, y, color, alpha, scaleRnd );
+			cloud.setStrokeColor("#eee", "#bbb");
 
 			globals.layerBackground.addChild(cloud.shape);
 

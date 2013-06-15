@@ -14,15 +14,15 @@
 	/*
 	 *	the Cloud object and constructor
 	 */
-	var Cloud = function(inX, inY, inFillColor, inAlpha, inScale) {
+	var Cloud = function(inX, inY, inFillColor, inAlpha, inScale, strokeColor) {
 			// this.maxX		= 0;
 			// this.maxY		= 0;
 			// this.minX		= 1000;
 			// this.minY		= 1000;	
-			this.fillColor = inFillColor;
+			// this.fillColor = inFillColor;
+			// this.alpha = inAlpha;
 			this.scale = inScale;
 			this.initialize(inX, inY, inFillColor, inAlpha, inScale);
-
 		}
 
 		// object variables
@@ -41,6 +41,9 @@
 	Cloud.unscaledHeight = null; // unscaled unscaledHeight
 	Cloud.boundingPolygon = null; // a Polygon object that bounds the Cloud. Used for collision detection
 
+	Cloud.prototype.strokeColorFrom = "#eee";
+	Cloud.prototype.strokeColorTo = "#000";
+
 
 	var p = Cloud.prototype;
 
@@ -50,13 +53,12 @@
 	p.initialize = function(inX, inY, inFillColor, inAlpha, inScale) {
 
 		// load data from JSON
-		var jsonStr = '{"fillColor":"' + inFillColor + '","alpha":"' + inAlpha + '","strokeStyle":6,"moveTo":{"x":140,"y":200},"quadraticCurveTo":[{"x":135,"y":155,"ref_x":180,"ref_y":150},{"x":220,"y":110,"ref_x":260,"ref_y":130},{"x":300,"y":100,"ref_x":340,"ref_y":130},{"x":390,"y":125,"ref_x":400,"ref_y":170},{"x":440,"y":190,"ref_x":420,"ref_y":230},{"x":420,"y":270,"ref_x":380,"ref_y":270},{"x":340,"y":290,"ref_x":300,"ref_y":270},{"x":260,"y":290,"ref_x":220,"ref_y":270},{"x":185,"y":275,"ref_x":170,"ref_y":250},{"x":185,"y":275,"ref_x":170,"ref_y":250},{"x":130,"y":240,"ref_x":140,"ref_y":200}]}';
-		var cloudData = jQuery.parseJSON(jsonStr);
+		this.cloudData = this.generateCloudData(inFillColor, inAlpha);
 
 		// adjust cloud to the upper left corner
-		cloudData = game.Common.getAdjustedQuadraticJson(cloudData);
+		cloudData = game.Common.getAdjustedQuadraticJson(this.cloudData);
 
-		var cloudGraphics = new createjs.Graphics();
+		this.cloudGraphics = new createjs.Graphics();
 
 
 		/*
@@ -66,7 +68,7 @@
 
 		// Peti: The graphics object exists only virtual. We cannot draw it onto the canvas in normal way. (It's possible but not a good idea.)
 		// So we need to add it to a new createjs.Shape.
-		var cloudShape = new createjs.Shape(cloudGraphics);
+		var cloudShape = new createjs.Shape(this.cloudGraphics);
 		cloudShape.regX = (this.maxX - this.minX) / 2; // set the reg points to the center
 		cloudShape.regY = (this.maxY - this.minY) / 2;
 		cloudShape.x = inX;
@@ -76,7 +78,7 @@
 
 		this.shape = cloudShape;
 
-		cloudGraphics = this.drawQuadraticJson(cloudGraphics, cloudData);
+		this.reDraw();
 
 		this.unscaledWidth = (this.maxX - this.minX);
 		this.unscaledHeight = (this.maxY - this.minY);
@@ -104,6 +106,12 @@
 	p.getCurrentWidth = function() {
 		var currWidth = (this.maxX) * this.shape.scaleX;
 		return currWidth;
+	}
+
+	p.generateCloudData = function(inFillColor, inAlpha){
+		var jsonStr = '{"fillColor":"' + inFillColor + '","alpha":"' + inAlpha + '","strokeStyle":6,"moveTo":{"x":140,"y":200},"quadraticCurveTo":[{"x":135,"y":155,"ref_x":180,"ref_y":150},{"x":220,"y":110,"ref_x":260,"ref_y":130},{"x":300,"y":100,"ref_x":340,"ref_y":130},{"x":390,"y":125,"ref_x":400,"ref_y":170},{"x":440,"y":190,"ref_x":420,"ref_y":230},{"x":420,"y":270,"ref_x":380,"ref_y":270},{"x":340,"y":290,"ref_x":300,"ref_y":270},{"x":260,"y":290,"ref_x":220,"ref_y":270},{"x":185,"y":275,"ref_x":170,"ref_y":250},{"x":185,"y":275,"ref_x":170,"ref_y":250},{"x":130,"y":240,"ref_x":140,"ref_y":200}]}';
+		var cloudData = jQuery.parseJSON(jsonStr);
+		return cloudData;
 	}
 
 	// // return with the scaled cloud X coord
@@ -138,7 +146,23 @@
 		this.shape.shadow = shadow;
 	}
 
+	p.setStrokeColor = function(from, to) {
+		this.strokeColorFrom = from;
+		this.strokeColorTo = to;
+		this.reDraw();
+	}
 
+	p.changeColor = function(inFillColor, inAlpha){
+		this.drawQuadraticJson(this.cloudGraphics, this.cloudData);
+		// re-generate the whole cloud data with the new color
+		this.cloudData = this.generateCloudData(inFillColor, inAlpha);
+		this.reDraw();
+	}
+
+
+	p.reDraw = function(){
+		this.drawQuadraticJson(this.cloudGraphics, this.cloudData);
+	}
 
 	/*
 	 *	universal quadratic curve drawer function
@@ -147,7 +171,9 @@
 		// draw out
 		// var graphics = new createjs.Graphics();
 		// All drawing methods in Graphics return the Graphics instance, so they can be chained together.
-		graphics.beginFill(createjs.Graphics.getRGB(inJson["fillColor"], inJson["alpha"])).setStrokeStyle(inJson["strokeStyle"]).beginLinearGradientStroke(["#000", "#FFF"], [0, 1], 100, 100, 440, 300);
+		graphics.clear();
+		graphics.beginFill(createjs.Graphics.getRGB(inJson["fillColor"], inJson["alpha"]))
+		.setStrokeStyle(inJson["strokeStyle"]).beginLinearGradientStroke([this.strokeColorFrom, this.strokeColorTo], [0, 1], 100, 100, 440, 300);
 
 		graphics.moveTo(inJson["moveTo"]["x"], inJson["moveTo"]["y"]);
 		var pMoveTo = new Point(this.shape.x + inJson["moveTo"]["x"], this.shape.y + inJson["moveTo"]["y"]);
