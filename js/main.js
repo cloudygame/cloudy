@@ -298,8 +298,10 @@ $(document).ready( function() {
 			alpha		= Math.random();							// alpha
 			alpha		= 0.8;
 			scaleRnd	= (Math.random())/2+0.3;					// random scaling - maximum +-25%
+
 			var cloud 	= new game.Cloud( x, y, color, alpha, scaleRnd );
-			cloud.shape.alpha	= 0;	// it's a different alpha than drawing alpha!
+			cloud.shape.alpha	= 0;	// it's a different alpha than drawing alpha!ű
+			cloud.addShadow();
 			globals.layerCloud.addChild(cloud.shape);
 
 			globals.cloudArr[i+offset]	= cloud;		//store clouds in a global array too
