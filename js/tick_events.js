@@ -110,16 +110,16 @@ game.TickEvents = {
 		// the mouse is over the control bar
 		if( globals.stage.mouseY > globals.STAGE_HEIGHT-100 ){
 			var direction	= Math.round((globals.stage.mouseX - (globals.STAGE_WIDTH/2))/(globals.BubbleDirGranularity*10));
-			var angleChange	= (globals.prevBubbleDir - direction)*(globals.BubbleDirGranularity);
 			globals.controlBar.draw2( globals.stage.mouseX );
 
 			for( var i=0; i<globals.bubbleArr.length; i++){
 				var bubble	= globals.bubbleArr[i];
+                var angleChange	= (bubble.prevBubbleDir - direction)*(globals.BubbleDirGranularity);
 
 				// convert direction to angle
 				bubble.setDirectionAngle(bubble.directionAngle + angleChange);
-			}
-			globals.prevBubbleDir	= direction;
+                bubble.prevBubbleDir	= direction;
+            }
 		}
 
 	},

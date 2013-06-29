@@ -50,7 +50,7 @@
 	
 	// Bubbles
 	globals.bubbleArr				= new Array();
-	globals.prevBubbleDir			= 0;
+
 	globals.BubbleDirGranularity	= 1;		// direction movement granularity: the lower the detailed (100=-4->+4)
 
 	// Grass

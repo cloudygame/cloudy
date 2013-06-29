@@ -16,7 +16,6 @@ var game = game || {};
         this.container = null;
         this.shape = null;
         this.debugShape = null;
-        this.shapeAlpha = null;
         this.boundingPolygon = null; // a Polygon object that bounds the Cloud. Used for collision detection
 
         this.spriteImg = null;
@@ -31,35 +30,23 @@ var game = game || {};
         this.directionStep = null;
         this.speed = null;
         this.color = null;
-        this.x = inX;
-        this.y = inY;
-        // this.color			= color;
-        this.speed = 1;
-        this.shapeAlpha = 0.8;
+        this.prevBubbleDir = null;
 
-        var graphics = new createjs.Graphics;
-        this.shape = new createjs.Shape(graphics);
-        var debugGraphics = new createjs.Graphics;
-        this.debugShape = new createjs.Shape(debugGraphics);
+        this.speed = null;
+        this.shapeAlpha = null;
+
+        this.shape = new createjs.Shape(new createjs.Graphics());
+
+        this.debugShape = new createjs.Shape(new createjs.Graphics());
 
         this.container = new createjs.Container();
         this.container.addChild(this.shape);
         this.container.addChild(this.debugShape);
 
-        this.scaledRadius = 30;
-
         //bubble_sprite_test:
         //    this.initSprite();
 
-
-        this.shape.alpha = this.shapeAlpha;
-        this.shape.x = globals.STAGE_WIDTH / 2 - 200;
-        this.shape.y = globals.STAGE_HEIGHT - 20;
-
-        // set the direction for the movement
-        this.setDirectionAngle(270);			// default
-
-        this.speed = 3;
+        this.initBubble();
 
         this._addBoundingPoligon(this.shape.x, this.shape.y, this.scaledRadius);
         this.reDraw();
@@ -67,6 +54,25 @@ var game = game || {};
 
 
     var p = Bubble.prototype;
+
+    p.initBubble = function () {
+        // set the direction for the movement
+        this.speed = 3;
+        this.shapeAlpha = 0.8;
+        this.shape.x = globals.STAGE_WIDTH / 2 - 200;
+        this.shape.y = globals.STAGE_HEIGHT - 20;
+
+        this.scaledRadius = 30;
+        this.directionStep = 0;
+        this.prevBubbleDir = 0;
+
+        this.shape.alpha = this.shapeAlpha;
+        this.shape.scaleX = 1;
+        this.shape.scaleY = 1;
+        this.shape.graphics.clear();
+        this.setDirectionAngle(270);			// default
+        this.reDraw();
+    }
 
     p.reDraw = function () {
         // creates a simple circle bubble shape with gradient fill
@@ -76,6 +82,7 @@ var game = game || {};
         graphics.beginLinearGradientStroke(["#9AA7E4", "#F4F5FD"], [0, 1], -1 * this.scaledRadius, -1 * this.scaledRadius, this.scaledRadius, this.scaledRadius);
         graphics.drawCircle(0, 0, this.scaledRadius);
     }
+
 
     // We have to move the bubble on a calculated line to the target direction X and Y because the current angle*speed = always 1/0 when the speed is low.
     p.move = function () {
@@ -106,7 +113,6 @@ var game = game || {};
         this.boundingPolygon.move(new Point(this.shape.x, this.shape.y));
     }
 
-
     // set the angle, target points and store the start points for the movement line
     p.setDirectionAngle = function (angle) {
         this.directionAngle = angle;
@@ -128,6 +134,7 @@ var game = game || {};
             // this.debugShape.graphics.lineTo( this.shape.x, this.shape.y );
         }
     }
+
 
     // creates a sprite bubble
     p.initSprite = function () {
@@ -182,16 +189,15 @@ var game = game || {};
         this.bmpAnimation.scaleX = 0.7;
     }
 
-
     //called if there is an error loading the image (usually due to a 404)
     p.handleImageError = function (e) {
         alert("Error Loading Image : " + e.target.src);
     }
 
+
     p.handleImageLoad = function (e) {
         this.show();
     }
-
 
     // p.getCenterX	= function(){
     // 	var centerX = this.shape.x+this.scaledRadius;
@@ -220,6 +226,7 @@ var game = game || {};
         }
     }
 
+
     p.drawBoundingPolygon = function () {
         cloudy.collision.drawBoundingPolygon(this.shape.graphics, this.boundingPolygon, globals.COLOUR_BOUNDING_POLYGON_NON_INTERSECT);
     }
@@ -231,8 +238,8 @@ var game = game || {};
      * - start bumm effect
      * - change the collided cloud status
      */
-    p.bumm = function(){
-        // remove collision detection
+    p.bumm = function () {
+        // remove temorary in order to turn off collision detection
         var index = globals.bubbleArr.indexOf(this);
         globals.bubbleArr.splice(index, 1);
 
@@ -246,13 +253,28 @@ var game = game || {};
             graphics.beginFill(createjs.Graphics.getRGB(game.Common.getRandomColor(), tmpAlpha));
             graphics.setStrokeStyle(1);
             graphics.beginStroke('#fff');
-            rndX = -rndRadius/2 + Math.random()*rndRadius;
-            rndY = -rndRadius/2 + Math.random()*rndRadius;
+            rndX = -rndRadius / 2 + Math.random() * rndRadius;
+            rndY = -rndRadius / 2 + Math.random() * rndRadius;
             graphics.drawCircle(rndX, rndY, 2);
         }
 
-        createjs.Tween.get(this.shape).to({scaleX:3,scaleY:3,alpha:0},2000);
+        var bubble = this;
+        createjs.Tween.get(this.shape)
+            .to({scaleX: 3, scaleY: 3, alpha: 0, y:this.shape.y-50}, 2000)
+            .call(function(){
+                bubble._reinit(bubble);
+            });
 
+    }
+
+    p._reinit = function(bubble){
+
+//        globals.bubbleArr[0]	= new game.Bubble( 30, 30 );
+//        globals.layerBubble.addChild(globals.bubbleArr[i].container);
+//        globals.layerBubble.removeChild(this);
+
+        globals.bubbleArr.push(bubble);
+        bubble.initBubble();
     }
 
 // connect the Bubble to the game cloudy
