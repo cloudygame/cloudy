@@ -102,6 +102,13 @@
 		}
 	}
 
+    p.addBumm = function(){
+        var shape = this.shape;
+        newScale = shape.scaleX * 0.7;
+        newAlpha = shape.alpha * 0.4;
+        createjs.Tween.get(this.shape).to({alpha:newAlpha, scaleX:newScale, scaleY:newScale}, 2000, createjs.Ease.bounceInOut);
+    }
+
 	// return with the current, scaled unscaledWidth
 	p.getCurrentWidth = function() {
 		var currWidth = (this.maxX) * this.shape.scaleX;

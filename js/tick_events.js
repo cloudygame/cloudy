@@ -25,19 +25,12 @@ game.TickEvents = {
 
 
 	collisionTest : function (){
-		collision.RadiusTest();
-        var bubble = globals.bubbleArr[0];
+		//collision.RadiusTest();
 		var colliding = collision.PolygonTest();
 		if (colliding != globals.colliding) {
 			if (colliding != false) {
 				game.Common.log('colliding TRUE');
-				if (globals.DEBUG_COLLISION) {
-					bubble.drawBoundingPolygon(globals.COLOUR_BOUNDING_POLYGON_INTERSECT);
-				}
 			} else {
-				if (globals.DEBUG_COLLISION) {
-					bubble.drawBoundingPolygon(globals.COLOUR_BOUNDING_POLYGON_NON_INTERSECT);
-				}
 			}
 		}
 		globals.colliding = colliding;

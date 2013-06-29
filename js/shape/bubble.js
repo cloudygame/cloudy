@@ -224,6 +224,37 @@ var game = game || {};
         cloudy.collision.drawBoundingPolygon(this.shape.graphics, this.boundingPolygon, globals.COLOUR_BOUNDING_POLYGON_NON_INTERSECT);
     }
 
+
+    /**
+     * bumm:
+     * - remove bubble
+     * - start bumm effect
+     * - change the collided cloud status
+     */
+    p.bumm = function(){
+        // remove collision detection
+        var index = globals.bubbleArr.indexOf(this);
+        globals.bubbleArr.splice(index, 1);
+
+        var graphics = this.shape.graphics;
+        var rndX = 0;
+        var rndY = 0;
+        var rndRadius = 40;
+        graphics.clear();
+        for (var i = 0; i < 5; i++) {
+            tmpAlpha = Math.random();
+            graphics.beginFill(createjs.Graphics.getRGB(game.Common.getRandomColor(), tmpAlpha));
+            graphics.setStrokeStyle(1);
+            graphics.beginStroke('#fff');
+            rndX = -rndRadius/2 + Math.random()*rndRadius;
+            rndY = -rndRadius/2 + Math.random()*rndRadius;
+            graphics.drawCircle(rndX, rndY, 2);
+        }
+
+        createjs.Tween.get(this.shape).to({scaleX:3,scaleY:3,alpha:0},2000);
+
+    }
+
 // connect the Bubble to the game cloudy
     cloudy.Bubble = Bubble;
 
