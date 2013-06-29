@@ -10,7 +10,7 @@
 	*/
 
 	globals.DEBUG				= true;
-	globals.DEBUG_COLLISION		= false;
+	globals.DEBUG_COLLISION		= true;
 	globals.DEBUG_CLOUD			= false;
 	globals.DEBUG_BUBBLE		= false;
 

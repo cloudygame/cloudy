@@ -26,6 +26,7 @@ game.TickEvents = {
 
 	collisionTest : function (){
 		collision.RadiusTest();
+        var bubble = globals.bubbleArr[0];
 		var colliding = collision.PolygonTest();
 		if (colliding != globals.colliding) {
 			if (colliding != false) {
