@@ -40,7 +40,8 @@ collision.PolygonTest = function () {
     var colliding = false;
     for (var j = 0; j < globals.bubbleArr.length; j++) {
         var currBubble = globals.bubbleArr[j];
-        currBubble.boundingPolygon.move(new Point(currBubble.shape.x, currBubble.shape.y));
+        var newCenter = new Point(currBubble.x, currBubble.y);
+        currBubble.boundingPolygon.move(newCenter);
         for (var i = 0; i < globals.cloudArr.length; i++) {
             var currCloud = globals.cloudArr[i];
             colliding = currBubble.boundingPolygon.intersectsWith(currCloud.boundingPolygon);

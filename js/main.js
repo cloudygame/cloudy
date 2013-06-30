@@ -196,9 +196,12 @@ $(document).ready( function() {
 
 
 	// ** sprite and shape Bubble Test **
-	var	i	= 0;
-	globals.bubbleArr[i]	= new game.Bubble( 30, 30 );
-	globals.layerBubble.addChild(globals.bubbleArr[i].container);
+    var bubbleInitX = globals.STAGE_WIDTH / 2 - 200;
+    var bubbleInitY = globals.STAGE_HEIGHT - 20;
+
+    var bubble	= new game.Bubble( bubbleInitX, bubbleInitY );
+    globals.bubbleArr.push(bubble);
+	globals.layerBubble.addChild(bubble);
 
 
 	/*
@@ -461,7 +464,7 @@ $(document).ready( function() {
 
 		for  ( var i=0; i<globals.cloudArr.length; i++){
 			//turn on the cache
-			globals.cloudArr[i].shape.cache(0,0,sizeX,sizeY);					// NA EZÉRT SZÍVÁS A DEFAULT FELHŐ OFFSET
+			globals.cloudArr[i].shape.cache(0,0,sizeX,sizeY);
 		}
 	}
 

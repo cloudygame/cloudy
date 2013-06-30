@@ -9,17 +9,16 @@ var game = game || {};
 // this "outer/empty" function is needed becuase the inner functions, variables shouldn't generate into global cloudy
 (function (cloudy) {
 
-    var Bubble = function (inX, inY) {
+    var Bubble = function (initX, initY) {
 
 
-        this.scaledRadius = null;
-        this.container = null;
-        this.shape = null;
-        this.debugShape = null;
         this.boundingPolygon = null; // a Polygon object that bounds the Cloud. Used for collision detection
 
         this.spriteImg = null;
         this.bmpAnimation = null;
+
+        this._initX = initX;
+        this._initY = initY;
 
         // animation data
         this.directionAngle = null;
@@ -30,45 +29,36 @@ var game = game || {};
         this.directionStep = null;
         this.speed = null;
         this.color = null;
-        this.prevBubbleDir = null;
-
         this.speed = null;
-        this.shapeAlpha = null;
 
         this.shape = new createjs.Shape(new createjs.Graphics());
-
-        this.debugShape = new createjs.Shape(new createjs.Graphics());
-
-        this.container = new createjs.Container();
-        this.container.addChild(this.shape);
-        this.container.addChild(this.debugShape);
+        this.addChild(this.shape);
 
         //bubble_sprite_test:
         //    this.initSprite();
 
         this.initBubble();
 
-        this._addBoundingPoligon(this.shape.x, this.shape.y, this.scaledRadius);
+        this._addBoundingPoligon(this.x, this.y, this.scaleX);
         this.reDraw();
     }
 
 
-    var p = Bubble.prototype;
+    var p = Bubble.prototype = new createjs.Container();
 
     p.initBubble = function () {
         // set the direction for the movement
         this.speed = 3;
-        this.shapeAlpha = 0.8;
-        this.shape.x = globals.STAGE_WIDTH / 2 - 200;
-        this.shape.y = globals.STAGE_HEIGHT - 20;
+        this.x = this._initX;
+        this.y = this._initY;
 
         this.scaledRadius = 30;
         this.directionStep = 0;
         this.prevBubbleDir = 0;
 
-        this.shape.alpha = this.shapeAlpha;
-        this.shape.scaleX = 1;
-        this.shape.scaleY = 1;
+        this.alpha = 0.8;
+        this.scaleX = 1;
+        this.scaleY = 1;
         this.shape.graphics.clear();
         this.setDirectionAngle(270);			// default
         this.reDraw();
@@ -93,54 +83,62 @@ var game = game || {};
         // var moveY	= Math.round(Math.sin(radian) * radius);
 
         // this.directionStep	+= this.speed+1;
-        this.directionStep += this.speed;
+        //this.directionStep += this.speed;
 
-        var Ax = this.directionFromX;
-        var Ay = this.directionFromY;
-        var Bx = this.directionToX;
-        var By = this.directionToY;
-        var i = this.directionStep;
+        var d = this._calculateDirection(this.directionAngle) ;
 
-        var lineLength = Math.sqrt((Ax - Bx) * (Ax - Bx) + (Ay - By) * (Ay - By));
-        var moveX = Math.round(Ax + (Bx - Ax) * i / lineLength);
-        var moveY = Math.round(Ay + (By - Ay) * i / lineLength);
+        var i = this.speed;
 
-        // game.Common.log( moveX + "--" + moveY + " - -" + this.directionStep +" Ax"+ Ax + '--' +Ay + 'ttt' + Bx + '--' + By);
+        var vectorLength = Math.sqrt((d.fromX - d.toX) * (d.fromX - d.toX) + (d.fromY - d.toY) * (d.fromY - d.toY));
+        var moveToX = Math.round(d.fromX + (d.toX - d.fromX) * i / vectorLength);
+        var moveToY = Math.round(d.fromY + (d.toY - d.fromY) * i / vectorLength);
 
-        this.shape.x = moveX;
-        this.shape.y = moveY;
+//        game.Common.log( moveX + "--" + moveY + " - -" + this.directionStep +" Ax"+ Ax + '--' +Ay + 'ttt' + Bx + '--' + By);
 
-        this.boundingPolygon.move(new Point(this.shape.x, this.shape.y));
+        this.x = moveToX;
+        this.y = moveToY;
+
+        this.boundingPolygon.move(new Point(this.x, this.y));
     }
 
     // set the angle, target points and store the start points for the movement line
     p.setDirectionAngle = function (angle) {
         this.directionAngle = angle;
         this.directionStep = 0;
+
+        if (globals.DEBUG_BUBBLE) {
+            var direction = this._calculateDirection(angle) ;
+            var graphics = this.shape.graphics;
+            graphics.setStrokeStyle(1);
+            graphics.beginStroke('#fff');
+            graphics.moveTo(direction.fromX, direction.fromY);
+            graphics.lineTo(direction.toX, direction.toY);
+        }
+    }
+
+    p._calculateDirection = function(angle){
+        var direction = {};
         var radian = angle * 0.0174533;		// (Math.PI/180)
         var radius = globals.STAGE_WIDTH;
-        this.directionToX = Math.round(Math.cos(radian) * radius) + this.shape.x;
-        this.directionToY = Math.round(Math.sin(radian) * radius) + this.shape.y;
-        this.directionFromX = this.shape.x;
-        this.directionFromY = this.shape.y;
-
-//		game.Common.log('Bubble.setDirectionAngle: angle=' + angle + ' from x:y=' + this.directionFromX + ':' + this.directionFromY + ' to x:y=' + this.directionToX + ':' + this.directionToY );
-        if (globals.DEBUG_BUBBLE) {
-            this.debugShape.graphics.setStrokeStyle(1);
-            this.debugShape.graphics.beginStroke('#fff');
-            this.debugShape.graphics.moveTo(this.directionFromX, this.directionFromY);
-            this.debugShape.graphics.lineTo(this.directionToX, this.directionToY);
-            // this.debugShape.graphics.lineTo( this.shape.regX, this.shape.regY );
-            // this.debugShape.graphics.lineTo( this.shape.x, this.shape.y );
-        }
+        direction.toX = Math.round(Math.cos(radian) * radius) + this.x;
+        direction.toY = Math.round(Math.sin(radian) * radius) + this.y;
+        direction.fromX = this.x;
+        direction.fromY = this.y;
+        return direction;
     }
 
 
     // creates a sprite bubble
     p.initSprite = function () {
         this.spriteImg = new Image();
-        this.spriteImg.onload = p.handleImageLoad;
-        this.spriteImg.onerror = p.handleImageError;
+        this.bmpAnimation = new createjs.BitmapAnimation(this.spriteSheet);
+
+        this.spriteImg.onload = function (e) {
+            this.addChild(this.bmpAnimation);
+        };
+        this.spriteImg.onerror = function (e) {
+            alert("Error Loading Image (possible HTTP 404): " + e.target.src);
+        };
         this.spriteImg.src = "img/bubbletest2.png";
 
         // create spritesheet and assign the associated data.
@@ -168,7 +166,6 @@ var game = game || {};
 
 
         // create a BitmapAnimation instance to display and play back the sprite sheet:
-        this.bmpAnimation = new createjs.BitmapAnimation(this.spriteSheet);
 
         // start playing the first sequence:
         this.bmpAnimation.gotoAndPlay("spin"); //animate
@@ -177,11 +174,8 @@ var game = game || {};
         // of animated rats if you disabled the shadow.
         this.bmpAnimation.shadow = new createjs.Shadow("#454", 33, 125, 41);
 
-        this.bmpAnimation.name = "monster1";
-        this.bmpAnimation.x = globals.STAGE_WIDTH / 2;
-        this.bmpAnimation.y = globals.STAGE_HEIGHT;
+        this.bmpAnimation.name = "BubbleSprite";
 
-        // have each monster start at a specific frame
         this.bmpAnimation.currentFrame = 0;
         this.bmpAnimation.alpha = 0.6;
 
@@ -189,37 +183,18 @@ var game = game || {};
         this.bmpAnimation.scaleX = 0.7;
     }
 
-    //called if there is an error loading the image (usually due to a 404)
-    p.handleImageError = function (e) {
-        alert("Error Loading Image : " + e.target.src);
-    }
 
-
-    p.handleImageLoad = function (e) {
-        this.show();
-    }
-
-    // p.getCenterX	= function(){
-    // 	var centerX = this.shape.x+this.scaledRadius;
-    // 	return centerX;
-    // }
-
-    // p.getCenterY	= function(){
-    // 	var centerY = this.shape.y+this.scaledRadius;
-    // 	return centerY;
-    // }
-
-    p._addBoundingPoligon = function (x, y, scaledRadius) {
+    p._addBoundingPoligon = function (x, y, scale) {
         var pCenter = new Point(x, y);
-        this.boundingPolygon = new Polygon(pCenter);
-        this.boundingPolygon.addPoint(new Point(x - scaledRadius, y));
-        this.boundingPolygon.addPoint(new Point(x - (scaledRadius * 0.707), y - (scaledRadius * 0.707)));
-        this.boundingPolygon.addPoint(new Point(x, y - scaledRadius));
-        this.boundingPolygon.addPoint(new Point(x + (scaledRadius * 0.707), y - (scaledRadius * 0.707)));
-        this.boundingPolygon.addPoint(new Point(x + scaledRadius, y));
-        this.boundingPolygon.addPoint(new Point(x + (scaledRadius * 0.707), y + (scaledRadius * 0.707)));
-        this.boundingPolygon.addPoint(new Point(x, y + scaledRadius));
-        this.boundingPolygon.addPoint(new Point(x - (scaledRadius * 0.707), y + (scaledRadius * 0.707)));
+        var polygon = this.boundingPolygon = new Polygon(pCenter);
+        polygon.addPoint(new Point(x - scale, y));
+        polygon.addPoint(new Point(x - (scale * 0.707), y - (scale * 0.707)));
+        polygon.addPoint(new Point(x, y - scale));
+        polygon.addPoint(new Point(x + (scale * 0.707), y - (scale * 0.707)));
+        polygon.addPoint(new Point(x + scale, y));
+        polygon.addPoint(new Point(x + (scale * 0.707), y + (scale * 0.707)));
+        polygon.addPoint(new Point(x, y + scale));
+        polygon.addPoint(new Point(x - (scale * 0.707), y + (scale * 0.707)));
 
         if (globals.DEBUG_COLLISION) {
             this.drawBoundingPolygon();
@@ -258,26 +233,17 @@ var game = game || {};
             graphics.drawCircle(rndX, rndY, 2);
         }
 
-        var bubble = this;
-        createjs.Tween.get(this.shape)
-            .to({scaleX: 3, scaleY: 3, alpha: 0, y:this.shape.y-50}, 2000)
-            .call(function(){
-                bubble._reinit(bubble);
-            });
+        createjs.Tween.get(this)
+            .to({scaleX: 3, scaleY: 3, alpha: 0, y: this.y - 50}, 2000)
+            .call(this._reinit);
 
     }
 
-    p._reinit = function(bubble){
-
-//        globals.bubbleArr[0]	= new game.Bubble( 30, 30 );
-//        globals.layerBubble.addChild(globals.bubbleArr[i].container);
-//        globals.layerBubble.removeChild(this);
-
-        globals.bubbleArr.push(bubble);
-        bubble.initBubble();
+    p._reinit = function () {
+        globals.bubbleArr.push(this);
+        this.initBubble();
     }
 
-// connect the Bubble to the game cloudy
     cloudy.Bubble = Bubble;
 
 }(game));

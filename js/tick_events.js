@@ -42,14 +42,14 @@ game.TickEvents = {
 		for( var i=0; i<globals.bubbleArr.length; i++){
 			var bubble	= globals.bubbleArr[i];
 		    // Hit testing the screen width, otherwise our sprite would disappear
-		    if (bubble.shape.y < 0) {
+		    if (bubble.y < 0) {
 				// We've reached the top of our screen
 				// We need to go back
 				bubble.setDirectionAngle(90);
 				globals.prevBubbleDir	= 0;
 		    }
 
-		    if (bubble.shape.y > globals.STAGE_HEIGHT) {
+		    if (bubble.y > globals.STAGE_HEIGHT) {
 				// We've reached the bottom of our screen
 				// We need to go back
 				bubble.setDirectionAngle(270);
