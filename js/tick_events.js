@@ -114,11 +114,11 @@ game.TickEvents = {
 
 			for( var i=0; i<globals.bubbleArr.length; i++){
 				var bubble	= globals.bubbleArr[i];
-                var angleChange	= (bubble.prevBubbleDir - direction)*(globals.BubbleDirGranularity);
+                var angleChange	= (globals.prevBubbleDir - direction)*(globals.BubbleDirGranularity);
 
 				// convert direction to angle
 				bubble.setDirectionAngle(bubble.directionAngle + angleChange);
-                bubble.prevBubbleDir	= direction;
+                globals.prevBubbleDir	= direction;
             }
 		}
 

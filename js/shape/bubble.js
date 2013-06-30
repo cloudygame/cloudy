@@ -22,11 +22,6 @@ var game = game || {};
 
         // animation data
         this.directionAngle = null;
-        this.directionToX = null;
-        this.directionToY = null;
-        this.directionFromX = null;
-        this.directionFromY = null;
-        this.directionStep = null;
         this.speed = null;
         this.color = null;
         this.speed = null;
@@ -53,8 +48,6 @@ var game = game || {};
         this.y = this._initY;
 
         this.scaledRadius = 30;
-        this.directionStep = 0;
-        this.prevBubbleDir = 0;
 
         this.alpha = 0.8;
         this.scaleX = 1;
@@ -76,14 +69,6 @@ var game = game || {};
 
     // We have to move the bubble on a calculated line to the target direction X and Y because the current angle*speed = always 1/0 when the speed is low.
     p.move = function () {
-        // calculate the offset vector with angle * speed - WRONG
-        // var radian	= this.directionAngle * 0.0174533;		// (Math.PI/180)
-        // var radius	= this.speed;
-        // var moveX	= Math.round(Math.cos(radian) * radius);
-        // var moveY	= Math.round(Math.sin(radian) * radius);
-
-        // this.directionStep	+= this.speed+1;
-        //this.directionStep += this.speed;
 
         var d = this._calculateDirection(this.directionAngle) ;
 
@@ -104,7 +89,6 @@ var game = game || {};
     // set the angle, target points and store the start points for the movement line
     p.setDirectionAngle = function (angle) {
         this.directionAngle = angle;
-        this.directionStep = 0;
 
         if (globals.DEBUG_BUBBLE) {
             var direction = this._calculateDirection(angle) ;
@@ -241,6 +225,7 @@ var game = game || {};
 
     p._reinit = function () {
         globals.bubbleArr.push(this);
+        globals.prevBubbleDir	= 0;
         this.initBubble();
     }
 
