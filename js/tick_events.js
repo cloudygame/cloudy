@@ -65,40 +65,37 @@ game.TickEvents = {
 
 	bgCloudMove : function (){
 		for( var i=0;i<globals.bgCloudArr.length; i++){
-			var cloudShape	= globals.bgCloudArr[i].shape;
-			var cloud		= globals.bgCloudArr[i];
-			var offsetScale	= cloud.maxX;//  cloudShape.scaleX
+			var cloud	= globals.bgCloudArr[i];
+			var offsetScale	= cloud.maxX;//  cloud.scaleX
 			if( globals.bgCloudArr[i].direction=="right" ){
-				if ( (cloud.shape.x - (cloud.getCurrentWidth()/2)) < globals.STAGE_WIDTH ){
-					cloudShape.x += globals.bgCloudArr[i].speed;
+				if ( (cloud.x - (cloud.getCurrentWidth()/2)) < globals.STAGE_WIDTH ){
+					cloud.x += globals.bgCloudArr[i].speed;
 				} else {
-					// console.log( cloud.getCurrentX()+ " W:" +cloud.getCurrentWidth() + " xxx " +cloudShape.x +","+ cloudShape.regX + " XXX " +(0 - cloud.maxX+cloud.minX) );
-					cloudShape.x = 0 - cloud.getCurrentWidth()/2;
+                    // randomize cloud pos
+					cloud.x = 0 - cloud.getCurrentWidth()/2 + Math.random()*200;
+					cloud.y += ((Math.random()/2)-0.5)*50;
 
-					// randomize cloud
-					cloudShape.x += Math.random()*200;
-					cloudShape.y += ((Math.random()/2)-0.5)*50;
 					var rndScale	= (Math.random()/3+0.1);
-					cloudShape.scaleX	= rndScale;
-					cloudShape.scaleY	= rndScale;
+					cloud.scaleX	= rndScale;
+					cloud.scaleY	= rndScale;
 					globals.bgCloudArr[i].speed	= Math.round((Math.random()+0.33)*2);
-					// console.log( "X" + cloudShape.x );
+					// console.log( "X" + cloud.x );
 				}
 			}else{
-				if ( (cloud.shape.x + cloud.getCurrentWidth()) > 0){
-					cloudShape.x -= 2;
+				if ( (cloud.x + cloud.getCurrentWidth()) > 0){
+					cloud.x -= 2;
 				} else {
 					// randomize cloud
-					cloudShape.x += -1*Math.random()*200;
-					cloudShape.y += ((Math.random()/2)-0.5)*50;
+					cloud.x += -1*Math.random()*200;
+					cloud.y += ((Math.random()/2)-0.5)*50;
 					var rndScale	= (Math.random()/3+0.1);
-					cloudShape.scaleY	= rndScale;
-					cloudShape.scaleX	= rndScale;
+					cloud.scaleY	= rndScale;
+					cloud.scaleX	= rndScale;
 					globals.bgCloudArr[i].speed	= Math.round((Math.random()+0.33)*2);
 
 					// set the start position
-					// console.log( cloud.getCurrentX()+ " W:" +cloud.getCurrentWidth() + " xxx " +cloudShape.x +","+ cloudShape.regX + " XXX " +(0 - cloud.maxX+cloud.minX) );
-					cloudShape.x = globals.STAGE_WIDTH + cloud.getCurrentWidth()/2;
+					// console.log( cloud.getCurrentX()+ " W:" +cloud.getCurrentWidth() + " xxx " +cloud.x +","+ cloud.regX + " XXX " +(0 - cloud.maxX+cloud.minX) );
+					cloud.x = globals.STAGE_WIDTH + cloud.getCurrentWidth()/2;
 				}
 			}
 

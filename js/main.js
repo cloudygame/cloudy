@@ -303,9 +303,9 @@ $(document).ready( function() {
 			scaleRnd	= (Math.random())/2+0.3;					// random scaling - maximum +-25%
 
 			var cloud 	= new game.Cloud( x, y, color, alpha, scaleRnd );
-			cloud.shape.alpha	= 0;	// it's a different alpha than drawing alpha!ű
+//			cloud.alpha	= 0;	// it's a different alpha than drawing alpha!
 			cloud.addShadow();
-			globals.layerCloud.addChild(cloud.shape);
+			globals.layerCloud.addChild(cloud);
 
 			globals.cloudArr[i+offset]	= cloud;		//store clouds in a global array too
 
@@ -318,7 +318,7 @@ $(document).ready( function() {
 			tmpX		= Math.round((Math.random())*1000)-200;
 			tmpY		= Math.round((Math.random()-0.2)*10);
 			tmpAlpha	= Math.random();
-			tweenArr[i] = createjs.Tween.get( globals.cloudArr[i].shape );
+			tweenArr[i] = createjs.Tween.get( globals.cloudArr[i] );
 
 			// simple alpha effect:
 			tweenArr[i].to({alpha:0.9},2000);
@@ -326,7 +326,7 @@ $(document).ready( function() {
 			// tweenArr[i].to({x:170,y:50,alpha:0.1},4000, createjs.Ease.elasticInOut ).to({x:tmpX, y:tmpY, alpha:0.9},4000, createjs.Ease.bounceInOut).to( {rotation:360}, 4000, createjs.Ease.elasticInOut );
 
 			// add simple drag'n drop to every cloud shape
-			Main.addShapeDragAndDrop( globals.cloudArr[i].shape );
+			Main.addShapeDragAndDrop( globals.cloudArr[i] );
 		}
 
 		globals.stage.update();
@@ -349,7 +349,7 @@ $(document).ready( function() {
 			var cloud 	= new game.Cloud( x, y, color, alpha, scaleRnd );
 			cloud.setStrokeColor("#eee", "#bbb");
 
-			globals.layerBackground.addChild(cloud.shape);
+			globals.layerBackground.addChild(cloud);
 
 			globals.bgCloudArr[i]			= cloud;					//store clouds in a global array too
 			globals.bgCloudArr[i].direction	= Math.random()<0.5 ?  "right" : "left";

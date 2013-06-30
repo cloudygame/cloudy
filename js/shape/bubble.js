@@ -10,7 +10,7 @@ var game = game || {};
 (function (cloudy) {
 
     var Bubble = function (initX, initY) {
-
+        this.Container_initialize();
 
         this.boundingPolygon = null; // a Polygon object that bounds the Cloud. Used for collision detection
 
@@ -40,6 +40,7 @@ var game = game || {};
 
 
     var p = Bubble.prototype = new createjs.Container();
+    p.Container_initialize = p.initialize;
 
     p.initBubble = function () {
         // set the direction for the movement
