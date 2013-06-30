@@ -182,12 +182,12 @@ $(document).ready( function() {
 
 
 	// draw grass
-	globals.grassArr[0]	= new game.Grass( 0, globals.STAGE_HEIGHT-60);
-	globals.grassArr[0].shape.alpha = 0.6;
+	globals.grassArr[0]	= new game.Grass( 0, globals.STAGE_HEIGHT-30);
+	globals.grassArr[0].shape.alpha = 0.8;
 	globals.layerBackground.addChild(globals.grassArr[0].shape);
 
-	globals.grassArr[1]	= new game.Grass( 0, globals.STAGE_HEIGHT-40);
-	globals.layerBackground.addChild(globals.grassArr[1].shape);
+//	globals.grassArr[1]	= new game.Grass( 0, globals.STAGE_HEIGHT-40);
+//	globals.layerBackground.addChild(globals.grassArr[1].shape);
 
 
 	// ** initialize clouds into globals.layerCloud **

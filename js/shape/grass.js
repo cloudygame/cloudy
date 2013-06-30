@@ -53,11 +53,11 @@
 
 		this.shape	= new createjs.Shape(this.graphics);
 		this.shape.x	= 0;
-		this.shape.y	= globals.STAGE_HEIGHT-50;
+		this.shape.y	= globals.STAGE_HEIGHT;
 		this.shape.scaleX	= 1;
 		this.shape.scaleY	= 1;
 
-		this.shape.cache(0, 0, globals.STAGE_WIDTH, globals.STAGE_HEIGHT);
+//		this.shape.cache(0, 0, globals.STAGE_WIDTH, globals.STAGE_HEIGHT);
 		this.draw();
 
 	}
@@ -110,7 +110,7 @@
 		}
 
 		console.log("grass draw");
-		this.shape.updateCache(0, 0, globals.STAGE_WIDTH, globals.STAGE_HEIGHT);
+		//this.shape.updateCache(0, 0, globals.STAGE_WIDTH, globals.STAGE_HEIGHT);
 	}
 
 
