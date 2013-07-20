@@ -48,7 +48,7 @@
      */
     p.initCloud = function (inX, inY, inFillColor, inAlpha, inScale) {
 
-        this.cloudData = this.loadCloudData(inFillColor, inAlpha);
+        this.cloudData = this._loadCloudData(inFillColor, inAlpha);
 
         /*
          *	Doc: A Shape allows you to display vector art in the display list. It composites a Graphics instance which exposes all of the vector drawing methods.
@@ -79,13 +79,6 @@
         return currWidth;
     }
 
-    p.generateCloudData = function (inFillColor, inAlpha) {
-        var jsonStr = '{"fillColor":"' + inFillColor + '","alpha":"' + inAlpha + '","strokeStyle":6,"moveTo":{"x":140,"y":200},"quadraticCurveTo":[{"x":135,"y":155,"ref_x":180,"ref_y":150},{"x":220,"y":110,"ref_x":260,"ref_y":130},{"x":300,"y":100,"ref_x":340,"ref_y":130},{"x":390,"y":125,"ref_x":400,"ref_y":170},{"x":440,"y":190,"ref_x":420,"ref_y":230},{"x":420,"y":270,"ref_x":380,"ref_y":270},{"x":340,"y":290,"ref_x":300,"ref_y":270},{"x":260,"y":290,"ref_x":220,"ref_y":270},{"x":185,"y":275,"ref_x":170,"ref_y":250},{"x":185,"y":275,"ref_x":170,"ref_y":250},{"x":130,"y":240,"ref_x":140,"ref_y":200}]}';
-        var cloudData = jQuery.parseJSON(jsonStr);
-        return cloudData;
-    }
-
-
     /*
      *	this function generates shadow around the cloud shape
      *	in:		cloud shape
@@ -105,7 +98,7 @@
     p.changeColor = function (inFillColor, inAlpha) {
 //        this._drawQuadraticJson(this.cloudShape.graphics, this.cloudData);
         // re-generate the whole cloud data with the new color
-        this.cloudData = this.generateCloudData(inFillColor, inAlpha);
+        this.cloudData = this._generateCloudData(inFillColor, inAlpha);
         this.reDraw();
     }
 
@@ -113,6 +106,12 @@
     p.reDraw = function () {
         this._drawQuadraticJson(this.cloudShape.graphics, this.cloudData);
     }
+
+    /**
+     *
+     * private methods
+     *
+     */
 
     /*
      *	universal quadratic curve drawer function
@@ -201,8 +200,8 @@
     /**
      * load data from JSON and adjust cloud to the upper left corner
      */
-    p.loadCloudData = function (inFillColor, inAlpha) {
-        var rawCloudData = this.generateCloudData(inFillColor, inAlpha);
+    p._loadCloudData = function (inFillColor, inAlpha) {
+        var rawCloudData = this._generateCloudData(inFillColor, inAlpha);
         var cloudData = game.Common.getAdjustedQuadraticJson(rawCloudData);
         return cloudData;
     }
@@ -224,6 +223,13 @@
             }
         }
     }
+
+    p._generateCloudData = function (inFillColor, inAlpha) {
+        var jsonStr = '{"fillColor":"' + inFillColor + '","alpha":"' + inAlpha + '","strokeStyle":6,"moveTo":{"x":140,"y":200},"quadraticCurveTo":[{"x":135,"y":155,"ref_x":180,"ref_y":150},{"x":220,"y":110,"ref_x":260,"ref_y":130},{"x":300,"y":100,"ref_x":340,"ref_y":130},{"x":390,"y":125,"ref_x":400,"ref_y":170},{"x":440,"y":190,"ref_x":420,"ref_y":230},{"x":420,"y":270,"ref_x":380,"ref_y":270},{"x":340,"y":290,"ref_x":300,"ref_y":270},{"x":260,"y":290,"ref_x":220,"ref_y":270},{"x":185,"y":275,"ref_x":170,"ref_y":250},{"x":185,"y":275,"ref_x":170,"ref_y":250},{"x":130,"y":240,"ref_x":140,"ref_y":200}]}';
+        var cloudData = jQuery.parseJSON(jsonStr);
+        return cloudData;
+    }
+    
 
     namespace.Cloud = Cloud;
 }
