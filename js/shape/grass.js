@@ -20,21 +20,7 @@
 		this.shape.y	= (typeof offsetY == "undefined") ? 0 : offsetY;	// set default value
 	}
 
-
-	Grass.grassJsonDataArr	= null;
-	Grass.grassStartColor	= null;
-	Grass.grassEndColor		= null;
-	Grass.shape				= null;
-	Grass.graphics			= null;
-	Grass.bending			= null;
-	Grass.bendingDirection	= null;
-	Grass.bladeDistance		= null;		// blade of grass generation offset in pixel (pixel between neighbourgh blades)
-	Grass.offsetX			= null;
-	Grass.numberOfBlades	= null;
-
-
 	var p	=	Grass.prototype;
-
 
 	/*
 	* automatically generated grass

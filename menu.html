@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>New menu structure</title>
+
+    <style>
+
+        div {
+            border: 1px solid gray;
+        }
+
+        .menu_block {
+            width: 300px;
+            border: 1px solid gray;
+            border-radius: 8px;
+            padding: 5px;
+        }
+
+        .menu_block > .title {
+            font-size: 20px;
+            font-weight: bold;
+            height: 30px;
+            text-align: center;
+            background-color: yellow;
+        }
+
+        .menu_block > .item {
+            margin: 0px;
+            font-size: 15px;
+            font-weight: bold;
+            height: 20px;
+            background-color: tan;
+            padding: 5px;
+
+            position: relative;
+        }
+
+        .menu_block > .item:hover {
+            margin: 4px 0px;
+            -webkit-transition: margin 0.2s ease-out;
+            -moz-transition: margin 0.2s ease-out;
+            -o-transition: margin 0.2s ease-out;
+            -ms-transition: margin 0.2s ease-out;
+        }
+
+        .menu_slide_in {
+            animation: menu_item_slide_in 1s;
+            -webkit-animation: menu_item_slide_in 1s;
+        }
+
+        .menu_slide_out {
+            animation: menu_item_slide_out 1s;
+            -webkit-animation: menu_item_slide_out 1s;
+        }
+
+
+        @keyframes menu_item_slide_in {
+            from {
+                left: -400px;
+            }
+            to {
+                left: 0px;
+            }
+        }
+
+        @-webkit-keyframes menu_item_slide_in {
+            from {
+                left: -400px;
+            }
+            to {
+                left: 0px;
+            }
+        }
+
+        @keyframes menu_item_slide_out {
+            from {
+                left: 0px;
+            }
+            to {
+                left: -400px;
+            }
+        }
+
+        @-webkit-keyframes menu_item_slide_out {
+            from {
+                left: 0px;
+            }
+            to {
+                left: -400px;
+            }
+        }
+
+    </style>
+
+    <script>
+
+        function initMenu() {
+            startMenuTransition('menu_slide_in');
+            setTimeout(function () {
+                startMenuTransition('menu_slide_out');
+            }, 2000);
+        }
+
+        function startMenuTransition(transitionClass, elem) {
+            if (!elem){
+                elem = document.querySelector('.menu_block .item');
+            }
+            startTransition(elem, transitionClass);
+            var sibling = elem.nextElementSibling;
+            if (!!sibling){
+                setTimeout(function () {
+                    startMenuTransition(transitionClass, sibling);
+                }, 100);
+            }
+        }
+
+        function startTransition(elem, transitionClass) {
+            elem.classList.remove(transitionClass);
+            elem.classList.add(transitionClass);
+        }
+
+
+    </script>
+
+</head>
+
+<body onload="initMenu();">
+
+<div class="menu_block">
+    <div class="title">Cloudy game</div>
+    <div class="item">1</div>
+    <div class="item">2</div>
+    <div class="item">3</div>
+    <div class="item">4</div>
+    <div class="item">5</div>
+</div>
+
+</body>
+</html>
