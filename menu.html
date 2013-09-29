@@ -5,15 +5,25 @@
 
     <style>
 
+        body {
+            background-color:gray;
+        }
+
         div {
             border: 1px solid gray;
         }
 
         .menu_block {
+            position: fixed;
             width: 300px;
             border: 1px solid gray;
             border-radius: 8px;
             padding: 5px;
+            left: -200px;
+            top: -100px;
+
+            transition: all 1s;
+            -webkit-transform: scale(0.1);
         }
 
         .menu_block > .title {
@@ -32,82 +42,82 @@
             background-color: tan;
             padding: 5px;
 
+            text-shadow: black 0.1em 0.1em 0.2em;
+
             position: relative;
+            -webkit-transition: all 0.5s;
+            /*-webkit-transition: all .2s ease-in-out;*/
         }
 
         .menu_block > .item:hover {
-            margin: 4px 0px;
-            -webkit-transition: margin 0.2s ease-out;
-            -moz-transition: margin 0.2s ease-out;
-            -o-transition: margin 0.2s ease-out;
-            -ms-transition: margin 0.2s ease-out;
+            /*margin: 4px 0px;*/
+            z-index: 1000;
+            /*-webkit-transition: margin 0.2s ease-out;*/
+            /*-moz-transition: margin 0.2s ease-out;*/
+            /*-o-transition: margin 0.2s ease-out;*/
+            /*-ms-transition: margin 0.2s ease-out;*/
+            text-shadow: none;
+            color: white;
+
+            -webkit-transform: skew(2deg, 2deg) translate(5px, 5px) scale(1.2);
+
         }
 
-        .menu_slide_in {
-            animation: menu_item_slide_in 1s;
-            -webkit-animation: menu_item_slide_in 1s;
+            /**
+            *
+            */
+
+        .menu_block.menu_show_effect {
+            left: 20%;
+            top: 10%;
+            -webkit-transform: skew(-2deg, -2deg) translate(5px, 5px) scale(1.2);
+            /*z-index:1001;*/
         }
 
-        .menu_slide_out {
-            animation: menu_item_slide_out 1s;
-            -webkit-animation: menu_item_slide_out 1s;
+
+        #menu_frame.menu_show_effect {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(255, 255, 255, .8);
+            -webkit-transition: background 0.5s;
         }
 
-
-        @keyframes menu_item_slide_in {
-            from {
-                left: -400px;
-            }
-            to {
-                left: 0px;
-            }
-        }
-
-        @-webkit-keyframes menu_item_slide_in {
-            from {
-                left: -400px;
-            }
-            to {
-                left: 0px;
-            }
-        }
-
-        @keyframes menu_item_slide_out {
-            from {
-                left: 0px;
-            }
-            to {
-                left: -400px;
-            }
-        }
-
-        @-webkit-keyframes menu_item_slide_out {
-            from {
-                left: 0px;
-            }
-            to {
-                left: -400px;
-            }
-        }
 
     </style>
 
     <script>
 
         function initMenu() {
+
+            return;
+
             startMenuTransition('menu_slide_in');
             setTimeout(function () {
                 startMenuTransition('menu_slide_out');
+
+                setTimeout(function () {
+                    elems = document.querySelectorAll('.menu_block .item');
+                    for (var i = 0; i < elems.length; i++) {
+                        var elem = elems[i];
+                        elem.classList.remove('menu_slide_in');
+                        elem.classList.remove('menu_slide_out');
+                    }
+                }, 1000);
+
             }, 2000);
         }
 
         function startMenuTransition(transitionClass, elem) {
-            if (!elem){
+            if (!elem) {
                 elem = document.querySelector('.menu_block .item');
             }
             startTransition(elem, transitionClass);
             var sibling = elem.nextElementSibling;
-            if (!!sibling){
+            if (!!sibling) {
                 setTimeout(function () {
                     startMenuTransition(transitionClass, sibling);
                 }, 100);
@@ -120,20 +130,35 @@
         }
 
 
+        function toggleMenu() {
+            var menu = document.querySelector('.menu_block');
+            menu.classList.toggle('menu_show_effect');
+
+            var bg = document.getElementById('menu_frame');
+            bg.classList.toggle('menu_show_effect');
+        }
+
+
     </script>
 
 </head>
 
 <body onload="initMenu();">
 
-<div class="menu_block">
-    <div class="title">Cloudy game</div>
-    <div class="item">1</div>
-    <div class="item">2</div>
-    <div class="item">3</div>
-    <div class="item">4</div>
-    <div class="item">5</div>
+<div style="z-index:10000; width:50px; height:50px; background-color: green; position:fixed; right: 10px; top:100px;"
+     onClick="toggleMenu();"></div>
+
+<div id="menu_frame">
+    <div class="menu_block">
+        <div class="title">Cloudy game</div>
+        <div class="item">1</div>
+        <div class="item">2</div>
+        <div class="item">3</div>
+        <div class="item">4</div>
+        <div class="item">5</div>
+    </div>
 </div>
+
 
 </body>
 </html>
